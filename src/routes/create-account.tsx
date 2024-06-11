@@ -13,9 +13,9 @@ export default function CreateAccount() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const oAuthLogin = async () => {
+  const oAuthLogin = async (e) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "github",
+      provider: e.target.name,
       options: {
         redirectTo: "http://localhost:5173/",
       },
@@ -56,16 +56,25 @@ export default function CreateAccount() {
         <h1 className="absolute top-0 text-2xl translate-y-[-50%]">
           <span className="px-4 bg-white">회원가입</span>
         </h1>
-        <button className="border px-4 py-2 rounded shadow">
+        <button
+          name="google"
+          onClick={oAuthLogin}
+          className="border px-4 py-2 rounded shadow"
+        >
           구글로 계속하기
         </button>
         <button
+          name="github"
           onClick={oAuthLogin}
           className="border px-4 py-2 rounded shadow"
         >
           깃허브로 계속하기
         </button>
-        <button className="border px-4 py-2 rounded shadow">
+        <button
+          onClick={oAuthLogin}
+          name="kakao"
+          className="border px-4 py-2 rounded shadow"
+        >
           카카오로 계속하기
         </button>
         <div className="relative">
