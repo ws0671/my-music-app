@@ -3,6 +3,8 @@ import Layout from "./components/layout";
 import Home from "./routes/home";
 import Login from "./routes/login";
 import CreateAccount from "./routes/create-account";
+import FindPassword from "./routes/find-password";
+import UpdatePassword from "./routes/update-password";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +24,14 @@ const router = createBrowserRouter([
   {
     path: "/create-account",
     element: <CreateAccount />,
+  },
+  {
+    path: "/find-password",
+    element: <FindPassword />,
+  },
+  {
+    path: "/update-password",
+    element: <UpdatePassword />,
   },
 ]);
 

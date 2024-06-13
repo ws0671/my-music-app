@@ -1,18 +1,21 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabaseClient";
 import { useNavigate, Link } from "react-router-dom";
-import useLoginStateStore from "../stores/loginState";
-import { checkAuth } from "../utils/auth";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { RiKakaoTalkFill } from "react-icons/ri";
+import useSessionStore from "../stores/session";
 
 export default function Login() {
+  const { session } = useSessionStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (session) navigate(-1);
+  }, []);
   const oAuthLogin = async (e) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: e.target.name,
@@ -84,7 +87,7 @@ export default function Login() {
           <input
             className="px-4 py-2 w-full focus:outline-none bg-gray-100 border-solid border rounded"
             onChange={onChange}
-            type="text"
+            type="email"
             name="email"
             value={email}
             placeholder="이메일"
@@ -110,6 +113,11 @@ export default function Login() {
         <Link to={"/create-account"}>
           <div className="text-center text-[13px]">
             <span className="underline">회원가입 페이지로 가기</span>
+          </div>
+        </Link>
+        <Link to={"/find-password"}>
+          <div className="text-center text-[13px]">
+            <span className="underline">비밀번호를 잊었나요?</span>
           </div>
         </Link>
       </div>

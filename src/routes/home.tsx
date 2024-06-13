@@ -1,28 +1,25 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../utils/supabaseClient";
-import useLoginStateStore from "../stores/loginState";
+import { checkAuth } from "../utils/auth";
+import useSessionStore from "../stores/session";
 
 export default function Home() {
-  const { loginState, setLoginState } = useLoginStateStore();
-  const checkLogin = async () => {
-    const { data, error } = await supabase.auth.getSession();
-    const session = data.session;
-    session !== null ? setLoginState(true) : setLoginState(false);
-    console.log(session);
-  };
-
+  const { session, setSession } = useSessionStore();
   useEffect(() => {
-    checkLogin();
-  }, [loginState]);
+    const session = checkAuth();
+    setSession(session);
+  }, []);
+  console.log(session);
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
-    setLoginState(false);
+    setSession(false);
   };
   return (
     <>
       <h1>Home!</h1>
-      {loginState ? (
+      {session ? (
         <button onClick={signOut}>logout</button>
       ) : (
         <Link to={"create-account"}>signup</Link>
