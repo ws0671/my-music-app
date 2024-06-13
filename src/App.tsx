@@ -3,8 +3,6 @@ import Layout from "./components/layout";
 import Home from "./routes/home";
 import Login from "./routes/login";
 import CreateAccount from "./routes/create-account";
-import { createClient } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
 
 const router = createBrowserRouter([
   {

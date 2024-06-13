@@ -1,18 +1,20 @@
-import { createClient } from "@supabase/supabase-js";
-import { useState } from "react";
-import { Form, redirect } from "react-router-dom";
-
-const supabase = createClient(
-  "https://ayrqfhuebatobjierkyu.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5cnFmaHVlYmF0b2JqaWVya3l1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTc3NTQ1MDcsImV4cCI6MjAzMzMzMDUwN30.GysEdNw_lxaOeCoqIm1BVvCoLjpUEldCGZ-bcA2Jc2Q"
-);
+import { useEffect, useState } from "react";
+import { supabase } from "../utils/supabaseClient";
+import { useNavigate, Link } from "react-router-dom";
+import useLoginStateStore from "../stores/loginState";
+import { checkAuth } from "../utils/auth";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub, faGoogle } from "@fortawesome/free-brands-svg-icons";
+import { RiKakaoTalkFill } from "react-icons/ri";
 
 export default function CreateAccount() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
+  checkAuth;
   const oAuthLogin = async (e) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: e.target.name,
@@ -38,16 +40,15 @@ export default function CreateAccount() {
       email,
       password,
       options: {
-        emailRedirectTo: "http://localhost:5173/",
         data: {
           name,
         },
+        emailRedirectTo: "http://localhost:5173/",
       },
     });
 
-    if (error) console.log(error);
     if (error !== null) setError(error.message);
-    console.log(data);
+    if (data.session) navigate("/");
   };
 
   return (
@@ -61,21 +62,24 @@ export default function CreateAccount() {
           onClick={oAuthLogin}
           className="border px-4 py-2 rounded shadow"
         >
-          구글로 계속하기
+          <FontAwesomeIcon icon={faGoogle} size="lg" />
+          <span className="ml-3">구글로 계속하기</span>
         </button>
         <button
           name="github"
           onClick={oAuthLogin}
           className="border px-4 py-2 rounded shadow"
         >
-          깃허브로 계속하기
+          <FontAwesomeIcon icon={faGithub} size="lg" />
+          <span className="ml-3">깃허브로 계속하기</span>
         </button>
         <button
           onClick={oAuthLogin}
           name="kakao"
           className="border px-4 py-2 rounded shadow"
         >
-          카카오로 계속하기
+          <RiKakaoTalkFill className="text-2xl inline" />
+          <span className="ml-3">카카오로 계속하기</span>
         </button>
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
@@ -107,19 +111,24 @@ export default function CreateAccount() {
           <input
             className="px-4 py-2 w-full focus:outline-none bg-gray-100 border-solid border rounded"
             onChange={onChange}
-            type="text"
+            type="password"
             name="password"
             value={password}
             placeholder="비밀번호"
             required
           />
+          {error ? <div className="text-red-500 text-sm">{error}</div> : null}
           <input
             className="px-4 py-2 hover:cursor-pointer hover:bg-orange-300 text-white bg-orange-400 rounded"
             type="submit"
             value="가입하기"
           />
         </form>
-        {error !== "" ? <h1>{error}</h1> : null}
+        <Link to={"/login"}>
+          <div className="text-center text-[13px]">
+            <span className="underline">로그인 페이지로 가기</span>
+          </div>
+        </Link>
       </div>
     </div>
   );
