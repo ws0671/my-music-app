@@ -1,7 +1,6 @@
 import { supabase } from "./supabaseClient";
 
 export async function checkAuth() {
-  const user = supabase.auth.getSession();
-  const session = (await user).data.session;
-  return session;
+  const { data } = await supabase.auth.getSession();
+  return data.session;
 }

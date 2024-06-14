@@ -9,47 +9,46 @@ export default function UpdatePassword() {
   const [error, setError] = useState("");
   const [auth, setAuth] = useState(null);
   const navigate = useNavigate();
+
   useEffect(() => {
     if (session) navigate(-1);
-    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+  }, []);
+  const updatePasswordHandler = () => {
+    supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === "PASSWORD_RECOVERY") {
-        setAuth(session);
+        const { data, error } = await supabase.auth.updateUser({
+          password,
+        });
+
+        if (data) {
+          setPassword("");
+        }
+
+        if (error) {
+          setError("There was an error updating your password.");
+        }
       } else {
-        navigate(-1);
+        setError("No session found. Please try resetting your password again.");
       }
     });
-  }, []);
-  const updatePasswordHandler = async () => {
-    if (auth) {
-      const { data, error } = await supabase.auth.updateUser({
-        password,
-      });
-
-      if (data) {
-        alert("Password updated successfully!");
-        setPassword("");
-        navigate("/login");
-      }
-
-      if (error) {
-        setError("There was an error updating your password.");
-      }
-    } else {
-      setError("No session found. Please try resetting your password again.");
-    }
-  };
-
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (password.length >= 6) {
-      updatePasswordHandler();
-    } else {
-      setError("Password should be at least 6 characters.");
-    }
   };
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const password = e.target.value;
     setPassword(password);
+  };
+  const signOut = async () => {
+    await supabase.auth.signOut();
+  };
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (password.length >= 6) {
+      updatePasswordHandler();
+      signOut();
+      navigate("/login");
+    } else {
+      setError("Password should be at least 6 characters.");
+    }
   };
   return (
     <div className="w-[400px] flex gap-4 flex-col justify-center">

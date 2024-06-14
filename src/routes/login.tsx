@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import useSessionStore from "../stores/session";
+import { checkAuth } from "../utils/auth";
 
 export default function Login() {
   const { session } = useSessionStore();
@@ -35,14 +36,16 @@ export default function Login() {
   };
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error !== null) setError(error.message);
-    if (data.session) navigate("/");
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) throw error;
+      if (data.session) navigate("/");
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   return (

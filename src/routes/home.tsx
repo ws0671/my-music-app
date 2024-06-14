@@ -7,10 +7,12 @@ import useSessionStore from "../stores/session";
 export default function Home() {
   const { session, setSession } = useSessionStore();
   useEffect(() => {
-    const session = checkAuth();
-    setSession(session);
+    const checkAuth = async () => {
+      const { data } = await supabase.auth.getSession();
+      setSession(data.session);
+    };
+    checkAuth();
   }, []);
-  console.log(session);
 
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
