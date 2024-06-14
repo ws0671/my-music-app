@@ -7,7 +7,6 @@ export default function UpdatePassword() {
   const { session } = useSessionStore();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [auth, setAuth] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
