@@ -1,20 +1,30 @@
-import { createClient } from "@supabase/supabase-js";
-import { useState } from "react";
-import { Form } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { supabase } from "../utils/supabaseClient";
+import { useNavigate, Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGithub, faGoogle } from "@fortawesome/free-brands-svg-icons";
+import { RiKakaoTalkFill } from "react-icons/ri";
+import { checkAuth } from "../utils/auth";
+import useSessionStore from "./../stores/session";
 
-const supabase = createClient(
-  "https://ayrqfhuebatobjierkyu.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5cnFmaHVlYmF0b2JqaWVya3l1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTc3NTQ1MDcsImV4cCI6MjAzMzMzMDUwN30.GysEdNw_lxaOeCoqIm1BVvCoLjpUEldCGZ-bcA2Jc2Q"
-);
-
-const { data, error } = await supabase.auth.signUp({
-  email: "example@email.com",
-  password: "example-password",
-});
 export default function CreateAccount() {
+  const { session } = useSessionStore();
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (session) navigate(-1);
+  }, []);
+  const oAuthLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: e.target.name,
+      options: {
+        redirectTo: "http://localhost:5173/",
+      },
+    });
+  };
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const name = e.target.name;
     const value = e.target.value;
@@ -26,8 +36,21 @@ export default function CreateAccount() {
       setPassword(value);
     }
   };
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log(email, name, password);
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name,
+        },
+        emailRedirectTo: "http://localhost:5173/",
+      },
+    });
+
+    if (error !== null) setError(error.message);
+    if (data.session) navigate("/");
   };
 
   return (
@@ -36,28 +59,43 @@ export default function CreateAccount() {
         <h1 className="absolute top-0 text-2xl translate-y-[-50%]">
           <span className="px-4 bg-white">회원가입</span>
         </h1>
-        <button className="border px-4 py-2 rounded shadow">
-          구글로 계속하기
+        <button
+          name="google"
+          onClick={oAuthLogin}
+          className="border px-4 py-2 rounded shadow"
+        >
+          <FontAwesomeIcon icon={faGoogle} size="lg" />
+          <span className="ml-3">구글로 계속하기</span>
         </button>
-        <button className="border px-4 py-2 rounded shadow">
-          깃허브로 계속하기
+        <button
+          name="github"
+          onClick={oAuthLogin}
+          className="border px-4 py-2 rounded shadow"
+        >
+          <FontAwesomeIcon icon={faGithub} size="lg" />
+          <span className="ml-3">깃허브로 계속하기</span>
         </button>
-        <button className="border px-4 py-2 rounded shadow">
-          카카오로 계속하기
+        <button
+          onClick={oAuthLogin}
+          name="kakao"
+          className="border px-4 py-2 rounded shadow"
+        >
+          <RiKakaoTalkFill className="text-2xl inline" />
+          <span className="ml-3">카카오로 계속하기</span>
         </button>
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <div className="border-t border-black w-full"></div>
           </div>
           <div className="relative flex justify-center">
-            <span className="bg-white px-2">또는</span>
+            <span className="bg-white text-sm px-2">또는</span>
           </div>
         </div>
-        <Form className="flex flex-col gap-4 w-full" onSubmit={onSubmit}>
+        <form className="flex flex-col gap-4 w-full" onSubmit={onSubmit}>
           <input
             className="px-4 py-2 w-full focus:outline-none bg-gray-100 border-solid border rounded"
             onChange={onChange}
-            type="text"
+            type="email"
             name="email"
             value={email}
             placeholder="이메일"
@@ -75,18 +113,24 @@ export default function CreateAccount() {
           <input
             className="px-4 py-2 w-full focus:outline-none bg-gray-100 border-solid border rounded"
             onChange={onChange}
-            type="text"
+            type="password"
             name="password"
             value={password}
             placeholder="비밀번호"
             required
           />
+          {error ? <div className="text-red-500 text-sm">{error}</div> : null}
           <input
-            className="px-4 py-2 text-white bg-orange-300 rounded"
+            className="px-4 py-2 hover:cursor-pointer hover:bg-orange-300 text-white bg-orange-400 rounded"
             type="submit"
             value="가입하기"
           />
-        </Form>
+        </form>
+        <Link to={"/login"}>
+          <div className="text-center text-[13px]">
+            <span className="underline">로그인 페이지로 가기</span>
+          </div>
+        </Link>
       </div>
     </div>
   );
