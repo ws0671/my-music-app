@@ -5,6 +5,7 @@ import Login from "./routes/login";
 import CreateAccount from "./routes/create-account";
 import FindPassword from "./routes/find-password";
 import UpdatePassword from "./routes/update-password";
+import Album from "./routes/album";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <Home />,
+      },
+      {
+        path: "album/:id",
+        element: <Album />,
       },
     ],
   },
@@ -37,7 +42,7 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <div className="h-screen flex justify-center">
+    <div>
       <RouterProvider router={router} />
     </div>
   );
