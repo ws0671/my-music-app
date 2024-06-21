@@ -1,4 +1,5 @@
 import axios, { all } from "axios";
+import { IAllData, IArtist, ITracksAllData } from "../types/spotify";
 
 const BASE_URL = "https://accounts.spotify.com/api/token";
 
@@ -40,14 +41,8 @@ export const searchTrack = async () => {
   );
   return response.data;
 };
-interface IAllData {
-  artists: [{ name: string }];
-  id: string;
-  images: [{ url: string }];
-  name: string;
-}
 
-export const getNewReleases = async () => {
+export const getNewReleases = async (countryCode: string) => {
   let allData: IAllData[] = [];
   const limit = 50;
   let offset = 0;
@@ -55,7 +50,7 @@ export const getNewReleases = async () => {
   const token = await getAccessToken();
   do {
     const response = await axios.get(
-      `https://api.spotify.com/v1/browse/new-releases?limit=${limit}&offset=${offset}`,
+      `https://api.spotify.com/v1/browse/new-releases?market=${countryCode}&limit=${limit}&offset=${offset}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -72,36 +67,7 @@ export const getNewReleases = async () => {
   return allData;
 };
 
-export interface ITrack {
-  id: string;
-  name: string;
-  track_number: number;
-  artists: [{ name: string }];
-  images: string;
-  album_name: string;
-  album_artists: string;
-  release_date: string;
-}
-export interface ITracksAllData {
-  artists: [{ name: string }];
-  id: string;
-  images: [{ url: string }];
-  name: string;
-  tracks: [
-    {
-      id: string;
-      name: string;
-      track_number: number;
-      artists: [{ name: string }];
-      images: string;
-      album_name: string;
-      album_artists: string;
-      release_date: string;
-    }
-  ];
-}
-
-const changeDateFormat = (inputDate) => {
+const changeDateFormat = (inputDate: string) => {
   const date = new Date(inputDate);
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -109,7 +75,8 @@ const changeDateFormat = (inputDate) => {
 
   return `${year}.${month}.${day}`;
 };
-export const getAlbumTracks = async (id) => {
+
+export const getAlbumTracks = async (id: string) => {
   let allData: ITracksAllData[] = [];
   const limit = 50;
   let offset = 0;
@@ -129,7 +96,9 @@ export const getAlbumTracks = async (id) => {
     offset += limit;
     console.log(data);
     const release_date = changeDateFormat(data.release_date);
-    const album_artists = data.artists.map((artist) => artist.name).join(", ");
+    const album_artists = data.artists
+      .map((artist: IArtist) => artist.name)
+      .join(", ");
     const img = data.images[0].url;
     const name = data.name;
     const tracksWithAlbumInfo = data.tracks.items.map((track) => {
@@ -145,4 +114,16 @@ export const getAlbumTracks = async (id) => {
   } while (offset < total);
 
   return allData;
+};
+
+export const getArtist = async (id: string) => {
+  const token = await getAccessToken();
+  const response = await axios.get(`https://api.spotify.com/v1/artists/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  console.log(response.data);
+
+  return response.data;
 };

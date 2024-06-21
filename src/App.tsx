@@ -6,6 +6,7 @@ import CreateAccount from "./routes/create-account";
 import FindPassword from "./routes/find-password";
 import UpdatePassword from "./routes/update-password";
 import Album from "./routes/album";
+import Artist from "./routes/artist";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
       {
         path: "album/:id",
         element: <Album />,
+      },
+      {
+        path: "artist/:id",
+        element: <Artist />,
       },
     ],
   },
