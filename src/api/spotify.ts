@@ -123,7 +123,34 @@ export const getArtist = async (id: string) => {
       Authorization: `Bearer ${token}`,
     },
   });
-  console.log(response.data);
 
   return response.data;
+};
+
+export const getArtistTopTracks = async (id: string) => {
+  const token = await getAccessToken();
+  const response = await axios.get(
+    `https://api.spotify.com/v1/artists/${id}/top-tracks`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data.tracks;
+};
+
+export const getRelatedArtist = async (id: string) => {
+  const token = await getAccessToken();
+  const response = await axios.get(
+    `https://api.spotify.com/v1/artists/${id}/related-artists`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  return response.data.artists;
 };

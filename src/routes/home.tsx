@@ -108,7 +108,7 @@ export default function Home() {
         {music.map((item) => {
           const allArtists = item.artists.map((i) => i.name).join(", ");
           return (
-            <Link to={`album/${item.id}`}>
+            <Link to={`album/${item.id}`} key={item.id}>
               <div className="w-44">
                 <img
                   className="rounded-lg w-44 h-44"

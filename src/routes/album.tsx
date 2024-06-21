@@ -60,7 +60,7 @@ export default function Album() {
       >
         btn
       </button>
-      <div className="grid grid-cols-[1fr_8fr_1fr] text-sm text-gray-400">
+      <div className="grid grid-cols-[1fr_20fr_2fr] text-sm text-gray-400">
         <div className="flex justify-center items-center">#</div>
         <div>제목</div>
         <div className="flex justify-center items-center">
@@ -76,7 +76,7 @@ export default function Album() {
         );
         duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
         return (
-          <div className="grid grid-cols-[1fr_8fr_1fr]">
+          <div className="grid grid-cols-[1fr_20fr_2fr]">
             <div className="flex justify-center items-center">
               {item.track_number}
             </div>

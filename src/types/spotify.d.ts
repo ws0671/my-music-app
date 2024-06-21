@@ -42,4 +42,5 @@ export interface ISpecificArtist {
   genres: [string];
   images: [{ url: string }];
   name: string;
+  id: string;
 }
