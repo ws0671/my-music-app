@@ -41,6 +41,7 @@ export default function Artist() {
       <div className="flex shadow-2xl gap-10 relative box-border">
         <img className="" src={artist.images[0].url} alt={artist.name} />
         <div className="pb-10 flex flex-col break-all justify-center space-y-10">
+          <div className=" text-xl">아티스트</div>
           <div className="font-bold text-8xl ">{artist.name}</div>
           <div className="font-bold text-5xl ">
             팔로워 {artist.followers.total.toLocaleString()}
@@ -73,7 +74,19 @@ export default function Artist() {
             <div className="flex justify-center items-center">{index + 1}</div>
             <div>
               <div className="font-bold">{item.name}</div>
-              <div className="text-sm text-gray-400">{artists}</div>
+              <div className="text-sm text-gray-400">
+                {item.artists.map((artist, index) => {
+                  const isLast = index === item.artists.length - 1;
+                  return (
+                    <>
+                      <Link to={`/artist/${artist.id}`}>
+                        <span className="hover:underline">{artist.name}</span>
+                      </Link>
+                      {!isLast && <span>, </span>}
+                    </>
+                  );
+                })}
+              </div>
             </div>
             <div className="flex justify-center items-center">
               {duration_min}:{duration_sec}

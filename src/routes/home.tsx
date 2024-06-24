@@ -114,7 +114,7 @@ export default function Home() {
                   className="rounded-lg w-44 h-44"
                   src={item.images[2].url}
                 />
-                <div className="truncate font-bold" key={item.id}>
+                <div className="my-1 truncate font-bold" key={item.id}>
                   {item.name}
                 </div>
                 <div className="truncate text-sm  text-gray-400">

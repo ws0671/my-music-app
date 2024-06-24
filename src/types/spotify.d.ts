@@ -44,3 +44,10 @@ export interface ISpecificArtist {
   name: string;
   id: string;
 }
+
+export interface IPlaylists {
+  description: string;
+  id: string;
+  images: [{ url: string }];
+  name: string;
+}

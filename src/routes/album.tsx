@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { ITrack, ITracksAllData, getAlbumTracks } from "../api/spotify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock } from "@fortawesome/free-regular-svg-icons";
@@ -35,19 +35,16 @@ export default function Album() {
     <div>
       <div className="flex shadow-2xl gap-10 relative">
         <img
-          className="w-44 h-44"
+          className="w-52 h-auto"
           src={tracks[0].images}
           alt={tracks[0].album_name}
         />
-        <div className="flex items-center pb-10">
-          <div
-            className={`font-bold ${
-              tracks[0].album_name.length > 10 ? "text-5xl" : "text-9xl"
-            }`}
-          >
+        <div className="flex space-y-3 flex-col justify-center">
+          <div className="">앨범</div>
+          <div className={`font-bold ${"text-5xl"}`}>
             {tracks[0].album_name}
           </div>
-          <div className="font-bold absolute bottom-1">
+          <div className="font-bold">
             <span className="">{tracks[0].album_artists}</span>
             <span className="mx-3">·</span>
             <span>{tracks[0].release_date}</span>
@@ -82,7 +79,19 @@ export default function Album() {
             </div>
             <div>
               <div className="font-bold">{item.name}</div>
-              <div className="text-sm text-gray-400">{artists}</div>
+              <div className="text-sm text-gray-400">
+                {item.artists.map((artist, index) => {
+                  const isLast = index === item.artists.length - 1;
+                  return (
+                    <>
+                      <Link to={`/artist/${artist.id}`}>
+                        <span className="hover:underline">{artist.name}</span>
+                      </Link>
+                      {!isLast && <span>, </span>}
+                    </>
+                  );
+                })}
+              </div>
             </div>
             <div className="flex justify-center items-center">
               {duration_min}:{duration_sec}

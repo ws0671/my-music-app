@@ -94,7 +94,6 @@ export const getAlbumTracks = async (id: string) => {
     const data = response.data;
     total = data.tracks.total;
     offset += limit;
-    console.log(data);
     const release_date = changeDateFormat(data.release_date);
     const album_artists = data.artists
       .map((artist: IArtist) => artist.name)
@@ -153,4 +152,34 @@ export const getRelatedArtist = async (id: string) => {
   );
 
   return response.data.artists;
+};
+
+export const getFeaturedPlaylists = async () => {
+  const token = await getAccessToken();
+  const response = await axios.get(
+    `https://api.spotify.com/v1/browse/featured-playlists`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  console.log(response.data.playlists.items);
+  return response.data.playlists.items;
+};
+
+export const getFeaturedPlaylist = async (id: string) => {
+  const token = await getAccessToken();
+  const response = await axios.get(
+    `
+https://api.spotify.com/v1/playlists/${id}/tracks`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  console.log(response);
+
+  return response.data.items;
 };

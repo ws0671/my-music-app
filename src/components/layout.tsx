@@ -9,8 +9,8 @@ export default function Layout() {
           <Link to={"/"}>
             <div className="mt-5 text-xl font-bold">홈</div>
           </Link>
-          <Link to={"/"}>
-            <div className="mt-5 text-xl font-bold">아티스트</div>
+          <Link to={"/playlist"}>
+            <div className="mt-5 text-xl font-bold">MMA 플레이리스트</div>
           </Link>
         </div>
         <Outlet />
