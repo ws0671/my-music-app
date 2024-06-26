@@ -23,6 +23,8 @@ export default function Album() {
   const { isPlaying, setIsPlaying } = useIsPlayingStore();
   const { videoId, setVideoId } = useVideoIdStore();
   const { setTrackInfo } = useTrackInfoStore();
+  console.log(tracks);
+
   useEffect(() => {
     const fetchAlbumTracks = async () => {
       setIsLoading(true);
@@ -45,12 +47,12 @@ export default function Album() {
     const id = e.currentTarget.getAttribute("data-id");
     const name = e.currentTarget.getAttribute("data-name");
     const artists = e.currentTarget.getAttribute("data-artists");
-    const imgUrl = e.currentTarget.getAttribute("data-imgUrl");
+    const imgurl = e.currentTarget.getAttribute("data-imgurl");
     const trackInfoOne = {
       id,
       name,
       artists,
-      imgUrl,
+      imgurl,
     };
     console.log(trackInfoOne);
 
@@ -120,7 +122,7 @@ export default function Album() {
                 data-id={item.id}
                 data-name={item.name}
                 data-artists={artists}
-                data-imgUrl={item.images}
+                data-imgurl={item.images}
                 onClick={onPlayClick}
                 icon={faPlay}
               />

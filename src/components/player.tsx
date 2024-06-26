@@ -80,7 +80,7 @@ export default function Player() {
       {videoId && (
         <div className="grid grid-cols-[1fr_1fr_1fr] bg-white sticky bottom-0 border border-t">
           <div className="flex  text-sm items-center justify-center py-5">
-            <img className="w-10" src={trackInfo.imgUrl} alt={trackInfo.name} />
+            <img className="w-10" src={trackInfo.imgurl} alt={trackInfo.name} />
             <div className="ml-3">
               <div>{trackInfo.name}</div>
               <div className="text-xs text-gray-300">{trackInfo.artists}</div>

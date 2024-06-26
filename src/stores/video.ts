@@ -8,7 +8,7 @@ export interface ITrackInfo {
   id: string;
   name: string;
   artists: string;
-  imgUrl: string;
+  imgurl: string;
 }
 export const useTrackInfoStore = create((set) => ({
   trackInfo: null,
