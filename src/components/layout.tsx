@@ -1,4 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
+import Player from "./player";
 
 export default function Layout() {
   return (
@@ -15,6 +16,7 @@ export default function Layout() {
         </div>
         <Outlet />
       </div>
+      <Player />
     </>
   );
 }

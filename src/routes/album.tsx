@@ -1,14 +1,28 @@
-import { useEffect, useRef, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ITrack, ITracksAllData, getAlbumTracks } from "../api/spotify";
+import {
+  ITrack,
+  ITracksAllData,
+  getAlbumTracks,
+  getSpotifyTrackInfo,
+} from "../api/spotify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock } from "@fortawesome/free-regular-svg-icons";
 import Loading from "../components/loading";
-
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { searchYouTubeVideo } from "../api/youtube";
+import {
+  useIsPlayingStore,
+  useTrackInfoStore,
+  useVideoIdStore,
+} from "../stores/video";
 export default function Album() {
   const [tracks, setTracks] = useState<ITrack[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { id } = useParams();
+  const { isPlaying, setIsPlaying } = useIsPlayingStore();
+  const { videoId, setVideoId } = useVideoIdStore();
+  const { setTrackInfo } = useTrackInfoStore();
   useEffect(() => {
     const fetchAlbumTracks = async () => {
       setIsLoading(true);
@@ -26,6 +40,26 @@ export default function Album() {
 
   const onClick = () => {
     console.log(tracks);
+  };
+  const onPlayClick = async (e: MouseEvent<SVGSVGElement>) => {
+    const id = e.currentTarget.getAttribute("data-id");
+    const name = e.currentTarget.getAttribute("data-name");
+    const artists = e.currentTarget.getAttribute("data-artists");
+    const imgUrl = e.currentTarget.getAttribute("data-imgUrl");
+    const trackInfoOne = {
+      id,
+      name,
+      artists,
+      imgUrl,
+    };
+    console.log(trackInfoOne);
+
+    const trackInfo = await getSpotifyTrackInfo(id);
+    const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
+    const fetchedVideoId = await searchYouTubeVideo(searchQuery);
+    setVideoId(fetchedVideoId);
+    setIsPlaying(true);
+    setTrackInfo(trackInfoOne);
   };
 
   if (isLoading) {
@@ -57,7 +91,7 @@ export default function Album() {
       >
         btn
       </button>
-      <div className="grid grid-cols-[1fr_20fr_2fr] text-sm text-gray-400">
+      <div className="grid grid-cols-[1fr_20fr_1fr] mr-5 text-sm text-gray-400">
         <div className="flex justify-center items-center">#</div>
         <div>제목</div>
         <div className="flex justify-center items-center">
@@ -73,9 +107,23 @@ export default function Album() {
         );
         duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
         return (
-          <div className="grid grid-cols-[1fr_20fr_2fr]">
-            <div className="flex justify-center items-center">
+          <div
+            key={item.id}
+            className="py-1 hover:bg-gray-200 hover:rounded-md grid grid-cols-[1fr_20fr_1fr] group mr-5"
+          >
+            <div className="group-hover:hidden flex justify-center items-center">
               {item.track_number}
+            </div>
+            <div className="hidden justify-center items-center group-hover:flex">
+              <FontAwesomeIcon
+                className="hover:cursor-pointer"
+                data-id={item.id}
+                data-name={item.name}
+                data-artists={artists}
+                data-imgUrl={item.images}
+                onClick={onPlayClick}
+                icon={faPlay}
+              />
             </div>
             <div>
               <div className="font-bold">{item.name}</div>
@@ -83,12 +131,12 @@ export default function Album() {
                 {item.artists.map((artist, index) => {
                   const isLast = index === item.artists.length - 1;
                   return (
-                    <>
+                    <span key={artist.id}>
                       <Link to={`/artist/${artist.id}`}>
                         <span className="hover:underline">{artist.name}</span>
                       </Link>
                       {!isLast && <span>, </span>}
-                    </>
+                    </span>
                   );
                 })}
               </div>
