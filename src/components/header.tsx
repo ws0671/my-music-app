@@ -53,7 +53,7 @@ export default function Header() {
       <div className="flex justify-center gap-5 items-center">
         {session ? (
           <div
-            className="border bg-black font-bold text-white rounded-3xl py-2 px-3"
+            className="border font-bold transition-all cursor-pointer hover:text-white hover:bg-orange-400 rounded-3xl py-2 px-3"
             onClick={signOut}
           >
             로그아웃
