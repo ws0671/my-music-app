@@ -20,9 +20,8 @@ export default function Album() {
   const [tracks, setTracks] = useState<ITrack[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { id } = useParams();
-  const { isPlaying, setIsPlaying } = useIsPlayingStore();
   const { videoId, setVideoId } = useVideoIdStore();
-  const { setTrackInfo } = useTrackInfoStore();
+  const { setTrackInfo, togglePlay } = useTrackInfoStore();
   console.log(tracks);
 
   useEffect(() => {
@@ -60,8 +59,8 @@ export default function Album() {
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
     const fetchedVideoId = await searchYouTubeVideo(searchQuery);
     setVideoId(fetchedVideoId);
-    setIsPlaying(true);
     setTrackInfo(trackInfoOne);
+    togglePlay();
   };
 
   if (isLoading) {
@@ -81,7 +80,9 @@ export default function Album() {
             {tracks[0].album_name}
           </div>
           <div className="font-bold">
-            <span className="">{tracks[0].album_artists}</span>
+            <Link to={`/artist/${tracks[0].artists[0].id}`}>
+              <span className="hover:underline">{tracks[0].album_artists}</span>
+            </Link>
             <span className="mx-3">·</span>
             <span>{tracks[0].release_date}</span>
           </div>

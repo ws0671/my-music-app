@@ -10,11 +10,19 @@ export interface ITrackInfo {
   artists: string;
   imgurl: string;
 }
-export const useTrackInfoStore = create((set) => ({
+interface TrackInfoState {
+  trackInfo: ITrackInfo | null;
+  isPlaying: boolean;
+  setTrackInfo: (trackInfo: ITrackInfo) => void;
+  togglePlay: () => void;
+}
+export const useTrackInfoStore = create<TrackInfoState>((set) => ({
   trackInfo: null,
-  setTrackInfo: (trackInfo: ITrackInfo) => set({ trackInfo }),
-}));
-export const useIsPlayingStore = create((set) => ({
   isPlaying: false,
-  setIsPlaying: (state: boolean) => set({ isPlaying: state }),
+  setTrackInfo: (trackInfo) => set({ trackInfo }),
+  togglePlay: () => set((state) => ({ isPlaying: !state.isPlaying })),
 }));
+// export const useIsPlayingStore = create((set) => ({
+//   isPlaying: false,
+//   setIsPlaying: (state: boolean) => set({ isPlaying: state }),
+// }));

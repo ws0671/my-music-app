@@ -17,9 +17,8 @@ export default function FeaturedPlayListsDetail() {
   const [playlist, setPlaylist] = useState([]);
   const { id } = useParams();
   const location = useLocation();
-  const { isPlaying, setIsPlaying } = useIsPlayingStore();
   const { videoId, setVideoId } = useVideoIdStore();
-  const { setTrackInfo } = useTrackInfoStore();
+  const { setTrackInfo, togglePlay } = useTrackInfoStore();
 
   const { imageUrl, name, description } = location.state || {};
   console.log(imageUrl);
@@ -56,8 +55,8 @@ export default function FeaturedPlayListsDetail() {
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
     const fetchedVideoId = await searchYouTubeVideo(searchQuery);
     setVideoId(fetchedVideoId);
-    setIsPlaying(true);
     setTrackInfo(trackInfoOne);
+    togglePlay();
   };
   if (isLoading) return <Loading />;
   return (

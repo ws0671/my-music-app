@@ -24,9 +24,8 @@ export default function Artist() {
   const [tracks, setTracks] = useState<ITrack[]>([]);
   const [relatedArtists, setRelatedArtists] = useState<ISpecificArtist[]>([]);
   const { id } = useParams();
-  const { isPlaying, setIsPlaying } = useIsPlayingStore();
   const { videoId, setVideoId } = useVideoIdStore();
-  const { setTrackInfo } = useTrackInfoStore();
+  const { setTrackInfo, togglePlay } = useTrackInfoStore();
   useEffect(() => {
     const fetchArtist = async () => {
       setIsLoading(true);
@@ -62,8 +61,8 @@ export default function Artist() {
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
     const fetchedVideoId = await searchYouTubeVideo(searchQuery);
     setVideoId(fetchedVideoId);
-    setIsPlaying(true);
     setTrackInfo(trackInfoOne);
+    togglePlay();
   };
 
   if (isLoading) return <Loading />;
