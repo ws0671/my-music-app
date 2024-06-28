@@ -89,7 +89,7 @@ export default function FeaturedPlayListsDetail() {
         );
         duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
         return (
-          <div className="grid grid-cols-[1fr_10fr_10fr_2fr] py-1  hover:rounded-md hover:bg-gray-200  group mr-5">
+          <div className="grid grid-cols-[1fr_10fr_10fr_2fr] py-1  hover:rounded-md hover:bg-orange-200  group mr-5">
             <div className="group-hover:hidden flex justify-center items-center">
               {index + 1}
             </div>

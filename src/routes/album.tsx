@@ -112,7 +112,7 @@ export default function Album() {
         return (
           <div
             key={item.id}
-            className="py-1 hover:bg-gray-200 hover:rounded-md grid grid-cols-[1fr_20fr_1fr] group mr-5"
+            className="py-1 hover:bg-orange-200 hover:rounded-md grid grid-cols-[1fr_20fr_1fr] group mr-5"
           >
             <div className="group-hover:hidden flex justify-center items-center">
               {item.track_number}
