@@ -1,10 +1,6 @@
 import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  ITrackInfo,
-  useIsPlayingStore,
-  useTrackInfoStore,
-} from "../stores/video";
+import { useTrackInfoStore } from "../stores/video";
 import { useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
 import { useVideoIdStore } from "../stores/video";
@@ -41,8 +37,6 @@ export default function Player() {
     }
   };
   useEffect(() => {
-    console.log(containerRef);
-
     if (containerRef.current) {
       const containerWidth = containerRef.current.offsetWidth;
       const textWidth = containerRef.current.childNodes[0].scrollWidth;
@@ -120,7 +114,7 @@ export default function Player() {
             <div className="flex justify-center w-[300px]">
               <img
                 className="w-10"
-                src={trackInfo.imgurl}
+                src={trackInfo.imgUrl}
                 alt={trackInfo.name}
               />
               <div

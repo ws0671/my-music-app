@@ -45,15 +45,15 @@ export default function Artist() {
     fetchArtist();
   }, [id]);
   const onPlayClick = async (e: MouseEvent<SVGSVGElement>) => {
-    const id = e.currentTarget.getAttribute("data-id");
-    const name = e.currentTarget.getAttribute("data-name");
-    const artists = e.currentTarget.getAttribute("data-artists");
-    const imgurl = e.currentTarget.getAttribute("data-imgurl");
+    const id = e.currentTarget.getAttribute("id");
+    const name = e.currentTarget.getAttribute("name");
+    const artists = e.currentTarget.getAttribute("artists");
+    const imgUrl = e.currentTarget.getAttribute("imgUrl");
     const trackInfoOne = {
       id,
       name,
       artists,
-      imgurl,
+      imgUrl,
     };
     console.log(trackInfoOne);
 
@@ -110,10 +110,10 @@ export default function Artist() {
             <div className="hidden justify-center items-center group-hover:flex">
               <FontAwesomeIcon
                 className="hover:cursor-pointer"
-                data-id={item.id}
-                data-name={item.name}
-                data-artists={artists}
-                data-imgurl={item.album.images[0].url}
+                id={item.id}
+                name={item.name}
+                artists={artists}
+                imgUrl={item.album.images[0].url}
                 onClick={onPlayClick}
                 icon={faPlay}
               />

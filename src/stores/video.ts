@@ -8,7 +8,7 @@ export interface ITrackInfo {
   id: string;
   name: string;
   artists: string;
-  imgurl: string;
+  imgUrl: string;
 }
 interface TrackInfoState {
   trackInfo: ITrackInfo | null;

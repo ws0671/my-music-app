@@ -39,15 +39,15 @@ export default function FeaturedPlayListsDetail() {
     fetchFeaturedPlaylists();
   }, []);
   const onPlayClick = async (e: MouseEvent<SVGSVGElement>) => {
-    const id = e.currentTarget.getAttribute("data-id");
-    const name = e.currentTarget.getAttribute("data-name");
-    const artists = e.currentTarget.getAttribute("data-artists");
-    const imgurl = e.currentTarget.getAttribute("data-imgurl");
+    const id = e.currentTarget.getAttribute("id");
+    const name = e.currentTarget.getAttribute("name");
+    const artists = e.currentTarget.getAttribute("artists");
+    const imgUrl = e.currentTarget.getAttribute("imgUrl");
     const trackInfoOne = {
       id,
       name,
       artists,
-      imgurl,
+      imgUrl,
     };
     console.log(trackInfoOne);
 
@@ -96,10 +96,10 @@ export default function FeaturedPlayListsDetail() {
             <div className="hidden justify-center items-center group-hover:flex">
               <FontAwesomeIcon
                 className="hover:cursor-pointer"
-                data-id={item.track.id}
-                data-name={item.track.name}
-                data-artists={artists}
-                data-imgurl={item.track.album.images[0].url}
+                id={item.track.id}
+                name={item.track.name}
+                artists={artists}
+                imgUrl={item.track.album.images[0].url}
                 onClick={onPlayClick}
                 icon={faPlay}
               />
