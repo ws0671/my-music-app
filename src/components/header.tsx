@@ -28,13 +28,13 @@ export default function Header() {
       <div className="flex justify-center items-center gap-3">
         <button
           onClick={() => navigate(-1)}
-          className="w-5 h-5 flex items-center justify-center p-4  hover:rounded-full hover:bg-orange-400 hover:text-white"
+          className="transition-all w-5 h-5 flex items-center justify-center p-4  hover:rounded-full hover:bg-orange-400 hover:text-white"
         >
           <FontAwesomeIcon icon={faChevronLeft} />
         </button>
         <button
           onClick={() => navigate(1)}
-          className="w-5 h-5 flex items-center justify-center p-4  hover:rounded-full hover:bg-orange-400 hover:text-white"
+          className="transition-all w-5 h-5 flex items-center justify-center p-4  hover:rounded-full hover:bg-orange-400 hover:text-white"
         >
           <FontAwesomeIcon icon={faChevronRight} />
         </button>
@@ -61,12 +61,12 @@ export default function Header() {
         ) : (
           <>
             <Link to="/create-account">
-              <div className="border font-bold hover:text-white hover:bg-orange-400 rounded-3xl py-2 px-3">
+              <div className="border font-bold transition-all hover:text-white hover:bg-orange-400 rounded-3xl py-2 px-3">
                 가입하기
               </div>
             </Link>
             <Link to="/login">
-              <div className="border font-bold hover:text-white hover:bg-orange-400 rounded-3xl py-2 px-3">
+              <div className="border font-bold transition-all hover:text-white hover:bg-orange-400 rounded-3xl py-2 px-3">
                 로그인하기
               </div>
             </Link>
