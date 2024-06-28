@@ -13,29 +13,10 @@ import Loading from "../components/loading";
 import { ITrack } from "../types/spotify";
 
 export default function Home() {
-  const { session, setSession } = useSessionStore();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [music, setMusic] = useState([]);
   const [countryCode, setContryCode] = useState("KR");
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { data } = await supabase.auth.getSession();
-      setSession(data.session);
-    };
-    checkAuth();
-  }, []);
 
-  const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    setSession(false);
-  };
-  const onTest = async () => {
-    console.log(await getAccessToken());
-  };
-
-  const onSearch = async () => {
-    console.log(music);
-  };
   useEffect(() => {
     const fetchNewReleases = async () => {
       setIsLoading(true);
@@ -59,14 +40,6 @@ export default function Home() {
   }
   return (
     <div className="">
-      {session ? (
-        <button onClick={signOut}>logout</button>
-      ) : (
-        <Link to={"create-account"}>signup</Link>
-      )}
-
-      <button onClick={onTest}>TEST</button>
-      <button onClick={onSearch}>검색</button>
       <div className="my-5">
         <span className="font-bold text-2xl">새로 발매된 앨범</span>
         <span className="ml-5">

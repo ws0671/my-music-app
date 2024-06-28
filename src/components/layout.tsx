@@ -1,5 +1,6 @@
 import { Link, Outlet } from "react-router-dom";
 import Player from "./player";
+import Header from "./header";
 
 export default function Layout() {
   return (
@@ -14,7 +15,10 @@ export default function Layout() {
             <div className="mt-5 text-xl font-bold">MMA 플레이리스트</div>
           </Link>
         </div>
-        <Outlet />
+        <div>
+          <Header />
+          <Outlet />
+        </div>
       </div>
       <Player />
     </>
