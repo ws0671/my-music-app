@@ -28,20 +28,6 @@ export const getAccessToken = async () => {
   }
 };
 
-export const searchTrack = async () => {
-  const token = await getAccessToken();
-  const query = "hello";
-  const response = await axios.get(
-    `https://api.spotify.com/v1/search?q=${query}&type=track`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-  return response.data;
-};
-
 export const getNewReleases = async (countryCode: string) => {
   let allData: IAllData[] = [];
   const limit = 50;
@@ -182,4 +168,21 @@ https://api.spotify.com/v1/playlists/${id}/tracks`,
   console.log(response);
 
   return response.data.items;
+};
+
+export const getSpotifyTrackInfo = async (trackId) => {
+  const token = await getAccessToken();
+  const response = await axios.get(
+    `
+https://api.spotify.com/v1/tracks/${trackId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  const data = response.data;
+  console.log(data);
+
+  return { name: data.name, artist: data.artists[0].name };
 };
