@@ -26,7 +26,7 @@ export default function FeaturedPlayLists() {
   return (
     <div>
       <div className="my-5">
-        <span className="font-bold text-2xl">MMA 플레이리스트</span>
+        <span className="font-bold text-2xl">Honey 플레이리스트</span>
       </div>
       <div className="flex flex-wrap gap-6 ">
         {playlists.map((item) => {

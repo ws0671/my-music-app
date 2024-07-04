@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export const useVideoIdStore = create((set) => ({
   videoId: "",
@@ -9,6 +10,8 @@ export interface ITrackInfo {
   name: string;
   artists: string;
   imgUrl: string;
+  state?: string;
+  videoId: string;
 }
 interface TrackInfoState {
   trackInfo: ITrackInfo | null;

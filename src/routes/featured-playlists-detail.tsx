@@ -43,17 +43,17 @@ export default function FeaturedPlayListsDetail() {
     const name = e.currentTarget.getAttribute("name");
     const artists = e.currentTarget.getAttribute("artists");
     const imgUrl = e.currentTarget.getAttribute("imgUrl");
+
+    const trackInfo = await getSpotifyTrackInfo(id);
+    const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
+    const fetchedVideoId = await searchYouTubeVideo(searchQuery);
     const trackInfoOne = {
       id,
       name,
       artists,
       imgUrl,
+      videoId: fetchedVideoId,
     };
-    console.log(trackInfoOne);
-
-    const trackInfo = await getSpotifyTrackInfo(id);
-    const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
-    const fetchedVideoId = await searchYouTubeVideo(searchQuery);
     setVideoId(fetchedVideoId);
     setTrackInfo(trackInfoOne);
     togglePlay();

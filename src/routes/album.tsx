@@ -39,25 +39,22 @@ export default function Album() {
     fetchAlbumTracks();
   }, []);
 
-  const onClick = () => {
-    console.log(tracks);
-  };
   const onPlayClick = async (e: MouseEvent<SVGSVGElement>) => {
     const id = e.currentTarget.getAttribute("id");
     const name = e.currentTarget.getAttribute("name");
     const artists = e.currentTarget.getAttribute("artists");
     const imgUrl = e.currentTarget.getAttribute("imgUrl");
+
+    const trackInfo = await getSpotifyTrackInfo(id);
+    const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
+    const fetchedVideoId = await searchYouTubeVideo(searchQuery);
     const trackInfoOne = {
       id,
       name,
       artists,
       imgUrl,
+      videoId: fetchedVideoId,
     };
-    console.log(trackInfoOne);
-
-    const trackInfo = await getSpotifyTrackInfo(id);
-    const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
-    const fetchedVideoId = await searchYouTubeVideo(searchQuery);
     setVideoId(fetchedVideoId);
     setTrackInfo(trackInfoOne);
     togglePlay();
@@ -88,13 +85,7 @@ export default function Album() {
           </div>
         </div>
       </div>
-      <button
-        className="w-10 h-10 bg-slate-400 text-white border border-black"
-        onClick={onClick}
-      >
-        btn
-      </button>
-      <div className="grid grid-cols-[1fr_20fr_1fr] mr-5 text-sm text-gray-400">
+      <div className="mt-10 grid grid-cols-[1fr_20fr_1fr] mr-5 text-sm text-gray-400">
         <div className="flex justify-center items-center">#</div>
         <div>제목</div>
         <div className="flex justify-center items-center">

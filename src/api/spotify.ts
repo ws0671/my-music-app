@@ -186,3 +186,28 @@ https://api.spotify.com/v1/tracks/${trackId}`,
 
   return { name: data.name, artist: data.artists[0].name };
 };
+
+export const searchTracks = async (query) => {
+  const token = await getAccessToken();
+
+  if (!token) {
+    console.error("Access token is not available");
+    return;
+  }
+
+  try {
+    const response = await axios.get("https://api.spotify.com/v1/search", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        q: query,
+        type: "track,artist,playlist,album",
+        limit: 10,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error searching tracks", error);
+  }
+};
