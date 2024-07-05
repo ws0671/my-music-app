@@ -61,7 +61,26 @@ export default function Search() {
     setSelectedId(id);
     setEllipsis((prev) => !prev);
   };
-
+  const addTrack = async (e) => {
+    setEllipsis(false);
+    const id = e.currentTarget.getAttribute("id");
+    const name = e.currentTarget.getAttribute("name");
+    const artists = e.currentTarget.getAttribute("artists");
+    const imgUrl = e.currentTarget.getAttribute("imgUrl");
+    const trackInfo = await getSpotifyTrackInfo(id);
+    const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
+    const fetchedVideoId = await searchYouTubeVideo(searchQuery);
+    const trackInfoOne = {
+      id,
+      name,
+      artists,
+      imgUrl,
+      videoId: fetchedVideoId,
+    };
+    const nowPlaylist = JSON.parse(localStorage.getItem("playlist"));
+    const updatedPlaylist = [...nowPlaylist, trackInfoOne];
+    localStorage.setItem("playlist", JSON.stringify(updatedPlaylist));
+  };
   if (isLoading) return <Loading />;
   return (
     <div>
@@ -127,9 +146,14 @@ export default function Search() {
               />
             </div>
             <div
+              onClick={addTrack}
+              id={item.id}
+              name={item.name}
+              artists={artists}
+              imgUrl={item.album.images[0].url}
               className={
                 ellipsis && selectedId === item.id
-                  ? " absolute top-10  hover:bg-orange-100 bg-white border shadow-md px-3 py-2 rounded-md z-[1000] right-0"
+                  ? " absolute top-10 cursor-pointer  hover:bg-orange-100 bg-white border shadow-md px-3 py-2 rounded-md z-[1000] right-0"
                   : "hidden"
               }
             >

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import UpdatePassword from "./../routes/update-password";
 import {
+  useCurrentTrackIndexStore,
   usePlaylistStore,
   useTrackInfoStore,
   useVideoIdStore,
@@ -8,7 +9,12 @@ import {
 import { getSpotifyTrackInfo } from "../api/spotify";
 import { searchYouTubeVideo } from "../api/youtube";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsis, faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEllipsis,
+  faMinus,
+  faPlus,
+  faSquareMinus,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function Playlist({ tracks, setPlaylist }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -16,7 +22,23 @@ export default function Playlist({ tracks, setPlaylist }) {
   const { setTrackInfo, togglePlay } = useTrackInfoStore();
   const [ellipsis, setEllipsis] = useState(false);
   const [selectedId, setSelectedId] = useState();
+  const dropdownRef = useRef([]);
 
+  const handleClickOutside = (e) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.some((ref) => ref.contains(e.target))
+    ) {
+      setEllipsis(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   const onPlayClick = async (e: MouseEvent<SVGSVGElement>) => {
     const id = e.currentTarget.getAttribute("id");
     const name = e.currentTarget.getAttribute("name");
@@ -41,17 +63,39 @@ export default function Playlist({ tracks, setPlaylist }) {
   const onEllipsis = (e, id) => {
     e.stopPropagation();
     setSelectedId(id);
-    setEllipsis((prev) => !prev);
+    if (ellipsis) {
+      setEllipsis(false);
+    } else {
+      setEllipsis(true);
+    }
   };
-  const removeSong = (index) => {
+  const removeSong = (e, index) => {
+    e.stopPropagation();
     const newPlaylist = tracks.filter((_, i) => i !== index);
     localStorage.setItem("playlist", JSON.stringify(newPlaylist));
     setPlaylist(newPlaylist);
     setEllipsis(false);
   };
+  const removeAll = () => {
+    if (confirm("플레이리스트 전체 삭제하시겠습니까?")) {
+      const newPlaylist = [];
+      localStorage.setItem("playlist", JSON.stringify(newPlaylist));
+      setPlaylist(newPlaylist);
+    }
+  };
+
   return (
     <div className="absolute rounded-xl top-[-450px] w-[250px]   bg-white left-10 shadow-xl p-5  border border-1">
-      <h1 className="font-bold pb-3 border-b-2 border-orange-200">Playlist</h1>
+      <div className="flex justify-between font-bold pb-3 border-b-2 border-orange-200">
+        <div>Playlist</div>
+        <div>
+          <FontAwesomeIcon
+            onClick={removeAll}
+            className="cursor-pointer"
+            icon={faSquareMinus}
+          />
+        </div>
+      </div>
       <div className="scrollbar-hide  mt-3 overflow-y-scroll h-[350px]">
         {tracks.map((trackInfo, index) => {
           return (
@@ -106,7 +150,8 @@ export default function Playlist({ tracks, setPlaylist }) {
                   />
                 </div>
                 <div
-                  onClick={() => removeSong(index)}
+                  ref={(el) => (dropdownRef.current[index] = el)}
+                  onClick={(e) => removeSong(e, index)}
                   className={
                     ellipsis && selectedId === index
                       ? "z-30 absolute right-[-70px]  hover:bg-orange-100 bg-white border shadow-md px-3 py-2 rounded-md "

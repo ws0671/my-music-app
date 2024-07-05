@@ -8,6 +8,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   ITrackInfo,
+  useCurrentTrackIndexStore,
   usePlaylistStore,
   useTrackInfoStore,
 } from "../stores/video";
@@ -28,8 +29,8 @@ export default function Player() {
     useTrackInfoStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isShort, setIsShort] = useState(false);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
-  console.log(playlist);
+  const { currentTrackIndex, setCurrentTrackIndex } =
+    useCurrentTrackIndexStore();
 
   const onReady = (e) => {
     setPlayer(e.target);
@@ -56,7 +57,7 @@ export default function Player() {
     if (savedPlaylist) {
       setPlaylist(JSON.parse(savedPlaylist));
     }
-  }, []);
+  }, [playlist]);
   useEffect(() => {
     const handleUpdatedPlaylist = () => {
       if (

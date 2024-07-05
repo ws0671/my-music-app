@@ -29,3 +29,8 @@ export const useTrackInfoStore = create<TrackInfoState>((set) => ({
 //   isPlaying: false,
 //   setIsPlaying: (state: boolean) => set({ isPlaying: state }),
 // }));
+
+export const useCurrentTrackIndexStore = create((set) => ({
+  currentTrackIndex: 0,
+  setCurrentTrackIndex: (index: number) => set({ currentTrackIndex: index }),
+}));
