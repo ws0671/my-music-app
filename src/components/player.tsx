@@ -16,10 +16,11 @@ import { useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
 import { useVideoIdStore } from "../stores/video";
 import Playlist from "./playlist";
+import useSessionStore from "../stores/session";
 
 export default function Player() {
   const { videoId, setVideoId } = useVideoIdStore();
-  const [playlist, setPlaylist] = useState([]);
+  const { playlist, setPlaylist } = usePlaylistStore();
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
@@ -31,6 +32,8 @@ export default function Player() {
   const [isShort, setIsShort] = useState(false);
   const { currentTrackIndex, setCurrentTrackIndex } =
     useCurrentTrackIndexStore();
+  const { session } = useSessionStore();
+  console.log(playlist);
 
   const onReady = (e) => {
     setPlayer(e.target);
@@ -52,12 +55,7 @@ export default function Player() {
       togglePlay();
     }
   };
-  useEffect(() => {
-    const savedPlaylist = localStorage.getItem("playlist");
-    if (savedPlaylist) {
-      setPlaylist(JSON.parse(savedPlaylist));
-    }
-  }, [playlist]);
+
   useEffect(() => {
     const handleUpdatedPlaylist = () => {
       if (
@@ -65,12 +63,7 @@ export default function Player() {
         !playlist.some((track) => track.videoId === trackInfo.videoId)
       ) {
         if (trackInfo.state === "playlist") return;
-        setPlaylist((prev) => {
-          const updatedPlaylist = [...prev, trackInfo];
-          localStorage.setItem("playlist", JSON.stringify(updatedPlaylist));
-
-          return updatedPlaylist;
-        });
+        setPlaylist(trackInfo);
       }
     };
     handleUpdatedPlaylist();
@@ -93,7 +86,7 @@ export default function Player() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  });
+  }, []);
   useEffect(() => {
     if (player) {
       if (isPlaying) {
@@ -180,7 +173,7 @@ export default function Player() {
   return (
     <>
       <div className="flex bg-white sticky bottom-0 border border-t">
-        {onPlaylist && <Playlist tracks={playlist} setPlaylist={setPlaylist} />}
+        {onPlaylist && <Playlist />}
         <div className="basis-1/3 flex gap-10 text-sm items-center justify-center py-5">
           <div
             onClick={() => {

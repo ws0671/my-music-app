@@ -34,3 +34,23 @@ export const useCurrentTrackIndexStore = create((set) => ({
   currentTrackIndex: 0,
   setCurrentTrackIndex: (index: number) => set({ currentTrackIndex: index }),
 }));
+
+export const usePlaylistStore = create(
+  persist(
+    (set, get) => ({
+      playlist: [],
+      setPlaylist: (newPlaylist) =>
+        set((prev) => ({
+          playlist: [...prev.playlist, newPlaylist],
+        })),
+      removePlaylist: (index) => {
+        const updatedPlaylist = get().playlist.filter((_, i) => i !== index);
+        set({ playlist: updatedPlaylist });
+      },
+      resetPlaylist: () => set({ playlist: [] }),
+    }),
+    {
+      name: "playlist",
+    }
+  )
+);

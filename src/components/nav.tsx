@@ -9,10 +9,12 @@ export default function Nav() {
   };
   return (
     <div className="ml-10 space-y-3 sticky top-0 h-[100vh]">
-      <Link to={"/"}>
-        <div className="">
-          <img src="/images/Honey.png" alt="logo" />
-        </div>
+      <Link className="block rounded-full" to={"/"}>
+        <img
+          className="w-full h-full rounded-full"
+          src="/images/Honey-removebg-preview.png"
+          alt="logo"
+        />
       </Link>
       <Link to={"/"}>
         <div

@@ -77,9 +77,17 @@ export default function Album() {
             {tracks[0].album_name}
           </div>
           <div className="font-bold">
-            <Link to={`/artist/${tracks[0].artists[0].id}`}>
-              <span className="hover:underline">{tracks[0].album_artists}</span>
-            </Link>
+            {tracks[0].artists.map((artist, index) => {
+              const isLast = index === tracks[0].artists.length - 1;
+              return (
+                <span key={artist.id}>
+                  <Link to={`/artist/${artist.id}`}>
+                    <span className="hover:underline">{artist.name}</span>
+                  </Link>
+                  {!isLast && <span>, </span>}
+                </span>
+              );
+            })}
             <span className="mx-3">·</span>
             <span>{tracks[0].release_date}</span>
           </div>

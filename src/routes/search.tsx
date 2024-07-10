@@ -4,7 +4,11 @@ import { getSpotifyTrackInfo, searchTracks } from "../api/spotify";
 import Loading from "../components/loading";
 import TruncatedText from "../components/truncated-text";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useTrackInfoStore, useVideoIdStore } from "../stores/video";
+import {
+  usePlaylistStore,
+  useTrackInfoStore,
+  useVideoIdStore,
+} from "../stores/video";
 import { searchYouTubeVideo } from "../api/youtube";
 import { faEllipsis, faPlay, faPlus } from "@fortawesome/free-solid-svg-icons";
 
@@ -19,6 +23,7 @@ export default function Search() {
   const { videoId, setVideoId } = useVideoIdStore();
   const { setTrackInfo, togglePlay } = useTrackInfoStore();
   const [selectedId, setSelectedId] = useState();
+  const { playlist, setPlaylist } = usePlaylistStore();
   useEffect(() => {
     const fetchSearchedData = async () => {
       try {
@@ -28,7 +33,6 @@ export default function Search() {
         setArtists(searchedData.artists.items);
         setPlaylists(searchedData.playlists.items);
         setAlbums(searchedData.albums.items);
-        console.log(searchedData);
       } catch (error) {
         console.error("Error: ", error);
       } finally {
@@ -77,9 +81,7 @@ export default function Search() {
       imgUrl,
       videoId: fetchedVideoId,
     };
-    const nowPlaylist = JSON.parse(localStorage.getItem("playlist"));
-    const updatedPlaylist = [...nowPlaylist, trackInfoOne];
-    localStorage.setItem("playlist", JSON.stringify(updatedPlaylist));
+    setPlaylist(trackInfoOne);
   };
   if (isLoading) return <Loading />;
   return (
@@ -93,7 +95,10 @@ export default function Search() {
         );
         duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
         return (
-          <div className="grid grid-cols-[1fr_10fr_10fr_2fr] py-1  hover:rounded-md hover:bg-orange-200  group mr-5 relative">
+          <div
+            key={index}
+            className="grid grid-cols-[1fr_10fr_10fr_2fr] py-1  hover:rounded-md hover:bg-orange-200  group mr-5 relative"
+          >
             <div className="group-hover:hidden flex justify-center items-center">
               {index + 1}
             </div>
@@ -121,12 +126,12 @@ export default function Search() {
                   {item.artists.map((artist, index) => {
                     const isLast = index === item.artists.length - 1;
                     return (
-                      <>
+                      <div className="inline-block" key={index}>
                         <Link to={`/artist/${artist.id}`}>
                           <span className="hover:underline">{artist.name}</span>
                         </Link>
-                        {!isLast && <span>, </span>}
-                      </>
+                        {!isLast && <span>,&nbsp;</span>}
+                      </div>
                     );
                   })}
                 </div>
@@ -200,12 +205,12 @@ export default function Search() {
                   {item.artists.map((artist, index) => {
                     const isLast = index === item.artists.length - 1;
                     return (
-                      <>
+                      <div className="inline-block" key={index}>
                         <Link to={`artist/${artist.id}`}>
                           <span className="hover:underline">{artist.name}</span>
                         </Link>
-                        {!isLast && <span>, </span>}
-                      </>
+                        {!isLast && <span>,&nbsp;</span>}
+                      </div>
                     );
                   })}
                 </div>

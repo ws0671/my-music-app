@@ -16,12 +16,14 @@ import {
   faSquareMinus,
 } from "@fortawesome/free-solid-svg-icons";
 
-export default function Playlist({ tracks, setPlaylist }) {
+export default function Playlist() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { videoId, setVideoId } = useVideoIdStore();
   const { setTrackInfo, togglePlay } = useTrackInfoStore();
   const [ellipsis, setEllipsis] = useState(false);
   const [selectedId, setSelectedId] = useState();
+  const { playlist, setPlaylist, removePlaylist, resetPlaylist } =
+    usePlaylistStore();
   const dropdownRef = useRef([]);
 
   const handleClickOutside = (e) => {
@@ -71,16 +73,12 @@ export default function Playlist({ tracks, setPlaylist }) {
   };
   const removeSong = (e, index) => {
     e.stopPropagation();
-    const newPlaylist = tracks.filter((_, i) => i !== index);
-    localStorage.setItem("playlist", JSON.stringify(newPlaylist));
-    setPlaylist(newPlaylist);
+    removePlaylist(index);
     setEllipsis(false);
   };
   const removeAll = () => {
     if (confirm("플레이리스트 전체 삭제하시겠습니까?")) {
-      const newPlaylist = [];
-      localStorage.setItem("playlist", JSON.stringify(newPlaylist));
-      setPlaylist(newPlaylist);
+      resetPlaylist();
     }
   };
 
@@ -97,9 +95,9 @@ export default function Playlist({ tracks, setPlaylist }) {
         </div>
       </div>
       <div className="scrollbar-hide  mt-3 overflow-y-scroll h-[350px]">
-        {tracks.map((trackInfo, index) => {
+        {playlist.map((trackInfo, index) => {
           return (
-            <div className="">
+            <div key={index} className="">
               <div
                 id={trackInfo?.id}
                 name={trackInfo?.name}
@@ -123,7 +121,7 @@ export default function Playlist({ tracks, setPlaylist }) {
                   <div className={`group-hover:hidden text-xs`}>
                     {trackInfo?.name}
                   </div>
-                  {trackInfo?.name.length > 25 ? (
+                  {/* {trackInfo?.name.length > 25 ? (
                     <div className={"group-hover:block  text-xs hidden"}>
                       <div className="animate-marquee  inline-block pr-10">
                         {trackInfo?.name}
@@ -136,7 +134,7 @@ export default function Playlist({ tracks, setPlaylist }) {
                     <div className={`hidden group-hover:block text-xs`}>
                       {trackInfo?.name}
                     </div>
-                  )}
+                  )} */}
 
                   <div className="text-[11px] text-gray-300">
                     {trackInfo?.artists}
