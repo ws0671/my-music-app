@@ -12,7 +12,7 @@ export default function Nav() {
       <Link className="block rounded-full" to={"/"}>
         <img
           className="w-full h-full rounded-full"
-          src="/images/Honey-removebg-preview.png"
+          src="/images/Honey.png"
           alt="logo"
         />
       </Link>
