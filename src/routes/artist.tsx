@@ -17,6 +17,7 @@ import {
   useVideoIdStore,
 } from "../stores/video";
 import { searchYouTubeVideo } from "../api/youtube";
+import useSessionStore from "../stores/session";
 
 export default function Artist() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -26,6 +27,7 @@ export default function Artist() {
   const { id } = useParams();
   const { videoId, setVideoId } = useVideoIdStore();
   const { setTrackInfo, togglePlay } = useTrackInfoStore();
+  const { session } = useSessionStore();
   useEffect(() => {
     const fetchArtist = async () => {
       setIsLoading(true);
@@ -54,6 +56,7 @@ export default function Artist() {
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
     const fetchedVideoId = await searchYouTubeVideo(searchQuery);
     const trackInfoOne = {
+      userId: session?.user.id,
       id,
       name,
       artists,

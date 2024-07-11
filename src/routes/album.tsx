@@ -16,14 +16,14 @@ import {
   useTrackInfoStore,
   useVideoIdStore,
 } from "../stores/video";
+import useSessionStore from "../stores/session";
 export default function Album() {
   const [tracks, setTracks] = useState<ITrack[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { id } = useParams();
   const { videoId, setVideoId } = useVideoIdStore();
   const { setTrackInfo, togglePlay } = useTrackInfoStore();
-  console.log(tracks);
-
+  const { session } = useSessionStore();
   useEffect(() => {
     const fetchAlbumTracks = async () => {
       setIsLoading(true);
@@ -49,6 +49,7 @@ export default function Album() {
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
     const fetchedVideoId = await searchYouTubeVideo(searchQuery);
     const trackInfoOne = {
+      userId: session?.user.id,
       id,
       name,
       artists,

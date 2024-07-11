@@ -11,6 +11,7 @@ import {
   useTrackInfoStore,
   useVideoIdStore,
 } from "../stores/video";
+import useSessionStore from "../stores/session";
 
 export default function FeaturedPlayListsDetail() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -19,10 +20,9 @@ export default function FeaturedPlayListsDetail() {
   const location = useLocation();
   const { videoId, setVideoId } = useVideoIdStore();
   const { setTrackInfo, togglePlay } = useTrackInfoStore();
+  const { session } = useSessionStore();
 
   const { imageUrl, name, description } = location.state || {};
-  console.log(imageUrl);
-  console.log(playlist);
 
   useEffect(() => {
     const fetchFeaturedPlaylists = async () => {
@@ -48,6 +48,7 @@ export default function FeaturedPlayListsDetail() {
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
     const fetchedVideoId = await searchYouTubeVideo(searchQuery);
     const trackInfoOne = {
+      userId: session?.user.id,
       id,
       name,
       artists,

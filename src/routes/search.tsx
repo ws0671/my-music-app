@@ -7,10 +7,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   usePlaylistStore,
   useTrackInfoStore,
+  useUserPlaylistStore,
   useVideoIdStore,
 } from "../stores/video";
 import { searchYouTubeVideo } from "../api/youtube";
 import { faEllipsis, faPlay, faPlus } from "@fortawesome/free-solid-svg-icons";
+import useSessionStore from "../stores/session";
+import { addToPlaylist } from "../utils/playlist";
 
 export default function Search() {
   const { id } = useParams();
@@ -24,6 +27,8 @@ export default function Search() {
   const { setTrackInfo, togglePlay } = useTrackInfoStore();
   const [selectedId, setSelectedId] = useState();
   const { playlist, setPlaylist } = usePlaylistStore();
+  const { session } = useSessionStore();
+  const { userPlaylist, setUserPlaylist } = useUserPlaylistStore();
   useEffect(() => {
     const fetchSearchedData = async () => {
       try {
@@ -51,6 +56,7 @@ export default function Search() {
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
     const fetchedVideoId = await searchYouTubeVideo(searchQuery);
     const trackInfoOne = {
+      userId: session?.user.id,
       id,
       name,
       artists,
@@ -75,13 +81,19 @@ export default function Search() {
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
     const fetchedVideoId = await searchYouTubeVideo(searchQuery);
     const trackInfoOne = {
+      userId: session?.user.id,
       id,
       name,
       artists,
       imgUrl,
       videoId: fetchedVideoId,
     };
-    setPlaylist(trackInfoOne);
+    if (session) {
+      addToPlaylist(trackInfoOne);
+      setUserPlaylist(trackInfoOne);
+    } else {
+      setPlaylist(trackInfoOne);
+    }
   };
   if (isLoading) return <Loading />;
   return (

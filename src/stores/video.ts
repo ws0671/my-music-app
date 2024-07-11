@@ -54,3 +54,17 @@ export const usePlaylistStore = create(
     }
   )
 );
+
+export const useUserPlaylistStore = create((set, get) => ({
+  userPlaylist: [],
+  replaceUserPlaylist: (newPlaylist) => set({ userPlaylist: [...newPlaylist] }),
+  setUserPlaylist: (newPlaylist) =>
+    set((prev) => ({
+      userPlaylist: [...prev.userPlaylist, newPlaylist],
+    })),
+  removeUserPlaylist: (index) => {
+    const updatedPlaylist = get().userPlaylist.filter((_, i) => i !== index);
+    set({ userPlaylist: updatedPlaylist });
+  },
+  resetUserPlaylist: () => set({ userPlaylist: [] }),
+}));

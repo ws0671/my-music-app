@@ -11,12 +11,14 @@ import {
   useCurrentTrackIndexStore,
   usePlaylistStore,
   useTrackInfoStore,
+  useUserPlaylistStore,
 } from "../stores/video";
 import { useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
 import { useVideoIdStore } from "../stores/video";
 import Playlist from "./playlist";
 import useSessionStore from "../stores/session";
+import { addToPlaylist, fetchPlaylist } from "../utils/playlist";
 
 export default function Player() {
   const { videoId, setVideoId } = useVideoIdStore();
@@ -33,7 +35,9 @@ export default function Player() {
   const { currentTrackIndex, setCurrentTrackIndex } =
     useCurrentTrackIndexStore();
   const { session } = useSessionStore();
-  console.log(playlist);
+  const { userPlaylist, setUserPlaylist, replaceUserPlaylist } =
+    useUserPlaylistStore();
+  const ignoreTrackInfoEffect = useRef(false);
 
   const onReady = (e) => {
     setPlayer(e.target);
@@ -57,16 +61,32 @@ export default function Player() {
   };
 
   useEffect(() => {
-    const handleUpdatedPlaylist = () => {
-      if (
-        trackInfo &&
-        !playlist.some((track) => track.videoId === trackInfo.videoId)
-      ) {
-        if (trackInfo.state === "playlist") return;
-        setPlaylist(trackInfo);
+    const handleUserPlaylist = async () => {
+      if (session) {
+        const data = await fetchPlaylist(session);
+        replaceUserPlaylist(data);
       }
     };
-    handleUpdatedPlaylist();
+    handleUserPlaylist();
+  }, [session]);
+  useEffect(() => {
+    const handleUpdatedPlaylist = () => {
+      if (trackInfo) {
+        if (trackInfo?.state === "playlist") return;
+
+        if (session) {
+          addToPlaylist(trackInfo);
+          setUserPlaylist(trackInfo);
+        } else {
+          setPlaylist(trackInfo);
+        }
+      }
+    };
+    if (!ignoreTrackInfoEffect.current) {
+      handleUpdatedPlaylist();
+    } else {
+      ignoreTrackInfoEffect.current = false;
+    }
   }, [trackInfo]);
 
   useEffect(() => {
@@ -108,17 +128,32 @@ export default function Player() {
   }, [isPlaying, player]);
 
   useEffect(() => {
-    if (player && currentTrackIndex < playlist.length) {
-      setVideoId(playlist[currentTrackIndex].videoId);
-      setTrackInfo(playlist[currentTrackIndex]);
+    if (session) {
+      if (player && currentTrackIndex < userPlaylist.length) {
+        setVideoId(userPlaylist[currentTrackIndex].videoId);
+        setTrackInfo(userPlaylist[currentTrackIndex]);
+      }
+    } else {
+      if (player && currentTrackIndex < playlist.length) {
+        setVideoId(playlist[currentTrackIndex].videoId);
+        setTrackInfo(playlist[currentTrackIndex]);
+      }
     }
   }, [currentTrackIndex]);
 
   const onEnd = () => {
-    if (currentTrackIndex < playlist.length - 1) {
-      setCurrentTrackIndex(currentTrackIndex + 1);
+    if (session) {
+      if (currentTrackIndex < userPlaylist.length - 1) {
+        setCurrentTrackIndex(currentTrackIndex + 1);
+      } else {
+        setCurrentTrackIndex(0);
+      }
     } else {
-      setCurrentTrackIndex(0);
+      if (currentTrackIndex < playlist.length - 1) {
+        setCurrentTrackIndex(currentTrackIndex + 1);
+      } else {
+        setCurrentTrackIndex(0);
+      }
     }
   };
   const opts = {
@@ -156,18 +191,38 @@ export default function Player() {
   };
 
   const handlePreviousTrack = () => {
-    if (currentTrackIndex > 0) {
-      setCurrentTrackIndex(currentTrackIndex - 1);
+    ignoreTrackInfoEffect.current = true;
+
+    if (session) {
+      if (currentTrackIndex > 0) {
+        setCurrentTrackIndex(currentTrackIndex - 1);
+      } else {
+        setCurrentTrackIndex(userPlaylist.length - 1);
+      }
     } else {
-      setCurrentTrackIndex(playlist.length - 1);
+      if (currentTrackIndex > 0) {
+        setCurrentTrackIndex(currentTrackIndex - 1);
+      } else {
+        setCurrentTrackIndex(playlist.length - 1);
+      }
     }
   };
 
   const handleNextTrack = () => {
-    if (currentTrackIndex < playlist.length - 1) {
-      setCurrentTrackIndex(currentTrackIndex + 1);
+    ignoreTrackInfoEffect.current = true;
+
+    if (session) {
+      if (currentTrackIndex < userPlaylist.length - 1) {
+        setCurrentTrackIndex(currentTrackIndex + 1);
+      } else {
+        setCurrentTrackIndex(0);
+      }
     } else {
-      setCurrentTrackIndex(0);
+      if (currentTrackIndex < playlist.length - 1) {
+        setCurrentTrackIndex(currentTrackIndex + 1);
+      } else {
+        setCurrentTrackIndex(0);
+      }
     }
   };
   return (
