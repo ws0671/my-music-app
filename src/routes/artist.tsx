@@ -48,17 +48,17 @@ export default function Artist() {
     fetchArtist();
   }, [id]);
   const onPlayClick = async (e: MouseEvent<SVGSVGElement>) => {
-    const id = e.currentTarget.getAttribute("id");
+    const trackId = e.currentTarget.getAttribute("trackId");
     const name = e.currentTarget.getAttribute("name");
     const artists = e.currentTarget.getAttribute("artists");
     const imgUrl = e.currentTarget.getAttribute("imgUrl");
 
-    const trackInfo = await getSpotifyTrackInfo(id);
+    const trackInfo = await getSpotifyTrackInfo(trackId);
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
     const fetchedVideoId = await searchYouTubeVideo(searchQuery);
     const trackInfoOne = {
       userId: session?.user.id,
-      id,
+      trackId,
       name,
       artists,
       imgUrl,
@@ -114,7 +114,7 @@ export default function Artist() {
             <div className="hidden justify-center items-center group-hover:flex">
               <FontAwesomeIcon
                 className="hover:cursor-pointer"
-                id={item.id}
+                trackId={item.id}
                 name={item.name}
                 artists={artists}
                 imgUrl={item.album.images[0].url}
@@ -139,7 +139,7 @@ export default function Artist() {
               </div>
             </div>
             <EllipsisMenu
-              id={item.id}
+              trackId={item.id}
               name={item.name}
               artists={artists}
               imgUrl={item.album.images[0].url}

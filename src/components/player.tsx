@@ -2,6 +2,8 @@ import {
   faList,
   faPause,
   faPlay,
+  faRepeat,
+  faShuffle,
   faStepBackward,
   faStepForward,
 } from "@fortawesome/free-solid-svg-icons";
@@ -38,6 +40,8 @@ export default function Player() {
   const { userPlaylist, setUserPlaylist, replaceUserPlaylist } =
     useUserPlaylistStore();
   const ignoreTrackInfoEffect = useRef(false);
+  const [shuffle, setShuffle] = useState(false);
+  const [repeat, setRepeat] = useState(false);
 
   const onReady = (e) => {
     setPlayer(e.target);
@@ -142,17 +146,35 @@ export default function Player() {
   }, [currentTrackIndex]);
 
   const onEnd = () => {
+    ignoreTrackInfoEffect.current = true;
+
     if (session) {
+      if (shuffle) {
+        const randomIndex = Math.floor(
+          Math.random() * (userPlaylist.length - 1)
+        );
+
+        setCurrentTrackIndex(randomIndex);
+        return;
+      }
       if (currentTrackIndex < userPlaylist.length - 1) {
         setCurrentTrackIndex(currentTrackIndex + 1);
       } else {
-        setCurrentTrackIndex(0);
+        if (repeat) setCurrentTrackIndex(0);
+        else player.pauseVideo();
       }
     } else {
+      if (shuffle) {
+        const randomIndex = Math.floor(Math.random() * (playlist.length - 1));
+
+        setCurrentTrackIndex(randomIndex);
+        return;
+      }
       if (currentTrackIndex < playlist.length - 1) {
         setCurrentTrackIndex(currentTrackIndex + 1);
       } else {
-        setCurrentTrackIndex(0);
+        if (repeat) setCurrentTrackIndex(0);
+        else player.pauseVideo();
       }
     }
   };
@@ -225,6 +247,12 @@ export default function Player() {
       }
     }
   };
+  const handleShuffle = () => {
+    setShuffle((prev) => !prev);
+  };
+  const handleRepeat = () => {
+    setRepeat((prev) => !prev);
+  };
   return (
     <>
       <div className="flex bg-white sticky bottom-0 border border-t">
@@ -292,28 +320,43 @@ export default function Player() {
               onEnd={onEnd}
             />
             <FontAwesomeIcon
+              icon={faShuffle}
+              onClick={handleShuffle}
+              className={
+                shuffle ? "cursor-pointer text-orange-400" : "cursor-pointer"
+              }
+            />
+            <FontAwesomeIcon
               icon={faStepBackward}
               onClick={handlePreviousTrack}
               className="cursor-pointer"
             />
-
-            {isPlaying ? (
-              <FontAwesomeIcon
-                icon={faPause}
-                className="cursor-pointer text-lg"
-                onClick={pauseVideo}
-              />
-            ) : (
-              <FontAwesomeIcon
-                icon={faPlay}
-                className="cursor-pointer text-lg"
-                onClick={playVideo}
-              />
-            )}
+            <div className="bg-orange-400 w-10 h-10 rounded-full flex justify-center items-center">
+              {isPlaying ? (
+                <FontAwesomeIcon
+                  icon={faPause}
+                  className="cursor-pointer text-white text-lg"
+                  onClick={pauseVideo}
+                />
+              ) : (
+                <FontAwesomeIcon
+                  icon={faPlay}
+                  className="cursor-pointer text-white text-lg "
+                  onClick={playVideo}
+                />
+              )}
+            </div>
             <FontAwesomeIcon
               icon={faStepForward}
               onClick={handleNextTrack}
               className="cursor-pointer"
+            />
+            <FontAwesomeIcon
+              onClick={handleRepeat}
+              icon={faRepeat}
+              className={
+                repeat ? "cursor-pointer text-orange-400" : "cursor-pointer"
+              }
             />
           </div>
           <div></div>

@@ -6,7 +6,7 @@ export async function addToPlaylist(track: ITrackInfo) {
     const { data, error } = await supabase.from("playlist").insert([
       {
         userId: track.userId,
-        trackId: track.id,
+        trackId: track.trackId,
         name: track.name,
         artists: track.artists,
         imgUrl: track.imgUrl,

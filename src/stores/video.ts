@@ -6,7 +6,7 @@ export const useVideoIdStore = create((set) => ({
   setVideoId: (id: string) => set({ videoId: id }),
 }));
 export interface ITrackInfo {
-  id: string;
+  trackId: string;
   name: string;
   artists: string;
   imgUrl: string;
