@@ -53,18 +53,18 @@ export default function Playlist() {
   }, []);
 
   const onPlayClick = async (e: MouseEvent<SVGSVGElement>) => {
-    const id = e.currentTarget.getAttribute("id");
+    const trackId = e.currentTarget.getAttribute("trackId");
     const name = e.currentTarget.getAttribute("name");
     const artists = e.currentTarget.getAttribute("artists");
     const imgUrl = e.currentTarget.getAttribute("imgUrl");
 
-    console.log(id, name, artists, imgUrl);
-    const trackInfo = await getSpotifyTrackInfo(id);
+    console.log(trackId, name, artists, imgUrl);
+    const trackInfo = await getSpotifyTrackInfo(trackId);
 
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
     const fetchedVideoId = await searchYouTubeVideo(searchQuery);
     const trackInfoOne = {
-      id,
+      trackId,
       name,
       artists,
       imgUrl,
@@ -125,7 +125,7 @@ export default function Playlist() {
               return (
                 <div key={index} className="">
                   <div
-                    id={trackInfo?.trackId}
+                    trackId={trackInfo?.trackId}
                     name={trackInfo?.name}
                     artists={trackInfo?.artists}
                     imgUrl={trackInfo?.imgUrl}
@@ -196,7 +196,7 @@ export default function Playlist() {
               return (
                 <div key={index} className="">
                   <div
-                    id={trackInfo?.id}
+                    trackId={trackInfo?.trackId}
                     name={trackInfo?.name}
                     artists={trackInfo?.artists}
                     imgUrl={trackInfo?.imgUrl}

@@ -7,7 +7,7 @@ import { searchYouTubeVideo } from "../api/youtube";
 import { addToPlaylist } from "../utils/playlist";
 import { usePlaylistStore, useUserPlaylistStore } from "../stores/video";
 
-export default function EllipsisMenu({ id, name, artists, imgUrl }) {
+export default function EllipsisMenu({ trackId, name, artists, imgUrl }) {
   const [selectedId, setSelectedId] = useState();
   const [ellipsis, setEllipsis] = useState(false);
   const { playlist, setPlaylist } = usePlaylistStore();
@@ -22,16 +22,16 @@ export default function EllipsisMenu({ id, name, artists, imgUrl }) {
   };
   const addTrack = async (e) => {
     setEllipsis(false);
-    const id = e.currentTarget.getAttribute("id");
+    const trackId = e.currentTarget.getAttribute("trackId");
     const name = e.currentTarget.getAttribute("name");
     const artists = e.currentTarget.getAttribute("artists");
     const imgUrl = e.currentTarget.getAttribute("imgUrl");
-    const trackInfo = await getSpotifyTrackInfo(id);
+    const trackInfo = await getSpotifyTrackInfo(trackId);
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
     const fetchedVideoId = await searchYouTubeVideo(searchQuery);
     const trackInfoOne = {
       userId: session?.user.id,
-      id,
+      trackId,
       name,
       artists,
       imgUrl,
@@ -48,20 +48,20 @@ export default function EllipsisMenu({ id, name, artists, imgUrl }) {
     <>
       <div className="flex justify-center items-center ">
         <FontAwesomeIcon
-          onClick={(e) => onEllipsis(e, id)}
+          onClick={(e) => onEllipsis(e, trackId)}
           className="cursor-pointer"
-          id={id}
+          id={trackId}
           icon={faEllipsis}
         />
       </div>
       <div
         onClick={addTrack}
-        id={id}
+        trackId={trackId}
         name={name}
         artists={artists}
         imgUrl={imgUrl}
         className={
-          ellipsis && selectedId === id
+          ellipsis && selectedId === trackId
             ? " absolute top-10 cursor-pointer  hover:bg-orange-100 bg-white border shadow-md px-3 py-2 rounded-md z-[1000] right-0"
             : "hidden"
         }
