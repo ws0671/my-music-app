@@ -14,6 +14,7 @@ import { searchYouTubeVideo } from "../api/youtube";
 import { faEllipsis, faPlay, faPlus } from "@fortawesome/free-solid-svg-icons";
 import useSessionStore from "../stores/session";
 import { addToPlaylist } from "../utils/playlist";
+import EllipsisMenu from "../components/ellipsisMenu";
 
 export default function Search() {
   const { id } = useParams();
@@ -71,30 +72,7 @@ export default function Search() {
     setSelectedId(id);
     setEllipsis((prev) => !prev);
   };
-  const addTrack = async (e) => {
-    setEllipsis(false);
-    const id = e.currentTarget.getAttribute("id");
-    const name = e.currentTarget.getAttribute("name");
-    const artists = e.currentTarget.getAttribute("artists");
-    const imgUrl = e.currentTarget.getAttribute("imgUrl");
-    const trackInfo = await getSpotifyTrackInfo(id);
-    const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
-    const fetchedVideoId = await searchYouTubeVideo(searchQuery);
-    const trackInfoOne = {
-      userId: session?.user.id,
-      id,
-      name,
-      artists,
-      imgUrl,
-      videoId: fetchedVideoId,
-    };
-    if (session) {
-      addToPlaylist(trackInfoOne);
-      setUserPlaylist(trackInfoOne);
-    } else {
-      setPlaylist(trackInfoOne);
-    }
-  };
+
   if (isLoading) return <Loading />;
   return (
     <div>
@@ -154,31 +132,12 @@ export default function Search() {
                 <span className="hover:underline">{item.album.name}</span>
               </Link>
             </div>
-            <div className="flex justify-center items-center ">
-              <FontAwesomeIcon
-                onClick={(e) => onEllipsis(e, item.id)}
-                className="cursor-pointer"
-                id={item.id}
-                icon={faEllipsis}
-              />
-            </div>
-            <div
-              onClick={addTrack}
+            <EllipsisMenu
               id={item.id}
               name={item.name}
               artists={artists}
               imgUrl={item.album.images[0].url}
-              className={
-                ellipsis && selectedId === item.id
-                  ? " absolute top-10 cursor-pointer  hover:bg-orange-100 bg-white border shadow-md px-3 py-2 rounded-md z-[1000] right-0"
-                  : "hidden"
-              }
-            >
-              <span className="text-sm">
-                <FontAwesomeIcon className="mr-2" icon={faPlus} />
-                플레이리스트에 추가하기
-              </span>
-            </div>
+            />
           </div>
         );
       })}

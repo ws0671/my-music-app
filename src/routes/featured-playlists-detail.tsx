@@ -12,6 +12,7 @@ import {
   useVideoIdStore,
 } from "../stores/video";
 import useSessionStore from "../stores/session";
+import EllipsisMenu from "../components/ellipsisMenu";
 
 export default function FeaturedPlayListsDetail() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -77,9 +78,7 @@ export default function FeaturedPlayListsDetail() {
         <div className="flex justify-center items-center">#</div>
         <div>제목</div>
         <div>앨범</div>
-        <div className="flex justify-center items-center">
-          <FontAwesomeIcon icon={faClock} />
-        </div>
+        <div className="flex justify-center items-center"></div>
       </div>
       <div className="border border-gray-200 my-3"></div>
       {playlist.map((item, index) => {
@@ -90,7 +89,7 @@ export default function FeaturedPlayListsDetail() {
         );
         duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
         return (
-          <div className="grid grid-cols-[1fr_10fr_10fr_2fr] py-1  hover:rounded-md hover:bg-orange-200  group mr-5">
+          <div className="grid grid-cols-[1fr_10fr_10fr_2fr] py-1  hover:rounded-md hover:bg-orange-200  group mr-5  relative">
             <div className="group-hover:hidden flex justify-center items-center">
               {index + 1}
             </div>
@@ -134,9 +133,12 @@ export default function FeaturedPlayListsDetail() {
                 <span className="hover:underline">{item.track.album.name}</span>
               </Link>
             </div>
-            <div className="flex justify-center items-center">
-              {duration_min}:{duration_sec}
-            </div>
+            <EllipsisMenu
+              id={item.track.id}
+              name={item.track.name}
+              artists={artists}
+              imgUrl={item.track.album.images[0].url}
+            />
           </div>
         );
       })}

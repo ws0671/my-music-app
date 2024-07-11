@@ -17,6 +17,7 @@ import {
   useVideoIdStore,
 } from "../stores/video";
 import useSessionStore from "../stores/session";
+import EllipsisMenu from "../components/ellipsisMenu";
 export default function Album() {
   const [tracks, setTracks] = useState<ITrack[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -97,9 +98,7 @@ export default function Album() {
       <div className="mt-10 grid grid-cols-[1fr_20fr_1fr] mr-5 text-sm text-gray-400">
         <div className="flex justify-center items-center">#</div>
         <div>제목</div>
-        <div className="flex justify-center items-center">
-          <FontAwesomeIcon icon={faClock} />
-        </div>
+        <div className="flex justify-center items-center"></div>
       </div>
       <div className="border border-gray-200 my-3"></div>
       {tracks.map((item) => {
@@ -112,7 +111,7 @@ export default function Album() {
         return (
           <div
             key={item.id}
-            className="py-1 hover:bg-orange-200 hover:rounded-md grid grid-cols-[1fr_20fr_1fr] group mr-5"
+            className="relative py-1 hover:bg-orange-200 hover:rounded-md grid grid-cols-[1fr_20fr_1fr] group mr-5"
           >
             <div className="group-hover:hidden flex justify-center items-center">
               {item.track_number}
@@ -144,9 +143,12 @@ export default function Album() {
                 })}
               </div>
             </div>
-            <div className="flex justify-center items-center">
-              {duration_min}:{duration_sec}
-            </div>
+            <EllipsisMenu
+              id={item.id}
+              name={item.name}
+              artists={artists}
+              imgUrl={item.images}
+            />
           </div>
         );
       })}
