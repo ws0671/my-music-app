@@ -17,6 +17,8 @@ import {
   useVideoIdStore,
 } from "../stores/video";
 import { searchYouTubeVideo } from "../api/youtube";
+import useSessionStore from "../stores/session";
+import EllipsisMenu from "../components/ellipsisMenu";
 
 export default function Artist() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -26,6 +28,7 @@ export default function Artist() {
   const { id } = useParams();
   const { videoId, setVideoId } = useVideoIdStore();
   const { setTrackInfo, togglePlay } = useTrackInfoStore();
+  const { session } = useSessionStore();
   useEffect(() => {
     const fetchArtist = async () => {
       setIsLoading(true);
@@ -49,17 +52,18 @@ export default function Artist() {
     const name = e.currentTarget.getAttribute("name");
     const artists = e.currentTarget.getAttribute("artists");
     const imgUrl = e.currentTarget.getAttribute("imgUrl");
-    const trackInfoOne = {
-      id,
-      name,
-      artists,
-      imgUrl,
-    };
-    console.log(trackInfoOne);
 
     const trackInfo = await getSpotifyTrackInfo(id);
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
     const fetchedVideoId = await searchYouTubeVideo(searchQuery);
+    const trackInfoOne = {
+      userId: session?.user.id,
+      id,
+      name,
+      artists,
+      imgUrl,
+      videoId: fetchedVideoId,
+    };
     setVideoId(fetchedVideoId);
     setTrackInfo(trackInfoOne);
     togglePlay();
@@ -102,7 +106,7 @@ export default function Artist() {
         return (
           <div
             key={item.id}
-            className="py-1 hover:bg-orange-200 hover:rounded-md grid grid-cols-[1fr_20fr_1fr] group mr-5"
+            className="py-1 hover:bg-orange-200 hover:rounded-md grid grid-cols-[1fr_20fr_1fr] group mr-5 relative"
           >
             <div className="group-hover:hidden flex justify-center items-center">
               {index + 1}
@@ -134,9 +138,12 @@ export default function Artist() {
                 })}
               </div>
             </div>
-            <div className="flex justify-center items-center">
-              {duration_min}:{duration_sec}
-            </div>
+            <EllipsisMenu
+              id={item.id}
+              name={item.name}
+              artists={artists}
+              imgUrl={item.album.images[0].url}
+            />
           </div>
         );
       })}

@@ -1,20 +1,43 @@
-import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
+import {
+  faList,
+  faPause,
+  faPlay,
+  faStepBackward,
+  faStepForward,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useTrackInfoStore } from "../stores/video";
+import {
+  ITrackInfo,
+  useCurrentTrackIndexStore,
+  usePlaylistStore,
+  useTrackInfoStore,
+  useUserPlaylistStore,
+} from "../stores/video";
 import { useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
 import { useVideoIdStore } from "../stores/video";
+import Playlist from "./playlist";
+import useSessionStore from "../stores/session";
+import { addToPlaylist, fetchPlaylist } from "../utils/playlist";
 
 export default function Player() {
-  const { videoId } = useVideoIdStore();
+  const { videoId, setVideoId } = useVideoIdStore();
+  const { playlist, setPlaylist } = usePlaylistStore();
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const [onPlaylist, setOnPlaylist] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
   const { trackInfo, isPlaying, togglePlay, setTrackInfo } =
     useTrackInfoStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isShort, setIsShort] = useState(false);
+  const { currentTrackIndex, setCurrentTrackIndex } =
+    useCurrentTrackIndexStore();
+  const { session } = useSessionStore();
+  const { userPlaylist, setUserPlaylist, replaceUserPlaylist } =
+    useUserPlaylistStore();
+  const ignoreTrackInfoEffect = useRef(false);
 
   const onReady = (e) => {
     setPlayer(e.target);
@@ -36,6 +59,36 @@ export default function Player() {
       togglePlay();
     }
   };
+
+  useEffect(() => {
+    const handleUserPlaylist = async () => {
+      if (session) {
+        const data = await fetchPlaylist(session);
+        replaceUserPlaylist(data);
+      }
+    };
+    handleUserPlaylist();
+  }, [session]);
+  useEffect(() => {
+    const handleUpdatedPlaylist = () => {
+      if (trackInfo) {
+        if (trackInfo?.state === "playlist") return;
+
+        if (session) {
+          addToPlaylist(trackInfo);
+          setUserPlaylist(trackInfo);
+        } else {
+          setPlaylist(trackInfo);
+        }
+      }
+    };
+    if (!ignoreTrackInfoEffect.current) {
+      handleUpdatedPlaylist();
+    } else {
+      ignoreTrackInfoEffect.current = false;
+    }
+  }, [trackInfo]);
+
   useEffect(() => {
     if (containerRef.current) {
       const containerWidth = containerRef.current.offsetWidth;
@@ -53,7 +106,7 @@ export default function Player() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  });
+  }, []);
   useEffect(() => {
     if (player) {
       if (isPlaying) {
@@ -73,6 +126,36 @@ export default function Player() {
 
     return () => clearInterval(interval);
   }, [isPlaying, player]);
+
+  useEffect(() => {
+    if (session) {
+      if (player && currentTrackIndex < userPlaylist.length) {
+        setVideoId(userPlaylist[currentTrackIndex].videoId);
+        setTrackInfo(userPlaylist[currentTrackIndex]);
+      }
+    } else {
+      if (player && currentTrackIndex < playlist.length) {
+        setVideoId(playlist[currentTrackIndex].videoId);
+        setTrackInfo(playlist[currentTrackIndex]);
+      }
+    }
+  }, [currentTrackIndex]);
+
+  const onEnd = () => {
+    if (session) {
+      if (currentTrackIndex < userPlaylist.length - 1) {
+        setCurrentTrackIndex(currentTrackIndex + 1);
+      } else {
+        setCurrentTrackIndex(0);
+      }
+    } else {
+      if (currentTrackIndex < playlist.length - 1) {
+        setCurrentTrackIndex(currentTrackIndex + 1);
+      } else {
+        setCurrentTrackIndex(0);
+      }
+    }
+  };
   const opts = {
     height: "0",
     width: "0",
@@ -106,69 +189,136 @@ export default function Player() {
       setCurrentTime(clickTime);
     }
   };
+
+  const handlePreviousTrack = () => {
+    ignoreTrackInfoEffect.current = true;
+
+    if (session) {
+      if (currentTrackIndex > 0) {
+        setCurrentTrackIndex(currentTrackIndex - 1);
+      } else {
+        setCurrentTrackIndex(userPlaylist.length - 1);
+      }
+    } else {
+      if (currentTrackIndex > 0) {
+        setCurrentTrackIndex(currentTrackIndex - 1);
+      } else {
+        setCurrentTrackIndex(playlist.length - 1);
+      }
+    }
+  };
+
+  const handleNextTrack = () => {
+    ignoreTrackInfoEffect.current = true;
+
+    if (session) {
+      if (currentTrackIndex < userPlaylist.length - 1) {
+        setCurrentTrackIndex(currentTrackIndex + 1);
+      } else {
+        setCurrentTrackIndex(0);
+      }
+    } else {
+      if (currentTrackIndex < playlist.length - 1) {
+        setCurrentTrackIndex(currentTrackIndex + 1);
+      } else {
+        setCurrentTrackIndex(0);
+      }
+    }
+  };
   return (
     <>
-      {videoId && (
-        <div className="flex bg-white sticky bottom-0 border border-t">
-          <div className="basis-1/3 flex text-sm items-center justify-center py-5">
-            <div className="flex justify-center w-[300px]">
-              <img
-                className="w-10"
-                src={trackInfo.imgUrl}
-                alt={trackInfo.name}
-              />
-              <div
-                ref={containerRef}
-                className="ml-3 relative overflow-hidden whitespace-nowrap "
-              >
-                <div
-                  className={`${
-                    isShort ? "" : "animate-marquee"
-                  } inline-block pr-10`}
-                >
-                  {trackInfo.name}
-                </div>
-                {!isShort && (
-                  <>
-                    <div className="animate-marquee inline-block pr-10">
-                      {trackInfo.name}
-                    </div>
-                    <div className="animate-marquee inline-block pr-10">
-                      {trackInfo.name}
-                    </div>
-                  </>
-                )}
-                <div className="text-xs text-gray-300">{trackInfo.artists}</div>
-              </div>
-            </div>
+      <div className="flex bg-white sticky bottom-0 border border-t">
+        {onPlaylist && <Playlist />}
+        <div className="basis-1/3 flex gap-10 text-sm items-center justify-center py-5">
+          <div
+            onClick={() => {
+              setOnPlaylist((prev) => !prev);
+            }}
+            className="text-xl w-10 transition-all h-10 flex justify-center items-center hover:cursor-pointer hover:rounded-full hover:bg-orange-200"
+          >
+            <FontAwesomeIcon icon={faList} />
           </div>
-          <div className="flex basis-1/3  text-xs gap-10 items-center justify-center">
-            <span>{formatTime(currentTime)}</span>
+          <div className="flex justify-center w-[300px]">
+            <img
+              className={trackInfo ? "w-10 rounded " : ""}
+              src={trackInfo?.imgUrl}
+              alt={trackInfo?.name}
+            />
             <div
-              className="relative w-[200px] h-1 bg-gray-300"
-              onClick={handleProgressBarClick}
-              ref={progressBarRef}
+              ref={containerRef}
+              className="ml-3 relative overflow-hidden whitespace-nowrap "
             >
               <div
-                className=" absolute left-0 top-0 h-1 bg-black"
-                style={{ width: progressBarWidth }}
-              ></div>
-            </div>
-            <span>{formatTime(duration)}</span>
-          </div>
-          <div className="basis-1/3  flex justify-center items-center">
-            <div className="w-2">
-              <YouTube videoId={videoId} opts={opts} onReady={onReady} />
-              {isPlaying ? (
-                <FontAwesomeIcon icon={faPause} onClick={pauseVideo} />
-              ) : (
-                <FontAwesomeIcon icon={faPlay} onClick={playVideo} />
+                className={`${
+                  isShort ? "" : "animate-marquee"
+                } inline-block pr-10`}
+              >
+                {trackInfo?.name}
+              </div>
+              {!isShort && (
+                <>
+                  <div className="animate-marquee inline-block pr-10">
+                    {trackInfo?.name}
+                  </div>
+                  <div className="animate-marquee inline-block pr-10">
+                    {trackInfo?.name}
+                  </div>
+                </>
               )}
+              <div className="text-xs text-gray-300">{trackInfo?.artists}</div>
             </div>
-            <div></div>
           </div>
         </div>
-      )}
+        <div className="flex basis-1/3  text-xs gap-10 items-center justify-center">
+          <span>{formatTime(currentTime)}</span>
+          <div
+            className="relative w-[200px] h-1 bg-gray-300"
+            onClick={handleProgressBarClick}
+            ref={progressBarRef}
+          >
+            <div
+              className=" absolute left-0 top-0 h-1 bg-black"
+              style={{ width: progressBarWidth }}
+            ></div>
+          </div>
+          <span>{formatTime(duration)}</span>
+        </div>
+        <div className="basis-1/3  flex justify-center items-center">
+          <div className="flex justify-center items-center gap-5">
+            <YouTube
+              videoId={videoId}
+              opts={opts}
+              onReady={onReady}
+              onEnd={onEnd}
+            />
+            <FontAwesomeIcon
+              icon={faStepBackward}
+              onClick={handlePreviousTrack}
+              className="cursor-pointer"
+            />
+
+            {isPlaying ? (
+              <FontAwesomeIcon
+                icon={faPause}
+                className="cursor-pointer text-lg"
+                onClick={pauseVideo}
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faPlay}
+                className="cursor-pointer text-lg"
+                onClick={playVideo}
+              />
+            )}
+            <FontAwesomeIcon
+              icon={faStepForward}
+              onClick={handleNextTrack}
+              className="cursor-pointer"
+            />
+          </div>
+          <div></div>
+        </div>
+      </div>
     </>
   );
 }

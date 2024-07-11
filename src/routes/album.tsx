@@ -16,14 +16,15 @@ import {
   useTrackInfoStore,
   useVideoIdStore,
 } from "../stores/video";
+import useSessionStore from "../stores/session";
+import EllipsisMenu from "../components/ellipsisMenu";
 export default function Album() {
   const [tracks, setTracks] = useState<ITrack[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { id } = useParams();
   const { videoId, setVideoId } = useVideoIdStore();
   const { setTrackInfo, togglePlay } = useTrackInfoStore();
-  console.log(tracks);
-
+  const { session } = useSessionStore();
   useEffect(() => {
     const fetchAlbumTracks = async () => {
       setIsLoading(true);
@@ -39,25 +40,23 @@ export default function Album() {
     fetchAlbumTracks();
   }, []);
 
-  const onClick = () => {
-    console.log(tracks);
-  };
   const onPlayClick = async (e: MouseEvent<SVGSVGElement>) => {
     const id = e.currentTarget.getAttribute("id");
     const name = e.currentTarget.getAttribute("name");
     const artists = e.currentTarget.getAttribute("artists");
     const imgUrl = e.currentTarget.getAttribute("imgUrl");
-    const trackInfoOne = {
-      id,
-      name,
-      artists,
-      imgUrl,
-    };
-    console.log(trackInfoOne);
 
     const trackInfo = await getSpotifyTrackInfo(id);
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
     const fetchedVideoId = await searchYouTubeVideo(searchQuery);
+    const trackInfoOne = {
+      userId: session?.user.id,
+      id,
+      name,
+      artists,
+      imgUrl,
+      videoId: fetchedVideoId,
+    };
     setVideoId(fetchedVideoId);
     setTrackInfo(trackInfoOne);
     togglePlay();
@@ -80,26 +79,26 @@ export default function Album() {
             {tracks[0].album_name}
           </div>
           <div className="font-bold">
-            <Link to={`/artist/${tracks[0].artists[0].id}`}>
-              <span className="hover:underline">{tracks[0].album_artists}</span>
-            </Link>
+            {tracks[0].artists.map((artist, index) => {
+              const isLast = index === tracks[0].artists.length - 1;
+              return (
+                <span key={artist.id}>
+                  <Link to={`/artist/${artist.id}`}>
+                    <span className="hover:underline">{artist.name}</span>
+                  </Link>
+                  {!isLast && <span>, </span>}
+                </span>
+              );
+            })}
             <span className="mx-3">·</span>
             <span>{tracks[0].release_date}</span>
           </div>
         </div>
       </div>
-      <button
-        className="w-10 h-10 bg-slate-400 text-white border border-black"
-        onClick={onClick}
-      >
-        btn
-      </button>
-      <div className="grid grid-cols-[1fr_20fr_1fr] mr-5 text-sm text-gray-400">
+      <div className="mt-10 grid grid-cols-[1fr_20fr_1fr] mr-5 text-sm text-gray-400">
         <div className="flex justify-center items-center">#</div>
         <div>제목</div>
-        <div className="flex justify-center items-center">
-          <FontAwesomeIcon icon={faClock} />
-        </div>
+        <div className="flex justify-center items-center"></div>
       </div>
       <div className="border border-gray-200 my-3"></div>
       {tracks.map((item) => {
@@ -112,7 +111,7 @@ export default function Album() {
         return (
           <div
             key={item.id}
-            className="py-1 hover:bg-orange-200 hover:rounded-md grid grid-cols-[1fr_20fr_1fr] group mr-5"
+            className="relative py-1 hover:bg-orange-200 hover:rounded-md grid grid-cols-[1fr_20fr_1fr] group mr-5"
           >
             <div className="group-hover:hidden flex justify-center items-center">
               {item.track_number}
@@ -144,9 +143,12 @@ export default function Album() {
                 })}
               </div>
             </div>
-            <div className="flex justify-center items-center">
-              {duration_min}:{duration_sec}
-            </div>
+            <EllipsisMenu
+              id={item.id}
+              name={item.name}
+              artists={artists}
+              imgUrl={item.images}
+            />
           </div>
         );
       })}

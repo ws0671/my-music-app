@@ -9,6 +9,7 @@ import Album from "./routes/album";
 import Artist from "./routes/artist";
 import FeaturedPlayLists from "./routes/featured-playlists";
 import FeaturedPlayListsDetail from "./routes/featured-playlists-detail";
+import Search from "./routes/search";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
       {
         path: "playlist/:id",
         element: <FeaturedPlayListsDetail />,
+      },
+      {
+        path: "search/:id",
+        element: <Search />,
       },
     ],
   },

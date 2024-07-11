@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import useSessionStore from "../stores/session";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "../utils/supabaseClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,10 +8,13 @@ import {
   faChevronRight,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
+import { searchTracks } from "../api/spotify";
 
 export default function Header() {
   const navigate = useNavigate();
   const { session, setSession } = useSessionStore();
+  const [word, setWord] = useState();
+
   useEffect(() => {
     const checkAuth = async () => {
       const { data } = await supabase.auth.getSession();
@@ -23,8 +26,16 @@ export default function Header() {
     const { error } = await supabase.auth.signOut();
     setSession(false);
   };
+  const onSearch = (e) => {
+    setWord(e.currentTarget.value);
+  };
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
+    navigate(`/search/${word}`);
+  };
   return (
-    <div className="flex justify-between p-5 sticky top-0 bg-white">
+    <div className="flex justify-between p-5 z-[9999] sticky top-0 bg-white">
       <div className="flex justify-center items-center gap-3">
         <button
           onClick={() => navigate(-1)}
@@ -43,12 +54,13 @@ export default function Header() {
         <div className="absolute left-3">
           <FontAwesomeIcon icon={faMagnifyingGlass} />
         </div>
-        <div>
+        <form onSubmit={onSubmit}>
           <input
+            onChange={onSearch}
             className="pl-9 border focus:outline-none p-1 w-[500px] rounded-3xl"
             type="text"
           />
-        </div>
+        </form>
       </div>
       <div className="flex justify-center gap-5 items-center">
         {session ? (
