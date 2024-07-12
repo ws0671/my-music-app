@@ -55,7 +55,7 @@ export async function deleteTrack(track) {
     }
 
     console.log(
-      `Track with ID ${trackId} for user ${userId} deleted successfully.`
+      `Track with ID ${track.trackId} for user ${track.userId} deleted successfully.`
     );
   } catch (error) {
     console.error("Error deleting track:", error.message);
