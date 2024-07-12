@@ -1,16 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { supabase } from "../utils/supabaseClient";
-import { checkAuth } from "../utils/auth";
-import useSessionStore from "../stores/session";
-import {
-  getAccessToken,
-  getNewReleases,
-  getSpotifyToken,
-  searchTrack,
-} from "../api/spotify";
+import { getNewReleases } from "../api/spotify";
 import Loading from "../components/loading";
-import { ITrack } from "../types/spotify";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
