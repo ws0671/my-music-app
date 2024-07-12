@@ -73,7 +73,7 @@ export async function deleteAllTrack(session) {
       throw error;
     }
 
-    console.log(`All tracks for user ${userId} deleted successfully.`);
+    console.log(`All tracks for user ${session.user.id} deleted successfully.`);
   } catch (error) {
     console.error("Error deleting track:", error.message);
   }
