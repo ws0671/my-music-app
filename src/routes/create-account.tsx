@@ -23,7 +23,7 @@ export default function CreateAccount() {
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: "http://localhost:5173/",
+        redirectTo: "https://my-music-app-eta.vercel.app/",
       },
     });
   };
@@ -47,7 +47,7 @@ export default function CreateAccount() {
         data: {
           name,
         },
-        emailRedirectTo: "http://localhost:5173/",
+        emailRedirectTo: "https://my-music-app-eta.vercel.app/",
       },
     });
 

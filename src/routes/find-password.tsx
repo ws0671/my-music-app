@@ -14,7 +14,7 @@ export default function FindPassword() {
   }, []);
   const resetPasswordHandler = async () => {
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: "http://localhost:5173/update-password",
+      redirectTo: "https://my-music-app-eta.vercel.app/update-password",
     });
 
     if (error) {

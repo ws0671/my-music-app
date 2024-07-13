@@ -23,7 +23,7 @@ export default function Login() {
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: "http://localhost:5173/",
+        redirectTo: "https://my-music-app-eta.vercel.app/",
       },
     });
   };
