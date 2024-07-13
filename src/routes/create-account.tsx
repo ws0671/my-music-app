@@ -23,7 +23,7 @@ export default function CreateAccount() {
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: "https://my-music-app-eta.vercel.app/",
+        redirectTo: "https://ayrqfhuebatobjierkyu.supabase.co/auth/v1/callback",
       },
     });
   };
