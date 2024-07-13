@@ -9,7 +9,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  ITrackInfo,
   useCurrentTrackIndexStore,
   usePlaylistStore,
   useTrackInfoStore,
@@ -22,6 +21,11 @@ import Playlist from "./playlist";
 import useSessionStore from "../stores/session";
 import { addToPlaylist, fetchPlaylist } from "../utils/playlist";
 
+interface OnReady {
+  target: {
+    getDuration: () => number;
+  };
+}
 export default function Player() {
   const { videoId, setVideoId } = useVideoIdStore();
   const { playlist, setPlaylist } = usePlaylistStore();
@@ -43,7 +47,7 @@ export default function Player() {
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState(false);
 
-  const onReady = (e) => {
+  const onReady = (e: OnReady) => {
     setPlayer(e.target);
     setDuration(e.target.getDuration());
   };
@@ -68,11 +72,11 @@ export default function Player() {
     const handleUserPlaylist = async () => {
       if (session) {
         const data = await fetchPlaylist(session);
-        replaceUserPlaylist(data);
+        if (data) replaceUserPlaylist(data);
       }
     };
     handleUserPlaylist();
-  }, [session]);
+  }, [session, replaceUserPlaylist]);
   useEffect(() => {
     const handleUpdatedPlaylist = () => {
       if (trackInfo) {
@@ -91,12 +95,16 @@ export default function Player() {
     } else {
       ignoreTrackInfoEffect.current = false;
     }
-  }, [trackInfo]);
+  }, [trackInfo, setPlaylist, setUserPlaylist, session]);
 
   useEffect(() => {
     if (containerRef.current) {
       const containerWidth = containerRef.current.offsetWidth;
-      const textWidth = containerRef.current.childNodes[0].scrollWidth;
+      let textWidth = 0;
+      const childNode: ChildNode = containerRef.current.childNodes[0];
+      if (childNode instanceof HTMLElement) {
+        textWidth = childNode.scrollWidth;
+      }
 
       if (textWidth <= containerWidth) {
         setIsShort(true);
@@ -119,7 +127,7 @@ export default function Player() {
         player.pauseVideo();
       }
     }
-  }, [isPlaying]);
+  }, [isPlaying, player]);
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isPlaying && player) {
@@ -133,17 +141,27 @@ export default function Player() {
 
   useEffect(() => {
     if (session) {
-      if (player && currentTrackIndex < userPlaylist.length) {
-        setVideoId(userPlaylist[currentTrackIndex].videoId);
-        setTrackInfo(userPlaylist[currentTrackIndex]);
-      }
+      if (userPlaylist[currentTrackIndex].videoId)
+        if (player && currentTrackIndex < userPlaylist.length) {
+          setVideoId(userPlaylist[currentTrackIndex].videoId);
+          setTrackInfo(userPlaylist[currentTrackIndex]);
+        }
     } else {
-      if (player && currentTrackIndex < playlist.length) {
-        setVideoId(playlist[currentTrackIndex].videoId);
-        setTrackInfo(playlist[currentTrackIndex]);
-      }
+      if (playlist[currentTrackIndex].videoId)
+        if (player && currentTrackIndex < playlist.length) {
+          setVideoId(playlist[currentTrackIndex].videoId);
+          setTrackInfo(playlist[currentTrackIndex]);
+        }
     }
-  }, [currentTrackIndex]);
+  }, [
+    currentTrackIndex,
+    player,
+    playlist,
+    session,
+    setTrackInfo,
+    setVideoId,
+    userPlaylist,
+  ]);
 
   const onEnd = () => {
     ignoreTrackInfoEffect.current = true;
@@ -201,7 +219,7 @@ export default function Player() {
     : "0%";
 
   const handleProgressBarClick = (
-    e: MouseEvent<HTMLDivElement, MouseEvent>
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     if (progressBarRef.current && player) {
       const rect = progressBarRef.current.getBoundingClientRect();
@@ -269,8 +287,8 @@ export default function Player() {
           <div className="flex justify-center w-[300px]">
             <img
               className={trackInfo ? "w-10 rounded " : ""}
-              src={trackInfo?.imgUrl}
-              alt={trackInfo?.name}
+              src={trackInfo?.imgUrl ?? ""}
+              alt={trackInfo?.name ?? ""}
             />
             <div
               ref={containerRef}

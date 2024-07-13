@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import UpdatePassword from "./../routes/update-password";
 import {
-  useCurrentTrackIndexStore,
   usePlaylistStore,
   useTrackInfoStore,
   useUserPlaylistStore,
@@ -13,7 +11,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEllipsis,
   faMinus,
-  faPlus,
   faSquareMinus,
 } from "@fortawesome/free-solid-svg-icons";
 import useSessionStore from "../stores/session";
@@ -21,25 +18,24 @@ import { deleteAllTrack, deleteTrack } from "../utils/playlist";
 
 export default function Playlist() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { videoId, setVideoId } = useVideoIdStore();
-  const { trackInfo, setTrackInfo, togglePlay } = useTrackInfoStore();
+  const { setVideoId } = useVideoIdStore();
+  const { setTrackInfo, togglePlay } = useTrackInfoStore();
   const [ellipsis, setEllipsis] = useState(false);
-  const [selectedId, setSelectedId] = useState();
-  const { playlist, setPlaylist, removePlaylist, resetPlaylist } =
-    usePlaylistStore();
-  const dropdownRef = useRef([]);
+  const [selectedId, setSelectedId] = useState(0);
+  const { playlist, removePlaylist, resetPlaylist } = usePlaylistStore();
+  const dropdownRef = useRef<HTMLElement[]>([]);
   const {
     userPlaylist,
-    setUserPlaylist,
+
     removeUserPlaylist,
     resetUserPlaylist,
   } = useUserPlaylistStore();
   const { session } = useSessionStore();
 
-  const handleClickOutside = (e) => {
+  const handleClickOutside = (e: MouseEvent) => {
     if (
       dropdownRef.current &&
-      !dropdownRef.current.some((ref) => ref.contains(e.target))
+      !dropdownRef.current.some((ref) => ref.contains(e.target as Node))
     ) {
       setEllipsis(false);
     }
@@ -52,13 +48,12 @@ export default function Playlist() {
     };
   }, []);
 
-  const onPlayClick = async (e: MouseEvent<SVGSVGElement>) => {
-    const trackId = e.currentTarget.getAttribute("trackId");
-    const name = e.currentTarget.getAttribute("name");
-    const artists = e.currentTarget.getAttribute("artists");
-    const imgUrl = e.currentTarget.getAttribute("imgUrl");
+  const onPlayClick = async (e: React.MouseEvent) => {
+    const trackId = e.currentTarget.getAttribute("data-trackId");
+    const name = e.currentTarget.getAttribute("data-name");
+    const artists = e.currentTarget.getAttribute("data-artists");
+    const imgUrl = e.currentTarget.getAttribute("data-imgUrl");
 
-    console.log(trackId, name, artists, imgUrl);
     const trackInfo = await getSpotifyTrackInfo(trackId);
 
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
@@ -75,8 +70,12 @@ export default function Playlist() {
     setTrackInfo(trackInfoOne);
     togglePlay();
   };
-  const onEllipsis = (e, id) => {
+  const onEllipsis = (
+    e: React.MouseEvent<SVGSVGElement, MouseEvent>,
+    id: number
+  ) => {
     e.stopPropagation();
+
     setSelectedId(id);
     if (ellipsis) {
       setEllipsis(false);
@@ -84,7 +83,7 @@ export default function Playlist() {
       setEllipsis(true);
     }
   };
-  const removeSong = (e, index) => {
+  const removeSong = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
     if (session) {
       removeUserPlaylist(index);
@@ -125,29 +124,29 @@ export default function Playlist() {
               return (
                 <div key={index} className="">
                   <div
-                    trackId={trackInfo?.trackId}
-                    name={trackInfo?.name}
-                    artists={trackInfo?.artists}
-                    imgUrl={trackInfo?.imgUrl}
+                    data-trackId={trackInfo?.trackId}
+                    data-name={trackInfo?.name}
+                    data-artists={trackInfo?.artists}
+                    data-imgUrl={trackInfo?.imgUrl}
                     onClick={onPlayClick}
                     className="cursor-pointer gap-3 flex justify-between hover:bg-orange-200 p-2 rounded-xl group "
                   >
                     <div className="flex w-8 items-center justify-center shrink-0">
                       <img
                         className={trackInfo ? "w-full h-full rounded" : ""}
-                        src={trackInfo?.imgUrl}
-                        alt={trackInfo?.name}
+                        src={trackInfo?.imgUrl ?? ""}
+                        alt={trackInfo?.name ?? ""}
                       />
                     </div>
                     <div
                       ref={containerRef}
                       className=" overflow-hidden grow whitespace-nowrap "
-                      id={trackInfo?.id}
+                      id={trackInfo?.trackId ?? ""}
                     >
                       <div className={`group-hover:hidden text-xs`}>
                         {trackInfo?.name}
                       </div>
-                      {trackInfo?.name.length > 25 ? (
+                      {trackInfo.name && trackInfo.name.length > 25 ? (
                         <div className={"group-hover:block  text-xs hidden"}>
                           <div className="animate-marquee  inline-block pr-10">
                             {trackInfo?.name}
@@ -174,9 +173,11 @@ export default function Playlist() {
                       />
                     </div>
                     <div
-                      ref={(el) => (dropdownRef.current[index] = el)}
+                      ref={(el) =>
+                        el ? (dropdownRef.current[index] = el) : null
+                      }
                       onClick={(e) => removeSong(e, index)}
-                      id={trackInfo?.trackId}
+                      id={trackInfo?.trackId ?? ""}
                       className={
                         ellipsis && selectedId === index
                           ? "z-30 absolute right-[-70px]  hover:bg-orange-100 bg-white border shadow-md px-3 py-2 rounded-md "
@@ -196,29 +197,29 @@ export default function Playlist() {
               return (
                 <div key={index} className="">
                   <div
-                    trackId={trackInfo?.trackId}
-                    name={trackInfo?.name}
-                    artists={trackInfo?.artists}
-                    imgUrl={trackInfo?.imgUrl}
+                    data-trackId={trackInfo?.trackId}
+                    data-name={trackInfo?.name}
+                    data-artists={trackInfo?.artists}
+                    data-imgUrl={trackInfo?.imgUrl}
                     onClick={onPlayClick}
                     className="cursor-pointer gap-3 flex justify-between hover:bg-orange-200 p-2 rounded-xl group "
                   >
                     <div className="flex w-8 items-center justify-center shrink-0">
                       <img
                         className={trackInfo ? "w-full h-full rounded" : ""}
-                        src={trackInfo?.imgUrl}
-                        alt={trackInfo?.name}
+                        src={trackInfo?.imgUrl ?? ""}
+                        alt={trackInfo?.name ?? ""}
                       />
                     </div>
                     <div
                       ref={containerRef}
                       className=" overflow-hidden grow whitespace-nowrap "
-                      id={trackInfo?.id}
+                      id={trackInfo?.trackId ?? ""}
                     >
                       <div className={`group-hover:hidden text-xs`}>
                         {trackInfo?.name}
                       </div>
-                      {trackInfo?.name.length > 25 ? (
+                      {trackInfo.name && trackInfo?.name.length > 25 ? (
                         <div className={"group-hover:block  text-xs hidden"}>
                           <div className="animate-marquee  inline-block pr-10">
                             {trackInfo?.name}
@@ -245,9 +246,11 @@ export default function Playlist() {
                       />
                     </div>
                     <div
-                      ref={(el) => (dropdownRef.current[index] = el)}
+                      ref={(el) =>
+                        el ? (dropdownRef.current[index] = el) : null
+                      }
                       onClick={(e) => removeSong(e, index)}
-                      id={trackInfo?.id}
+                      id={trackInfo?.trackId ?? ""}
                       className={
                         ellipsis && selectedId === index
                           ? "z-30 absolute right-[-70px]  hover:bg-orange-100 bg-white border shadow-md px-3 py-2 rounded-md "

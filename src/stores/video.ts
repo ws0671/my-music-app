@@ -1,7 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
-export const useVideoIdStore = create((set) => ({
+interface VideoId {
+  videoId: string | null;
+  setVideoId: (id: string) => void;
+}
+export const useVideoIdStore = create<VideoId>((set) => ({
   videoId: "",
   setVideoId: (id: string) => set({ videoId: id }),
 }));
@@ -30,11 +33,16 @@ export const useTrackInfoStore = create<TrackInfoState>((set) => ({
 //   isPlaying: false,
 //   setIsPlaying: (state: boolean) => set({ isPlaying: state }),
 // }));
-
-export const useCurrentTrackIndexStore = create((set) => ({
-  currentTrackIndex: 0,
-  setCurrentTrackIndex: (index: number) => set({ currentTrackIndex: index }),
-}));
+interface CurrentTackIndexStore {
+  currentTrackIndex: number;
+  setCurrentTrackIndex: (index: number) => void;
+}
+export const useCurrentTrackIndexStore = create<CurrentTackIndexStore>(
+  (set) => ({
+    currentTrackIndex: 0,
+    setCurrentTrackIndex: (index: number) => set({ currentTrackIndex: index }),
+  })
+);
 
 interface PlaylistState {
   playlist: ITrackInfo[];
