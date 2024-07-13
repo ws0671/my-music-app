@@ -6,12 +6,13 @@ export const useVideoIdStore = create((set) => ({
   setVideoId: (id: string) => set({ videoId: id }),
 }));
 export interface ITrackInfo {
-  trackId: string;
-  name: string;
-  artists: string;
-  imgUrl: string;
+  userId?: string;
+  trackId: string | null;
+  name: string | null;
+  artists: string | null;
+  imgUrl: string | null;
   state?: string;
-  videoId: string;
+  videoId: string | null;
 }
 interface TrackInfoState {
   trackInfo: ITrackInfo | null;
@@ -35,16 +36,24 @@ export const useCurrentTrackIndexStore = create((set) => ({
   setCurrentTrackIndex: (index: number) => set({ currentTrackIndex: index }),
 }));
 
+interface PlaylistState {
+  playlist: ITrackInfo[];
+  setPlaylist: (newPlaylist: ITrackInfo) => void;
+  removePlaylist: (index: number) => void;
+  resetPlaylist: () => void;
+}
 export const usePlaylistStore = create(
-  persist(
+  persist<PlaylistState>(
     (set, get) => ({
       playlist: [],
-      setPlaylist: (newPlaylist) =>
+      setPlaylist: (newPlaylist: ITrackInfo) =>
         set((prev) => ({
           playlist: [...prev.playlist, newPlaylist],
         })),
-      removePlaylist: (index) => {
-        const updatedPlaylist = get().playlist.filter((_, i) => i !== index);
+      removePlaylist: (index: number) => {
+        const updatedPlaylist = get().playlist.filter(
+          (_, i: number) => i !== index
+        );
         set({ playlist: updatedPlaylist });
       },
       resetPlaylist: () => set({ playlist: [] }),
@@ -55,7 +64,14 @@ export const usePlaylistStore = create(
   )
 );
 
-export const useUserPlaylistStore = create((set, get) => ({
+interface UserPlaylistState {
+  userPlaylist: ITrackInfo[];
+  replaceUserPlaylist: (newPlaylist: ITrackInfo[]) => void;
+  setUserPlaylist: (newPlaylist: ITrackInfo) => void;
+  removeUserPlaylist: (index: number) => void;
+  resetUserPlaylist: () => void;
+}
+export const useUserPlaylistStore = create<UserPlaylistState>((set, get) => ({
   userPlaylist: [],
   replaceUserPlaylist: (newPlaylist) => set({ userPlaylist: [...newPlaylist] }),
   setUserPlaylist: (newPlaylist) =>

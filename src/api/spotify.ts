@@ -1,5 +1,5 @@
-import axios, { all } from "axios";
-import { IAllData, IArtist, ITracksAllData } from "../types/spotify";
+import axios from "axios";
+import { IAllData, IArtist, ITrack, ITracksAllData } from "../types/spotify";
 
 const BASE_URL = "https://accounts.spotify.com/api/token";
 
@@ -86,7 +86,7 @@ export const getAlbumTracks = async (id: string) => {
       .join(", ");
     const img = data.images[0].url;
     const name = data.name;
-    const tracksWithAlbumInfo = data.tracks.items.map((track) => {
+    const tracksWithAlbumInfo = data.tracks.items.map((track: ITrack) => {
       return {
         ...track,
         images: img,
@@ -170,7 +170,7 @@ https://api.spotify.com/v1/playlists/${id}/tracks`,
   return response.data.items;
 };
 
-export const getSpotifyTrackInfo = async (trackId) => {
+export const getSpotifyTrackInfo = async (trackId: string | null) => {
   const token = await getAccessToken();
   const response = await axios.get(
     `
@@ -187,7 +187,7 @@ https://api.spotify.com/v1/tracks/${trackId}`,
   return { name: data.name, artist: data.artists[0].name };
 };
 
-export const searchTracks = async (query) => {
+export const searchTracks = async (query: string) => {
   const token = await getAccessToken();
 
   if (!token) {

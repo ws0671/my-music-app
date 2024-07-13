@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import useSessionStore from "../stores/session";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabaseClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,28 +8,29 @@ import {
   faChevronRight,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
-import { searchTracks } from "../api/spotify";
 
 export default function Header() {
   const navigate = useNavigate();
   const { session, setSession } = useSessionStore();
-  const [word, setWord] = useState();
+  const [word, setWord] = useState("");
 
   useEffect(() => {
+    console.log(session);
+
     const checkAuth = async () => {
       const { data } = await supabase.auth.getSession();
-      setSession(data.session);
+      if (data.session) setSession(data.session);
     };
     checkAuth();
   }, []);
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    setSession(false);
+    await supabase.auth.signOut();
+    setSession(null);
   };
-  const onSearch = (e) => {
+  const onSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setWord(e.currentTarget.value);
   };
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     navigate(`/search/${word}`);
