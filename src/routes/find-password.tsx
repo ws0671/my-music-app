@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 export default function FindPassword() {
   const { session } = useSessionStore();
   const [email, setEmail] = useState("");
-  const [error, setError] = useState(false);
+  const [error] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {

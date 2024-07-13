@@ -3,23 +3,30 @@ import Loading from "../components/loading";
 import { getFeaturedPlaylist, getSpotifyTrackInfo } from "../api/spotify";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock } from "@fortawesome/free-regular-svg-icons";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { searchYouTubeVideo } from "../api/youtube";
-import {
-  useIsPlayingStore,
-  useTrackInfoStore,
-  useVideoIdStore,
-} from "../stores/video";
+import { useTrackInfoStore, useVideoIdStore } from "../stores/video";
 import useSessionStore from "../stores/session";
 import EllipsisMenu from "../components/ellipsisMenu";
 
+interface FeaturedPlayLists {
+  track: {
+    id: string;
+    name: string;
+    album: {
+      images: [{ url: string }];
+      name: string;
+      id: string;
+    };
+    artists: [{ name: string; id: string }];
+  };
+}
 export default function FeaturedPlayListsDetail() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [playlist, setPlaylist] = useState([]);
+  const [playlist, setPlaylist] = useState<FeaturedPlayLists[]>([]);
   const { id } = useParams();
   const location = useLocation();
-  const { videoId, setVideoId } = useVideoIdStore();
+  const { setVideoId } = useVideoIdStore();
   const { setTrackInfo, togglePlay } = useTrackInfoStore();
   const { session } = useSessionStore();
 
@@ -29,8 +36,10 @@ export default function FeaturedPlayListsDetail() {
     const fetchFeaturedPlaylists = async () => {
       setIsLoading(true);
       try {
-        const playlist = await getFeaturedPlaylist(id);
-        setPlaylist(playlist);
+        if (id) {
+          const playlist = await getFeaturedPlaylist(id);
+          setPlaylist(playlist);
+        }
       } catch (error) {
         console.error("Error:", error);
       } finally {
@@ -39,11 +48,12 @@ export default function FeaturedPlayListsDetail() {
     };
     fetchFeaturedPlaylists();
   }, []);
-  const onPlayClick = async (e: MouseEvent<SVGSVGElement>) => {
-    const trackId = e.currentTarget.getAttribute("trackId");
-    const name = e.currentTarget.getAttribute("name");
-    const artists = e.currentTarget.getAttribute("artists");
-    const imgUrl = e.currentTarget.getAttribute("imgUrl");
+
+  const onPlayClick = async (e: React.MouseEvent<SVGSVGElement>) => {
+    const trackId = e.currentTarget.getAttribute("data-trackId");
+    const name = e.currentTarget.getAttribute("data-name");
+    const artists = e.currentTarget.getAttribute("data-artists");
+    const imgUrl = e.currentTarget.getAttribute("data-imgUrl");
 
     const trackInfo = await getSpotifyTrackInfo(trackId);
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
@@ -83,11 +93,11 @@ export default function FeaturedPlayListsDetail() {
       <div className="border border-gray-200 my-3"></div>
       {playlist.map((item, index) => {
         const artists = item.track.artists.map((i) => i.name).join(", ");
-        const duration_min = Math.floor(item.track.duration_ms / 1000 / 60);
-        let duration_sec: string | number = Math.ceil(
-          (item.track.duration_ms / 1000) % 60
-        );
-        duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
+        // const duration_min = Math.floor(item.track.duration_ms / 1000 / 60);
+        // let duration_sec: string | number = Math.ceil(
+        //   (item.track.duration_ms / 1000) % 60
+        // );
+        // duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
         return (
           <div className="grid grid-cols-[1fr_10fr_10fr_2fr] py-1  hover:rounded-md hover:bg-orange-200  group mr-5  relative">
             <div className="group-hover:hidden flex justify-center items-center">
@@ -96,10 +106,10 @@ export default function FeaturedPlayListsDetail() {
             <div className="hidden justify-center items-center group-hover:flex">
               <FontAwesomeIcon
                 className="hover:cursor-pointer"
-                trackId={item.track.id}
-                name={item.track.name}
-                artists={artists}
-                imgUrl={item.track.album.images[0].url}
+                data-trackId={item.track.id}
+                data-name={item.track.name}
+                data-artists={artists}
+                data-imgUrl={item.track.album.images[0].url}
                 onClick={onPlayClick}
                 icon={faPlay}
               />
@@ -107,7 +117,7 @@ export default function FeaturedPlayListsDetail() {
             <div className="flex items-center">
               <img
                 className="w-10 h-10 rounded"
-                src={item.track.album.images[2].url}
+                src={item.track.album.images[0].url}
                 alt={item.track.album.name}
               />
               <div className="ml-3">

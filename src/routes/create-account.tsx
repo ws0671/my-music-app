@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabaseClient";
+import { Provider } from "@supabase/supabase-js";
 import { useNavigate, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { RiKakaoTalkFill } from "react-icons/ri";
-import { checkAuth } from "../utils/auth";
 import useSessionStore from "./../stores/session";
 
 export default function CreateAccount() {
@@ -18,8 +18,10 @@ export default function CreateAccount() {
     if (session) navigate(-1);
   }, []);
   const oAuthLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: e.target.name,
+    const target = e.target as HTMLButtonElement;
+    const provider = target.name as Provider;
+    await supabase.auth.signInWithOAuth({
+      provider,
       options: {
         redirectTo: "http://localhost:5173/",
       },

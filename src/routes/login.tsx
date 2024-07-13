@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { RiKakaoTalkFill } from "react-icons/ri";
 import useSessionStore from "../stores/session";
-import { checkAuth } from "../utils/auth";
+import { PostgrestError, Provider } from "@supabase/supabase-js";
 
 export default function Login() {
   const { session } = useSessionStore();
@@ -17,9 +17,11 @@ export default function Login() {
   useEffect(() => {
     if (session) navigate(-1);
   }, []);
-  const oAuthLogin = async (e) => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: e.target.name,
+  const oAuthLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const target = e.target as HTMLButtonElement;
+    const provider = target.name as Provider;
+    await supabase.auth.signInWithOAuth({
+      provider,
       options: {
         redirectTo: "http://localhost:5173/",
       },
@@ -44,7 +46,9 @@ export default function Login() {
       if (error) throw error;
       if (data.session) navigate("/");
     } catch (error) {
-      setError(error.message);
+      const postgrestError = error as PostgrestError;
+
+      setError(postgrestError.message);
     }
   };
 

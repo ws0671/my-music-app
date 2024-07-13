@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { getFeaturedPlaylists } from "../api/spotify";
 import Loading from "../components/loading";
 import { Link } from "react-router-dom";

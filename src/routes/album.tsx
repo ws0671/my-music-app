@@ -1,36 +1,31 @@
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import {
-  ITrack,
-  ITracksAllData,
-  getAlbumTracks,
-  getSpotifyTrackInfo,
-} from "../api/spotify";
+import { getAlbumTracks, getSpotifyTrackInfo } from "../api/spotify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock } from "@fortawesome/free-regular-svg-icons";
 import Loading from "../components/loading";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { searchYouTubeVideo } from "../api/youtube";
-import {
-  useIsPlayingStore,
-  useTrackInfoStore,
-  useVideoIdStore,
-} from "../stores/video";
+import { useTrackInfoStore, useVideoIdStore } from "../stores/video";
 import useSessionStore from "../stores/session";
 import EllipsisMenu from "../components/ellipsisMenu";
+import { ITracksAllData } from "../types/spotify";
 export default function Album() {
-  const [tracks, setTracks] = useState<ITrack[]>([]);
+  const [tracks, setTracks] = useState<ITracksAllData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { id } = useParams();
-  const { videoId, setVideoId } = useVideoIdStore();
+  const { setVideoId } = useVideoIdStore();
   const { setTrackInfo, togglePlay } = useTrackInfoStore();
   const { session } = useSessionStore();
   useEffect(() => {
     const fetchAlbumTracks = async () => {
       setIsLoading(true);
       try {
-        const tracks = await getAlbumTracks(id);
-        setTracks(tracks);
+        if (id) {
+          const tracks = await getAlbumTracks(id);
+          console.log(tracks);
+
+          setTracks(tracks);
+        }
       } catch (error) {
         console.error("Error:", error);
       } finally {
@@ -38,13 +33,13 @@ export default function Album() {
       }
     };
     fetchAlbumTracks();
-  }, []);
+  }, [id]);
 
   const onPlayClick = async (e: MouseEvent<SVGSVGElement>) => {
-    const trackId = e.currentTarget.getAttribute("trackId");
-    const name = e.currentTarget.getAttribute("name");
-    const artists = e.currentTarget.getAttribute("artists");
-    const imgUrl = e.currentTarget.getAttribute("imgUrl");
+    const trackId = e.currentTarget.getAttribute("data-trackId");
+    const name = e.currentTarget.getAttribute("data-name");
+    const artists = e.currentTarget.getAttribute("data-artists");
+    const imgUrl = e.currentTarget.getAttribute("data-imgUrl");
 
     const trackInfo = await getSpotifyTrackInfo(trackId);
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
@@ -70,14 +65,12 @@ export default function Album() {
       <div className="flex shadow-2xl gap-10 relative">
         <img
           className="w-52 h-auto"
-          src={tracks[0].images}
-          alt={tracks[0].album_name}
+          src={tracks[0].images ?? ""}
+          alt={tracks[0].name}
         />
         <div className="flex space-y-3 flex-col justify-center">
           <div className="">앨범</div>
-          <div className={`font-bold ${"text-5xl"}`}>
-            {tracks[0].album_name}
-          </div>
+          <div className={`font-bold ${"text-5xl"}`}>{tracks[0].name}</div>
           <div className="font-bold">
             {tracks[0].artists.map((artist, index) => {
               const isLast = index === tracks[0].artists.length - 1;
@@ -103,11 +96,11 @@ export default function Album() {
       <div className="border border-gray-200 my-3"></div>
       {tracks.map((item) => {
         const artists = item.artists.map((i) => i.name).join(", ");
-        const duration_min = Math.floor(item.duration_ms / 1000 / 60);
-        let duration_sec: string | number = Math.ceil(
-          (item.duration_ms / 1000) % 60
-        );
-        duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
+        // const duration_min = Math.floor(item.duration_ms / 1000 / 60);
+        // let duration_sec: string | number = Math.ceil(
+        //   (item.duration_ms / 1000) % 60
+        // );
+        // duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
         return (
           <div
             key={item.id}
@@ -119,10 +112,10 @@ export default function Album() {
             <div className="hidden justify-center items-center group-hover:flex">
               <FontAwesomeIcon
                 className="hover:cursor-pointer"
-                trackId={item.id}
-                name={item.name}
-                artists={artists}
-                imgUrl={item.images}
+                data-trackId={item.id}
+                data-name={item.name}
+                data-artists={artists}
+                data-imgUrl={item.images}
                 onClick={onPlayClick}
                 icon={faPlay}
               />

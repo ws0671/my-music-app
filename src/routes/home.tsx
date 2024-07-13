@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getNewReleases } from "../api/spotify";
 import Loading from "../components/loading";
+import { IAllData } from "../types/spotify";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [music, setMusic] = useState([]);
+  const [music, setMusic] = useState<IAllData[]>([]);
   const [countryCode, setContryCode] = useState("KR");
 
   useEffect(() => {
@@ -23,7 +24,7 @@ export default function Home() {
     fetchNewReleases();
   }, [countryCode]);
 
-  const onChangeCountryCode = (code) => {
+  const onChangeCountryCode = (code: string) => {
     setContryCode(code);
   };
   if (isLoading) {
@@ -70,13 +71,12 @@ export default function Home() {
       </div>
       <div className="flex flex-wrap gap-6 ">
         {music.map((item) => {
-          const allArtists = item.artists.map((i) => i.name).join(", ");
           return (
             <Link to={`album/${item.id}`} key={item.id}>
               <div className="w-44">
                 <img
                   className="rounded-lg w-44 h-44"
-                  src={item.images[2].url}
+                  src={item.images[0].url}
                 />
                 <div className="my-1 truncate font-bold" key={item.id}>
                   {item.name}

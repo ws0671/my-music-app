@@ -13,7 +13,7 @@ export default function UpdatePassword() {
     if (session) navigate(-1);
   }, []);
   const updatePasswordHandler = () => {
-    supabase.auth.onAuthStateChange(async (event, session) => {
+    supabase.auth.onAuthStateChange(async (event) => {
       if (event === "PASSWORD_RECOVERY") {
         const { data, error } = await supabase.auth.updateUser({
           password,

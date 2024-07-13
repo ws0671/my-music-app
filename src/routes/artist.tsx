@@ -7,38 +7,35 @@ import {
 } from "../api/spotify";
 import { Link, useParams } from "react-router-dom";
 import Loading from "../components/loading";
-import { ISpecificArtist, ITrack } from "../types/spotify";
+import { ISpecificArtist, ITracksAllData } from "../types/spotify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock } from "@fortawesome/free-regular-svg-icons";
 import { faPlay } from "@fortawesome/free-solid-svg-icons";
-import {
-  useIsPlayingStore,
-  useTrackInfoStore,
-  useVideoIdStore,
-} from "../stores/video";
+import { useTrackInfoStore, useVideoIdStore } from "../stores/video";
 import { searchYouTubeVideo } from "../api/youtube";
 import useSessionStore from "../stores/session";
 import EllipsisMenu from "../components/ellipsisMenu";
 
 export default function Artist() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [artist, setArtist] = useState<ISpecificArtist>([]);
-  const [tracks, setTracks] = useState<ITrack[]>([]);
+  const [artist, setArtist] = useState<ISpecificArtist>();
+  const [tracks, setTracks] = useState<ITracksAllData[]>([]);
   const [relatedArtists, setRelatedArtists] = useState<ISpecificArtist[]>([]);
   const { id } = useParams();
-  const { videoId, setVideoId } = useVideoIdStore();
+  const { setVideoId } = useVideoIdStore();
   const { setTrackInfo, togglePlay } = useTrackInfoStore();
   const { session } = useSessionStore();
   useEffect(() => {
     const fetchArtist = async () => {
       setIsLoading(true);
       try {
-        const artist = await getArtist(id);
-        const tracks = await getArtistTopTracks(id);
-        const relatedArtists = await getRelatedArtist(id);
-        setArtist(artist);
-        setTracks(tracks);
-        setRelatedArtists(relatedArtists);
+        if (id) {
+          const artist = await getArtist(id);
+          const tracks = await getArtistTopTracks(id);
+          const relatedArtists = await getRelatedArtist(id);
+          setArtist(artist);
+          setTracks(tracks);
+          setRelatedArtists(relatedArtists);
+        }
       } catch (error) {
         console.error("Error:", error);
       } finally {
@@ -47,11 +44,11 @@ export default function Artist() {
     };
     fetchArtist();
   }, [id]);
-  const onPlayClick = async (e: MouseEvent<SVGSVGElement>) => {
-    const trackId = e.currentTarget.getAttribute("trackId");
-    const name = e.currentTarget.getAttribute("name");
-    const artists = e.currentTarget.getAttribute("artists");
-    const imgUrl = e.currentTarget.getAttribute("imgUrl");
+  const onPlayClick = async (e: React.MouseEvent<SVGSVGElement>) => {
+    const trackId = e.currentTarget.getAttribute("data-trackId");
+    const name = e.currentTarget.getAttribute("data-name");
+    const artists = e.currentTarget.getAttribute("data-artists");
+    const imgUrl = e.currentTarget.getAttribute("data-imgUrl");
 
     const trackInfo = await getSpotifyTrackInfo(trackId);
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
@@ -73,15 +70,15 @@ export default function Artist() {
   return (
     <div>
       <div className="flex shadow-2xl gap-10 relative box-border">
-        <img className="" src={artist.images[0].url} alt={artist.name} />
+        <img className="" src={artist?.images[0].url} alt={artist?.name} />
         <div className="pb-10 flex flex-col break-all justify-center space-y-10">
           <div className=" text-xl">아티스트</div>
-          <div className="font-bold text-8xl ">{artist.name}</div>
+          <div className="font-bold text-8xl ">{artist?.name}</div>
           <div className="font-bold text-5xl ">
-            팔로워 {artist.followers.total.toLocaleString()}
+            팔로워 {artist?.followers.total.toLocaleString()}
           </div>
           <span className="font-bold text-sm">
-            {artist.genres.map((item, index) => {
+            {artist?.genres.map((item, index) => {
               return (
                 <span
                   className=" border-2 border-black rounded-xl p-1 mr-2"
@@ -98,11 +95,11 @@ export default function Artist() {
       <div className="border border-gray-200 my-3"></div>
       {tracks.map((item, index) => {
         const artists = item.artists.map((i) => i.name).join(", ");
-        const duration_min = Math.floor(item.duration_ms / 1000 / 60);
-        let duration_sec: string | number = Math.ceil(
-          (item.duration_ms / 1000) % 60
-        );
-        duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
+        // const duration_min = Math.floor(item.duration_ms / 1000 / 60);
+        // let duration_sec: string | number = Math.ceil(
+        //   (item.duration_ms / 1000) % 60
+        // );
+        // duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
         return (
           <div
             key={item.id}
@@ -114,10 +111,10 @@ export default function Artist() {
             <div className="hidden justify-center items-center group-hover:flex">
               <FontAwesomeIcon
                 className="hover:cursor-pointer"
-                trackId={item.id}
-                name={item.name}
-                artists={artists}
-                imgUrl={item.album.images[0].url}
+                data-trackId={item.id}
+                data-name={item.name}
+                data-artists={artists}
+                data-imgUrl={item.images}
                 onClick={onPlayClick}
                 icon={faPlay}
               />
@@ -142,7 +139,7 @@ export default function Artist() {
               trackId={item.id}
               name={item.name}
               artists={artists}
-              imgUrl={item.album.images[0].url}
+              imgUrl={item.images}
             />
           </div>
         );

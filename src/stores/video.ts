@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 interface VideoId {
-  videoId: string | null;
+  videoId: string;
   setVideoId: (id: string) => void;
 }
 export const useVideoIdStore = create<VideoId>((set) => ({
@@ -15,7 +15,7 @@ export interface ITrackInfo {
   artists: string | null;
   imgUrl: string | null;
   state?: string;
-  videoId: string | null;
+  videoId: string;
 }
 interface TrackInfoState {
   trackInfo: ITrackInfo | null;

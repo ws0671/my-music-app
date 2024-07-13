@@ -61,12 +61,6 @@ export default function Player() {
     player?.pauseVideo();
     togglePlay();
   };
-  const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.code === "Space") {
-      e.preventDefault();
-      togglePlay();
-    }
-  };
 
   useEffect(() => {
     const handleUserPlaylist = async () => {
@@ -114,6 +108,12 @@ export default function Player() {
     }
   }, [trackInfo?.name]);
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === "Space") {
+        e.preventDefault();
+        togglePlay();
+      }
+    };
     document.addEventListener("keydown", handleKeyDown);
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
@@ -127,7 +127,7 @@ export default function Player() {
         player.pauseVideo();
       }
     }
-  }, [isPlaying, player]);
+  }, [isPlaying]);
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isPlaying && player) {
@@ -141,27 +141,17 @@ export default function Player() {
 
   useEffect(() => {
     if (session) {
-      if (userPlaylist[currentTrackIndex].videoId)
-        if (player && currentTrackIndex < userPlaylist.length) {
-          setVideoId(userPlaylist[currentTrackIndex].videoId);
-          setTrackInfo(userPlaylist[currentTrackIndex]);
-        }
+      if (player && currentTrackIndex < userPlaylist.length) {
+        setVideoId(userPlaylist[currentTrackIndex].videoId);
+        setTrackInfo(userPlaylist[currentTrackIndex]);
+      }
     } else {
-      if (playlist[currentTrackIndex].videoId)
-        if (player && currentTrackIndex < playlist.length) {
-          setVideoId(playlist[currentTrackIndex].videoId);
-          setTrackInfo(playlist[currentTrackIndex]);
-        }
+      if (player && currentTrackIndex < playlist.length) {
+        setVideoId(playlist[currentTrackIndex].videoId);
+        setTrackInfo(playlist[currentTrackIndex]);
+      }
     }
-  }, [
-    currentTrackIndex,
-    player,
-    playlist,
-    session,
-    setTrackInfo,
-    setVideoId,
-    userPlaylist,
-  ]);
+  }, [currentTrackIndex]);
 
   const onEnd = () => {
     ignoreTrackInfoEffect.current = true;

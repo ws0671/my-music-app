@@ -1,5 +1,7 @@
+import { Session } from "@supabase/supabase-js";
 import { ITrackInfo } from "../stores/video";
 import { supabase } from "./supabaseClient";
+import { PostgrestError } from "@supabase/supabase-js";
 
 export async function addToPlaylist(track: ITrackInfo) {
   try {
@@ -21,11 +23,12 @@ export async function addToPlaylist(track: ITrackInfo) {
 
     console.log("Track added to playlist:", data);
   } catch (error) {
-    console.error("Error adding track to playlist:", error.message);
+    const postgrestError = error as PostgrestError;
+    console.error("Error adding track to playlist:", postgrestError.message);
   }
 }
 
-export async function fetchPlaylist(session) {
+export async function fetchPlaylist(session: Session) {
   try {
     const { data, error } = await supabase
       .from("playlist")
@@ -38,11 +41,15 @@ export async function fetchPlaylist(session) {
 
     return data;
   } catch (error) {
-    console.error("Error fetching playlist:", error.message);
+    const postgrestError = error as PostgrestError;
+    console.error("Error fetching playlist:", postgrestError.message);
   }
 }
-
-export async function deleteTrack(track) {
+interface DeleteTrack {
+  userId: string;
+  trackId: string;
+}
+export async function deleteTrack(track: DeleteTrack) {
   try {
     const { error } = await supabase
       .from("playlist")
@@ -58,11 +65,13 @@ export async function deleteTrack(track) {
       `Track with ID ${track.trackId} for user ${track.userId} deleted successfully.`
     );
   } catch (error) {
-    console.error("Error deleting track:", error.message);
+    const postgrestError = error as PostgrestError;
+
+    console.error("Error deleting track:", postgrestError.message);
   }
 }
 
-export async function deleteAllTrack(session) {
+export async function deleteAllTrack(session: Session) {
   try {
     const { error } = await supabase
       .from("playlist")
@@ -75,6 +84,8 @@ export async function deleteAllTrack(session) {
 
     console.log(`All tracks for user ${session.user.id} deleted successfully.`);
   } catch (error) {
-    console.error("Error deleting track:", error.message);
+    const postgrestError = error as PostgrestError;
+
+    console.error("Error deleting track:", postgrestError.message);
   }
 }
