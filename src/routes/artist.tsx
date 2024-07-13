@@ -44,6 +44,7 @@ export default function Artist() {
     };
     fetchArtist();
   }, [id]);
+  console.log(tracks);
   const onPlayClick = async (e: React.MouseEvent<SVGSVGElement>) => {
     const trackId = e.currentTarget.getAttribute("data-trackId");
     const name = e.currentTarget.getAttribute("data-name");
@@ -114,7 +115,7 @@ export default function Artist() {
                 data-trackId={item.id}
                 data-name={item.name}
                 data-artists={artists}
-                data-imgUrl={item.images}
+                data-imgUrl={item.album.images[0].url}
                 onClick={onPlayClick}
                 icon={faPlay}
               />
@@ -139,7 +140,7 @@ export default function Artist() {
               trackId={item.id}
               name={item.name}
               artists={artists}
-              imgUrl={item.images}
+              imgUrl={item.album.images[0].url}
             />
           </div>
         );
