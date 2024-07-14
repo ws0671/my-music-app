@@ -1,3 +1,36 @@
+## 실행 방법
+
+1. git clone을 통해 프로젝트를 다운받습니다.
+
+2. 다운받은 폴더를 IDE로 실행합니다.
+
+3. 터미널에 아래의 명령어로 의존성 설치를 합니다.
+
+```
+npm install
+```
+
+4. 프로젝트의 음악 재생 및 정상적인 동작을 위해 루트 경로에 .env 파일을 만들어야합니다.
+
+```
+//.env
+VITE_SUPABASE_URL={my-key}
+VITE_SUPABASE_ANON_KEY={my-key}
+
+VITE_SPOTIFY_CLIENT_ID={my-key}
+VITE_SPOTIFY_CLIENT_SECRET={my-key}
+
+VITE_YOUTUBE_API_KEY={my-key}
+```
+
+{my-key}에 자신의 api key를 넣어줍니다. supabase, spotify, youtube의 api key가 필요합니다.
+
+5. 터미널에 아래의 명령어를 입력하여 실행합니다.
+
+```
+npm run start
+```
+
 <img width="1280" alt="배포 home" src="https://github.com/user-attachments/assets/0fcfe42d-be9b-4477-aa70-d4e9c000087f"/>
 
 ## 나만의 뮤직 웹 Honey
@@ -67,39 +100,6 @@
 ### 플레이리스트
 
 곡옆에 배치된 ...기호 또는 재생 버튼을 눌러서 플레이리스트에 음악을 등록할 수 있습니다.
-
-## 실행 방법
-
-1. git clone을 통해 프로젝트를 다운받습니다.
-
-2. 다운받은 폴더를 IDE로 실행합니다.
-
-3. 터미널에 아래의 명령어로 의존성 설치를 합니다.
-
-```
-npm install
-```
-
-4. 프로젝트의 음악 재생 및 정상적인 동작을 위해 루트 경로에 .env 파일을 만들어야합니다.
-
-```
-//.env
-VITE_SUPABASE_URL={my-key}
-VITE_SUPABASE_ANON_KEY={my-key}
-
-VITE_SPOTIFY_CLIENT_ID={my-key}
-VITE_SPOTIFY_CLIENT_SECRET={my-key}
-
-VITE_YOUTUBE_API_KEY={my-key}
-```
-
-{my-key}에 자신의 api key를 넣어줍니다. supabase, spotify, youtube의 api key가 필요합니다.
-
-5. 터미널에 아래의 명령어를 입력하여 실행합니다.
-
-```
-npm run start
-```
 
 ## 개발 일지
 
