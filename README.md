@@ -14,13 +14,14 @@
 
 ## 기술 스택
 
+<div>
 <img  src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=white"/>  
 <img  src="https://img.shields.io/badge/vite-646CFF?style=for-the-badge&logo=vite&logoColor=white"/>
 <img  src="https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white"/>
 <img  src="https://img.shields.io/badge/tailwindcss-06B6D4?style=for-the-badge&logo=tailwindCSS&logoColor=white"/>
 <img  src="https://img.shields.io/badge/zustand-black?style=for-the-badge&logo=zustand&logoColor=white"/>
 <img  src="https://img.shields.io/badge/supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white"/>
-
+</div>
 ## 주요 기능
 
  <table>
