@@ -31,10 +31,9 @@ VITE_YOUTUBE_API_KEY={my-key}
 npm run start
 ```
 
+# 나만의 뮤직 웹 Honey
+
 <img width="1280" alt="배포 home" src="https://github.com/user-attachments/assets/0fcfe42d-be9b-4477-aa70-d4e9c000087f"/>
-
-## 나만의 뮤직 웹 Honey
-
 듣고 싶은 음악을 플레이리스트에 등록해 감상하세요
 
 ## 프로젝트 소개
