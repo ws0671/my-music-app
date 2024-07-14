@@ -18,6 +18,7 @@ export default function UpdatePassword() {
         const { data, error } = await supabase.auth.updateUser({
           password,
         });
+        console.log(data);
 
         if (data) {
           setPassword("");
