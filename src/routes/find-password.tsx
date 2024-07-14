@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabaseClient";
 import useSessionStore from "../stores/session";
 import { useNavigate } from "react-router-dom";
-import Loading from "../components/loading";
 
 export default function FindPassword() {
   const { session } = useSessionStore();
