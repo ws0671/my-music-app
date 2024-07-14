@@ -22,6 +22,7 @@
 <img  src="https://img.shields.io/badge/zustand-black?style=for-the-badge&logo=zustand&logoColor=white"/>
 <img  src="https://img.shields.io/badge/supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white"/>
 </div>
+
 ## 주요 기능
 
  <table>
