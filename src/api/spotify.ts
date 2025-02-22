@@ -20,6 +20,7 @@ export const getAccessToken = async () => {
         },
       }
     );
+
     window.localStorage.setItem("token", res.data.access_token);
     return res.data.access_token;
   } catch (error) {
@@ -142,16 +143,17 @@ export const getRelatedArtist = async (id: string) => {
 
 export const getFeaturedPlaylists = async () => {
   const token = await getAccessToken();
+
   const response = await axios.get(
-    `https://api.spotify.com/v1/browse/featured-playlists`,
+    `https://api.spotify.com/v1/tracks
+`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     }
   );
-  console.log(response.data.playlists.items);
-  return response.data.playlists.items;
+  console.log(response);
 };
 
 export const getFeaturedPlaylist = async (id: string) => {
