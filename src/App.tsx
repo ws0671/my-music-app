@@ -52,7 +52,7 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <div>
+    <div className="font-gmarket">
       <RouterProvider router={router} />
     </div>
   );

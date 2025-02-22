@@ -69,7 +69,7 @@ export default function Home() {
           </span>
         </span>
       </div>
-      <div className="grid grid-cols-4 gap-2 ">
+      <div className="grid grid-cols-6 gap-6 ">
         {music.map((item) => {
           return (
             <Link className="" to={`album/${item.id}`} key={item.id}>
@@ -78,7 +78,7 @@ export default function Home() {
                 <div className="my-1 truncate font-bold" key={item.id}>
                   {item.name}
                 </div>
-                <div className="truncate text-sm  text-gray-400">
+                <div className="truncate text-sm font-bold text-gray-400">
                   {item.artists.map((artist, index) => {
                     const isLast = index === item.artists.length - 1;
                     return (

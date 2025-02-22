@@ -263,7 +263,8 @@ export default function Player() {
   };
   return (
     <>
-      <div className="flex bg-white sticky bottom-0 border border-t">
+      <div className="flex bg-purple-700 sticky bottom-0 text-white">
+        {/* border border-t */}
         {onPlaylist && <Playlist />}
         <div className="basis-1/3 flex gap-10 text-sm items-center justify-center py-5">
           <div

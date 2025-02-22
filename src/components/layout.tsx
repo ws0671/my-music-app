@@ -6,12 +6,15 @@ import Nav from "./left-nav";
 export default function Layout() {
   return (
     <>
-      <div className="grid grid-cols-[1fr_4fr_1fr]">
-        <Nav />
-        <div className="shadow-[0px_4px_6px_0px_rgba(0,_0,_0,_0.1)] px-6">
-          <Header />
+      <Header />
+      <div className="grid grid-cols-[1fr_4fr_1fr] gap-2 bg-purple-700 text-white">
+        <div className="bg-purple-600">
+          <Nav />
+        </div>
+        <div className="bg-purple-600 px-6">
           <Outlet />
         </div>
+        <div className="bg-purple-600"></div>
       </div>
       <Player />
     </>
