@@ -28,13 +28,13 @@ VITE_YOUTUBE_API_KEY={my-key}
 5. 터미널에 아래의 명령어를 입력하여 실행합니다.
 
 ```
-npm run start
+npm run dev
 ```
 
 # 나만의 뮤직 웹 Honey
 
 <img width="1280" alt="배포 home" src="https://github.com/user-attachments/assets/0fcfe42d-be9b-4477-aa70-d4e9c000087f"/>
-듣고 싶은 음악을 플레이리스트에 등록해 감상하세요
+듣고 싶은 음악을 플레이리스트에 등록해 감상해보세요
 
 ## 프로젝트 소개
 
