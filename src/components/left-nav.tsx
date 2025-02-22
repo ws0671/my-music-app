@@ -9,10 +9,10 @@ export default function Nav() {
   };
   return (
     <div className="ml-10 space-y-3 sticky top-0 h-[100vh]">
-      <Link className="block rounded-full" to={"/"}>
+      <Link className="block w-52 rounded-full bg-sky-500 mt-10" to={"/"}>
         <img
-          className="w-full h-full rounded-full"
-          src="/images/Honey.png"
+          className="rounded-full"
+          src="/images/Honey-removebg-preview.png"
           alt="logo"
         />
       </Link>
@@ -39,7 +39,7 @@ export default function Nav() {
           }
         >
           <FontAwesomeIcon icon={faMusic} />
-          <span className="ml-4">Honey 플레이리스트</span>
+          <span className="ml-4">미정</span>
         </div>
       </Link>
     </div>

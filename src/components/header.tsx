@@ -36,29 +36,20 @@ export default function Header() {
     navigate(`/search/${word}`);
   };
   return (
-    <div className="flex justify-between p-5 z-[9999] sticky top-0 bg-white">
-      <div className="flex justify-center items-center gap-3">
-        <button
-          onClick={() => navigate(-1)}
-          className="transition-all w-5 h-5 flex items-center justify-center p-4  hover:rounded-full hover:bg-orange-400 hover:text-white"
-        >
-          <FontAwesomeIcon icon={faChevronLeft} />
-        </button>
-        <button
-          onClick={() => navigate(1)}
-          className="transition-all w-5 h-5 flex items-center justify-center p-4  hover:rounded-full hover:bg-orange-400 hover:text-white"
-        >
-          <FontAwesomeIcon icon={faChevronRight} />
-        </button>
-      </div>
-      <div className="flex relative justify-center items-center">
+    <div className="flex justify-evenly p-5 z-[9999] sticky top-0 bg-white">
+      <div></div>
+      <div className="flex group relative justify-center items-center">
+        <div className="fixed inset-0 bg-black opacity-0 transition-opacity duration-300 pointer-events-none group-hover:opacity-50 group-focus-within:opacity-50"></div>
+
         <div className="absolute left-3">
           <FontAwesomeIcon icon={faMagnifyingGlass} />
         </div>
         <form onSubmit={onSubmit}>
           <input
             onChange={onSearch}
-            className="pl-9 border focus:outline-none p-1 w-[500px] rounded-3xl"
+            className="transition-transform duration-300 ease-in-out hover:scale-150 shadow-[0px_0px_10px_5px_rgba(0,_0,_0,_0.1)] focus:outline-none p-1 pl-9 rounded-3xl
+            absolute top-[50%] hover:top-1/2 hover:left-1/2
+                 "
             type="text"
           />
         </form>
@@ -74,13 +65,13 @@ export default function Header() {
         ) : (
           <>
             <Link to="/create-account">
-              <div className="border font-bold transition-all hover:text-white hover:bg-orange-400 rounded-3xl py-2 px-3">
-                가입하기
+              <div className="border font-bold transition-all hover:text-white hover:bg-orange-400 rounded-lg py-1 px-2">
+                회원가입
               </div>
             </Link>
             <Link to="/login">
-              <div className="border font-bold transition-all hover:text-white hover:bg-orange-400 rounded-3xl py-2 px-3">
-                로그인하기
+              <div className="border font-bold transition-all hover:text-white hover:bg-orange-400 rounded-lg py-1 px-2">
+                로그인
               </div>
             </Link>
           </>

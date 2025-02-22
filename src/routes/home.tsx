@@ -33,7 +33,7 @@ export default function Home() {
   return (
     <div className="">
       <div className="my-5">
-        <span className="font-bold text-2xl">새로 발매된 앨범</span>
+        <span className="font-bold text-2xl">새로운 앨범</span>
         <span className="ml-5">
           <span
             onClick={() => onChangeCountryCode("KR")}
@@ -69,15 +69,12 @@ export default function Home() {
           </span>
         </span>
       </div>
-      <div className="flex flex-wrap gap-6 ">
+      <div className="grid grid-cols-4 gap-2 ">
         {music.map((item) => {
           return (
-            <Link to={`album/${item.id}`} key={item.id}>
-              <div className="w-44">
-                <img
-                  className="rounded-lg w-44 h-44"
-                  src={item.images[0].url}
-                />
+            <Link className="" to={`album/${item.id}`} key={item.id}>
+              <div className="">
+                <img className="rounded-lg w-full" src={item.images[0].url} />
                 <div className="my-1 truncate font-bold" key={item.id}>
                   {item.name}
                 </div>
