@@ -7,8 +7,6 @@ import FindPassword from "./routes/find-password";
 import UpdatePassword from "./routes/update-password";
 import Album from "./routes/album";
 import Artist from "./routes/artist";
-import FeaturedPlayLists from "./routes/featured-playlists";
-import FeaturedPlayListsDetail from "./routes/featured-playlists-detail";
 import Search from "./routes/search";
 
 const router = createBrowserRouter([
@@ -27,14 +25,6 @@ const router = createBrowserRouter([
       {
         path: "artist/:id",
         element: <Artist />,
-      },
-      {
-        path: "playlist",
-        element: <FeaturedPlayLists />,
-      },
-      {
-        path: "playlist/:id",
-        element: <FeaturedPlayListsDetail />,
       },
       {
         path: "search/:id",
