@@ -64,12 +64,12 @@ export default function Header() {
         ) : (
           <>
             <Link to="/create-account">
-              <div className="border font-bold transition-all bg-white text-purple-700 hover:text-white hover:bg-orange-400 rounded-lg py-1 px-2">
+              <div className="border font-bold transition-all bg-white text-purple-700 hover:text-purple-500 rounded-md py-1 px-2">
                 회원가입
               </div>
             </Link>
             <Link to="/login">
-              <div className="border font-bold transition-all bg-white text-purple-700 hover:text-white hover:bg-orange-400 rounded-lg py-1 px-2">
+              <div className="border font-bold transition-all bg-white text-purple-700 hover:text-purple-500 rounded-md py-1 px-2">
                 로그인
               </div>
             </Link>

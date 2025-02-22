@@ -39,8 +39,8 @@ export default function Home() {
             onClick={() => onChangeCountryCode("KR")}
             className={
               countryCode === "KR"
-                ? "bg-orange-400 text-white p-1 rounded cursor-pointer"
-                : "cursor-pointer transition duration-1000 p-1 rounded hover:p-1 hover:text-white hover:bg-orange-400 hover:rounded"
+                ? "bg-purple-400 text-white p-1 rounded cursor-pointer"
+                : "cursor-pointer transition duration-1000 p-1 rounded hover:p-1 hover:text-white hover:bg-purple-400 hover:rounded"
             }
           >
             한국
@@ -50,8 +50,8 @@ export default function Home() {
             onClick={() => onChangeCountryCode("US")}
             className={
               countryCode === "US"
-                ? "bg-orange-400 text-white p-1 rounded cursor-pointer"
-                : "cursor-pointer transition duration-1000 p-1 rounded hover:p-1 hover:text-white hover:bg-orange-400 hover:rounded"
+                ? "bg-purple-400 text-white p-1 rounded cursor-pointer"
+                : "cursor-pointer transition duration-1000 p-1 rounded hover:p-1 hover:text-white hover:bg-purple-400 hover:rounded"
             }
           >
             미국
@@ -61,8 +61,8 @@ export default function Home() {
             onClick={() => onChangeCountryCode("JP")}
             className={
               countryCode === "JP"
-                ? "bg-orange-400 text-white p-1 rounded cursor-pointer"
-                : "cursor-pointer transition duration-1000 p-1 rounded hover:p-1 hover:text-white hover:bg-orange-400 hover:rounded"
+                ? "bg-purple-400 text-white p-1 rounded cursor-pointer"
+                : "cursor-pointer transition duration-1000 p-1 rounded hover:p-1 hover:text-white hover:bg-purple-400 hover:rounded"
             }
           >
             일본
