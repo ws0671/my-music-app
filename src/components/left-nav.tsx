@@ -21,8 +21,8 @@ export default function Nav() {
           onClick={() => onClick("home")}
           className={
             click === "home"
-              ? "text-orange-400 mt-5 text-xl font-bold hover:text-orange-400 transition-all"
-              : "mt-5 text-xl font-bold hover:text-orange-400 transition-all"
+              ? "text-purple-400 mt-5 text-xl font-bold hover:text-purple-400 transition-all"
+              : "mt-5 text-xl font-bold hover:text-purple-400 transition-all"
           }
         >
           <FontAwesomeIcon icon={faHouse} />
@@ -34,8 +34,8 @@ export default function Nav() {
           onClick={() => onClick("playlist")}
           className={
             click === "playlist"
-              ? "text-orange-400 mt-5 text-xl font-bold hover:text-orange-400 transition-all"
-              : "mt-5 text-xl font-bold hover:text-orange-400 transition-all"
+              ? "text-purple-400 mt-5 text-xl font-bold hover:text-purple-400 transition-all"
+              : "mt-5 text-xl font-bold hover:text-purple-400 transition-all"
           }
         >
           <FontAwesomeIcon icon={faMusic} />
