@@ -1,4 +1,5 @@
 import {
+  faCirclePlay,
   faList,
   faPause,
   faPlay,
@@ -349,7 +350,7 @@ export default function Player() {
                 />
               ) : (
                 <FontAwesomeIcon
-                  icon={faPlay}
+                  icon={faCirclePlay}
                   className="cursor-pointer text-white text-lg "
                   onClick={playVideo}
                 />

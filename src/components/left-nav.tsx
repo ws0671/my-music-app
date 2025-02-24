@@ -9,13 +9,7 @@ export default function Nav() {
   };
   return (
     <div className="ml-10 space-y-3 sticky top-0 h-[100vh]">
-      <Link className="block w-52 rounded-full mt-10" to={"/"}>
-        <img
-          className="rounded-full"
-          src="/images/Honey-removebg-preview.png"
-          alt="logo"
-        />
-      </Link>
+      <Link className="block w-14 mt-10" to={"/"}></Link>
       <Link to={"/"}>
         <div
           onClick={() => onClick("home")}
