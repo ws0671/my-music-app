@@ -32,15 +32,15 @@ export default function Home() {
   }
   return (
     <div className="">
-      <div className="my-5">
-        <span className="font-bold text-2xl">새로운 앨범</span>
-        <span className="ml-5">
+      <div className="my-6 flex items-center flex-col">
+        <span className="font-bold text-4xl">새로나온 앨범</span>
+        <span className="mt-3 space-x-3 text-base">
           <span
             onClick={() => onChangeCountryCode("KR")}
             className={
               countryCode === "KR"
-                ? "bg-purple-400 text-white p-1 rounded cursor-pointer"
-                : "cursor-pointer transition duration-1000 p-1 rounded hover:p-1 hover:text-white hover:bg-purple-400 hover:rounded"
+                ? "bg-purple-400 text-white px-2 py-1 rounded cursor-pointer"
+                : "cursor-pointer transition duration-1000 px-2 py-1 rounded hover:px-2 hover:py-1 hover:text-white hover:bg-purple-400 hover:rounded"
             }
           >
             한국
@@ -50,8 +50,8 @@ export default function Home() {
             onClick={() => onChangeCountryCode("US")}
             className={
               countryCode === "US"
-                ? "bg-purple-400 text-white p-1 rounded cursor-pointer"
-                : "cursor-pointer transition duration-1000 p-1 rounded hover:p-1 hover:text-white hover:bg-purple-400 hover:rounded"
+                ? "bg-purple-400 text-white px-2 py-1 rounded cursor-pointer"
+                : "cursor-pointer transition duration-1000 px-2 py-1 rounded hover:px-2 hover:py-1 hover:text-white hover:bg-purple-400 hover:rounded"
             }
           >
             미국
@@ -61,15 +61,15 @@ export default function Home() {
             onClick={() => onChangeCountryCode("JP")}
             className={
               countryCode === "JP"
-                ? "bg-purple-400 text-white p-1 rounded cursor-pointer"
-                : "cursor-pointer transition duration-1000 p-1 rounded hover:p-1 hover:text-white hover:bg-purple-400 hover:rounded"
+                ? "bg-purple-400 text-white px-2 py-1 rounded cursor-pointer"
+                : "cursor-pointer transition duration-1000 px-2 py-1 rounded hover:px-2 hover:py-1 hover:text-white hover:bg-purple-400 hover:rounded"
             }
           >
             일본
           </span>
         </span>
       </div>
-      <div className="grid grid-cols-6 gap-6 ">
+      <div className="grid grid-cols-5 gap-6 ">
         {music.map((item) => {
           return (
             <Link className="" to={`album/${item.id}`} key={item.id}>

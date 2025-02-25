@@ -1,4 +1,5 @@
 import {
+  faCirclePause,
   faCirclePlay,
   faList,
   faPause,
@@ -264,10 +265,10 @@ export default function Player() {
   };
   return (
     <>
-      <div className="flex bg-purple-700 sticky bottom-0 text-white">
+      <div className="col-span-3 flex bg-purple-700 text-white">
         {/* border border-t */}
         {onPlaylist && <Playlist />}
-        <div className="basis-1/3 flex gap-10 text-sm items-center justify-center py-5">
+        <div className="basis-1/3 flex gap-10 text-sm items-center justify-center ">
           <div
             onClick={() => {
               setOnPlaylist((prev) => !prev);
@@ -307,70 +308,80 @@ export default function Player() {
             </div>
           </div>
         </div>
-        <div className="flex basis-1/3  text-xs gap-10 items-center justify-center">
-          <span>{formatTime(currentTime)}</span>
+        <div aria-label="플레이어 컨트롤">
           <div
-            className="relative w-[200px] h-1 bg-gray-300"
-            onClick={handleProgressBarClick}
-            ref={progressBarRef}
+            aria-label="재생부"
+            className="basis-1/3  flex justify-center items-center"
           >
-            <div
-              className=" absolute left-0 top-0 h-1 bg-black"
-              style={{ width: progressBarWidth }}
-            ></div>
-          </div>
-          <span>{formatTime(duration)}</span>
-        </div>
-        <div className="basis-1/3  flex justify-center items-center">
-          <div className="flex justify-center items-center gap-5">
-            <YouTube
-              videoId={videoId}
-              opts={opts}
-              onReady={onReady}
-              onEnd={onEnd}
-            />
-            <FontAwesomeIcon
-              icon={faShuffle}
-              onClick={handleShuffle}
-              className={
-                shuffle ? "cursor-pointer text-orange-400" : "cursor-pointer"
-              }
-            />
-            <FontAwesomeIcon
-              icon={faStepBackward}
-              onClick={handlePreviousTrack}
-              className="cursor-pointer"
-            />
-            <div className="bg-orange-400 w-10 h-10 rounded-full flex justify-center items-center">
-              {isPlaying ? (
-                <FontAwesomeIcon
-                  icon={faPause}
-                  className="cursor-pointer text-white text-lg"
-                  onClick={pauseVideo}
+            <div className="flex justify-center items-center gap-3">
+              <div>
+                <YouTube
+                  videoId={videoId}
+                  opts={opts}
+                  onReady={onReady}
+                  onEnd={onEnd}
                 />
-              ) : (
                 <FontAwesomeIcon
-                  icon={faCirclePlay}
-                  className="cursor-pointer text-white text-lg "
-                  onClick={playVideo}
+                  icon={faShuffle}
+                  onClick={handleShuffle}
+                  className={
+                    shuffle
+                      ? "cursor-pointer text-orange-400"
+                      : "cursor-pointer"
+                  }
                 />
-              )}
+              </div>
+              <FontAwesomeIcon
+                icon={faStepBackward}
+                onClick={handlePreviousTrack}
+                className="cursor-pointer"
+              />
+              <div className=" w-10 h-10 rounded-full flex justify-center items-center">
+                {isPlaying ? (
+                  <FontAwesomeIcon
+                    icon={faCirclePause}
+                    className="cursor-pointer text-white text-3xl"
+                    onClick={pauseVideo}
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    icon={faCirclePlay}
+                    className="cursor-pointer text-white text-3xl "
+                    onClick={playVideo}
+                  />
+                )}
+              </div>
+              <FontAwesomeIcon
+                icon={faStepForward}
+                onClick={handleNextTrack}
+                className="cursor-pointer"
+              />
+              <FontAwesomeIcon
+                onClick={handleRepeat}
+                icon={faRepeat}
+                className={
+                  repeat ? "cursor-pointer text-orange-400" : "cursor-pointer"
+                }
+              />
             </div>
-            <FontAwesomeIcon
-              icon={faStepForward}
-              onClick={handleNextTrack}
-              className="cursor-pointer"
-            />
-            <FontAwesomeIcon
-              onClick={handleRepeat}
-              icon={faRepeat}
-              className={
-                repeat ? "cursor-pointer text-orange-400" : "cursor-pointer"
-              }
-            />
+            <div></div>
           </div>
-          <div></div>
+          <div className="flex basis-1/3  text-xs gap-2 items-center justify-center">
+            <span>{formatTime(currentTime)}</span>
+            <div
+              className="relative w-[600px] rounded-sm h-1 bg-gray-300"
+              onClick={handleProgressBarClick}
+              ref={progressBarRef}
+            >
+              <div
+                className=" absolute left-0 top-0 h-1 bg-black"
+                style={{ width: progressBarWidth }}
+              ></div>
+            </div>
+            <span>{formatTime(duration)}</span>
+          </div>
         </div>
+        <div></div>
       </div>
     </>
   );

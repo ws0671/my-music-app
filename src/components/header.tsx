@@ -36,16 +36,18 @@ export default function Header() {
     navigate(`/search/${word}`);
   };
   return (
-    <div className="flex  justify-between p-5 z-[9999] sticky top-0 bg-purple-700">
-      <img className="w-20" src="/images/3-removebg-preview.png" alt="logo" />
-      <div></div>
-      <div className="flex relative justify-center items-center">
+    <div className="col-span-3 grid grid-cols-[1fr_3fr_1fr]  bg-purple-700">
+      <div className="flex justify-center">
+        <img className="w-20" src="/images/3-removebg-preview.png" alt="logo" />
+      </div>
+      <div className=" flex relative justify-center items-center">
         <div className="group flex items-center">
           <div className="fixed inset-0 bg-black opacity-0 transition-opacity duration-300 pointer-events-none group-hover:opacity-50 group-focus-within:opacity-50"></div>
-          <div className="absolute left-3">
-            <FontAwesomeIcon icon={faMagnifyingGlass} />
-          </div>
-          <form onSubmit={onSubmit}>
+
+          <form className="relative" onSubmit={onSubmit}>
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 ">
+              <FontAwesomeIcon icon={faMagnifyingGlass} />
+            </div>
             <input
               onChange={onSearch}
               className="transition-transform duration-300 ease-in-out hover:scale-[2] focus:scale-[2] shadow-[0px_0px_10px_5px_rgba(0,_0,_0,_0.1)] focus:outline-none p-1 pl-9 rounded-3xl
@@ -55,7 +57,7 @@ export default function Header() {
           </form>
         </div>
       </div>
-      <div className="flex justify-center gap-5 items-center">
+      <div className=" flex justify-center gap-5 items-center">
         {session ? (
           <div
             className="border font-bold transition-all cursor-pointer hover:text-white hover:bg-orange-400 rounded-3xl py-2 px-3"
@@ -78,7 +80,6 @@ export default function Header() {
           </>
         )}
       </div>
-      <div></div>
     </div>
   );
 }
