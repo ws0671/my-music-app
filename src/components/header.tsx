@@ -37,8 +37,18 @@ export default function Header() {
   };
   return (
     <div className="col-span-3 grid grid-cols-[1fr_3fr_1fr]  bg-purple-700">
-      <div className="flex justify-center">
-        <img className="w-20" src="/images/3-removebg-preview.png" alt="logo" />
+      <div className="justify-center flex">
+        <Link
+          to={"/"}
+          className="bg-purple-400"
+          style={{ clipPath: "circle(33.9% at 50% 50%)" }}
+        >
+          <img
+            className="w-20"
+            src="/images/3-removebg-preview.png"
+            alt="logo"
+          />
+        </Link>
       </div>
       <div className=" flex relative justify-center items-center">
         <div className="group flex items-center">

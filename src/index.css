@@ -12,3 +12,28 @@
   display: inline-block;
   padding-right: 100%;
 }
+
+@layer utilities {
+  .custom-scrollbar {
+    @apply overflow-y-auto;
+    scrollbar-gutter: stable;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 14px; /* 스크롤바 너비 */
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent; /* 스크롤바 배경 숨기기 */
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #a855f7; /* 보라색 스크롤 */
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #c084fc; /* 보라색 스크롤 */
+  }
+  .custom-scrollbar::-webkit-scrollbar-button {
+    display: none; /* 화살표 숨기기 */
+  }
+}

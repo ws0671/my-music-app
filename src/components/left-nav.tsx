@@ -8,7 +8,7 @@ export default function Nav() {
     setClick(menu);
   };
   return (
-    <div className="ml-10 space-y-3 sticky top-0 h-[100vh]">
+    <div className="">
       <Link className="block w-14 mt-10" to={"/"}></Link>
       <Link to={"/"}>
         <div
