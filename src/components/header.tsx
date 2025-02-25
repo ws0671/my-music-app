@@ -40,7 +40,7 @@ export default function Header() {
       <div className="justify-center flex">
         <Link
           to={"/"}
-          className="bg-purple-400"
+          className=""
           style={{ clipPath: "circle(33.9% at 50% 50%)" }}
         >
           <img
