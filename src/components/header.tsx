@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import useSessionStore from "../stores/session";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "../utils/supabaseClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -13,6 +13,7 @@ export default function Header() {
   const navigate = useNavigate();
   const { session, setSession } = useSessionStore();
   const [word, setWord] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     console.log(session);
@@ -32,11 +33,12 @@ export default function Header() {
   };
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    inputRef.current?.blur();
 
     navigate(`/search/${word}`);
   };
   return (
-    <div className="col-span-3 grid grid-cols-[1fr_3fr_1fr]  bg-purple-700">
+    <>
       <div className="justify-center flex">
         <Link
           to={"/"}
@@ -59,6 +61,7 @@ export default function Header() {
               <FontAwesomeIcon icon={faMagnifyingGlass} />
             </div>
             <input
+              ref={inputRef}
               onChange={onSearch}
               className="transition-transform duration-300 ease-in-out hover:scale-[2] focus:scale-[2] shadow-[0px_0px_10px_5px_rgba(0,_0,_0,_0.1)] focus:outline-none p-1 pl-9 rounded-3xl
                  "
@@ -90,6 +93,6 @@ export default function Header() {
           </>
         )}
       </div>
-    </div>
+    </>
   );
 }

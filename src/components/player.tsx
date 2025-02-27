@@ -263,17 +263,26 @@ export default function Player() {
   const handleRepeat = () => {
     setRepeat((prev) => !prev);
   };
+
+  // 로그인 & 비로그인시 플레이리스트가 비어있을 때
+  const isPlaylistEmpty = session
+    ? userPlaylist.length === 0
+    : playlist.length === 0;
   return (
     <>
-      <div className="col-span-3 flex bg-purple-700 text-white">
-        {/* border border-t */}
-        {onPlaylist && <Playlist />}
-        <div className="basis-1/3 flex gap-10 text-sm items-center justify-center ">
+      <div className=" text-white ">
+        {/* <div className="basis-1/3 flex gap-10 text-sm items-center justify-center ">
           <div
             onClick={() => {
-              setOnPlaylist((prev) => !prev);
+              if (!isPlaylistEmpty) {
+                setOnPlaylist((prev) => !prev);
+              }
             }}
-            className="text-xl w-10 transition-all h-10 flex justify-center items-center hover:cursor-pointer hover:rounded-full hover:bg-orange-200"
+            className={`text-xl w-10 transition-all h-10 flex justify-center items-center ${
+              isPlaylistEmpty
+                ? ""
+                : "hover:cursor-pointer hover:rounded-full hover:bg-orange-200"
+            }`}
           >
             <FontAwesomeIcon icon={faList} />
           </div>
@@ -307,11 +316,18 @@ export default function Player() {
               <div className="text-xs text-gray-300">{trackInfo?.artists}</div>
             </div>
           </div>
-        </div>
-        <div aria-label="플레이어 컨트롤">
+        </div> */}
+        <div
+          aria-label="플레이어 컨트롤"
+          className={`${
+            isPlaylistEmpty ? "" : "opacity-50 cursor-not-allowed "
+          }`}
+        >
           <div
             aria-label="재생부"
-            className="basis-1/3  flex justify-center items-center"
+            className={`basis-1/3 flex justify-center items-center ${
+              isPlaylistEmpty ? "" : "pointer-events-none"
+            }`}
           >
             <div className="flex justify-center items-center gap-3">
               <div>
@@ -381,7 +397,6 @@ export default function Player() {
             <span>{formatTime(duration)}</span>
           </div>
         </div>
-        <div></div>
       </div>
     </>
   );

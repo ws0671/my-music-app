@@ -54,8 +54,8 @@ export default function EllipsisMenu({
     }
   };
   return (
-    <>
-      <div className="flex justify-center items-center ">
+    <div className="flex justify-center items-center ">
+      <div className=" ">
         <FontAwesomeIcon
           onClick={() => onEllipsis(trackId)}
           className="cursor-pointer"
@@ -80,6 +80,6 @@ export default function EllipsisMenu({
           플레이리스트에 추가하기
         </span>
       </div>
-    </>
+    </div>
   );
 }

@@ -107,7 +107,7 @@ export default function Playlist() {
   };
 
   return (
-    <div className="absolute rounded-xl top-[-450px] w-[250px]   bg-white left-10 shadow-xl p-5  border border-1">
+    <div className=" shadow-xl border border-1 ">
       <div className="flex justify-between font-bold pb-3 border-b-2 border-orange-200">
         <div>Playlist</div>
         <div>
@@ -118,7 +118,8 @@ export default function Playlist() {
           />
         </div>
       </div>
-      <div className="scrollbar-hide  mt-3 overflow-y-scroll h-[350px]">
+
+      <div className=" mt-3 overflow-y-scroll">
         {session
           ? userPlaylist.map((trackInfo, index) => {
               return (
@@ -160,7 +161,6 @@ export default function Playlist() {
                           {trackInfo?.name}
                         </div>
                       )}
-
                       <div className="text-[11px] text-gray-300">
                         {trackInfo?.artists}
                       </div>
@@ -233,7 +233,6 @@ export default function Playlist() {
                           {trackInfo?.name}
                         </div>
                       )}
-
                       <div className="text-[11px] text-gray-300">
                         {trackInfo?.artists}
                       </div>

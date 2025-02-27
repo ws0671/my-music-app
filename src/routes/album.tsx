@@ -61,7 +61,7 @@ export default function Album() {
     return <Loading />;
   }
   return (
-    <div>
+    <div className="">
       <div className="flex shadow-2xl gap-10 relative">
         <img
           className="w-52 h-auto"
@@ -88,63 +88,69 @@ export default function Album() {
           </div>
         </div>
       </div>
-      <div className="mt-10 grid grid-cols-[1fr_20fr_1fr] mr-5 text-sm text-gray-400">
-        <div className="flex justify-center items-center">#</div>
-        <div>제목</div>
-        <div className="flex justify-center items-center"></div>
-      </div>
-      <div className="border border-gray-200 my-3"></div>
-      {tracks.map((item) => {
-        const artists = item.artists.map((i) => i.name).join(", ");
-        // const duration_min = Math.floor(item.duration_ms / 1000 / 60);
-        // let duration_sec: string | number = Math.ceil(
-        //   (item.duration_ms / 1000) % 60
-        // );
-        // duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
-        return (
-          <div
-            key={item.id}
-            className="relative py-1 hover:bg-orange-200 hover:rounded-md grid grid-cols-[1fr_20fr_1fr] group mr-5"
-          >
-            <div className="group-hover:hidden flex justify-center items-center">
-              {item.track_number}
-            </div>
-            <div className="hidden justify-center items-center group-hover:flex">
-              <FontAwesomeIcon
-                className="hover:cursor-pointer"
-                data-trackId={item.id}
-                data-name={item.name}
-                data-artists={artists}
-                data-imgUrl={item.images}
-                onClick={onPlayClick}
-                icon={faPlay}
-              />
-            </div>
-            <div>
-              <div className="font-bold">{item.name}</div>
-              <div className="text-sm text-gray-400">
-                {item.artists.map((artist, index) => {
-                  const isLast = index === item.artists.length - 1;
-                  return (
-                    <span key={artist.id}>
-                      <Link to={`/artist/${artist.id}`}>
-                        <span className="hover:underline">{artist.name}</span>
-                      </Link>
-                      {!isLast && <span>, </span>}
-                    </span>
-                  );
-                })}
+      <div className="m-6">
+        <div className="mt-10 grid grid-cols-[1fr_20fr_1fr] mr-5 text-sm text-gray-400">
+          <div className="flex justify-center items-center">#</div>
+          <div>제목</div>
+          <div className="flex justify-center items-center"></div>
+        </div>
+        <div className="border border-gray-200 my-3"></div>
+        <div className="">
+          {tracks.map((item) => {
+            const artists = item.artists.map((i) => i.name).join(", ");
+            // const duration_min = Math.floor(item.duration_ms / 1000 / 60);
+            // let duration_sec: string | number = Math.ceil(
+            //   (item.duration_ms / 1000) % 60
+            // );
+            // duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
+            return (
+              <div
+                key={item.id}
+                className="relative p-2 hover:bg-purple-500 hover:rounded-md grid grid-cols-[1fr_20fr_1fr] group"
+              >
+                <div className="group-hover:hidden flex justify-center items-center">
+                  {item.track_number}
+                </div>
+                <div className="hidden justify-center items-center group-hover:flex">
+                  <FontAwesomeIcon
+                    className="hover:cursor-pointer"
+                    data-trackId={item.id}
+                    data-name={item.name}
+                    data-artists={artists}
+                    data-imgUrl={item.images}
+                    onClick={onPlayClick}
+                    icon={faPlay}
+                  />
+                </div>
+                <div>
+                  <div className="font-bold">{item.name}</div>
+                  <div className="text-sm text-gray-400">
+                    {item.artists.map((artist, index) => {
+                      const isLast = index === item.artists.length - 1;
+                      return (
+                        <span key={artist.id}>
+                          <Link to={`/artist/${artist.id}`}>
+                            <span className="hover:underline">
+                              {artist.name}
+                            </span>
+                          </Link>
+                          {!isLast && <span>, </span>}
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+                <EllipsisMenu
+                  trackId={item.id}
+                  name={item.name}
+                  artists={artists}
+                  imgUrl={item.images}
+                />
               </div>
-            </div>
-            <EllipsisMenu
-              trackId={item.id}
-              name={item.name}
-              artists={artists}
-              imgUrl={item.images}
-            />
-          </div>
-        );
-      })}
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }

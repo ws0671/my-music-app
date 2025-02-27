@@ -16,7 +16,6 @@
 @layer utilities {
   .custom-scrollbar {
     @apply overflow-y-auto;
-    scrollbar-gutter: stable;
   }
 
   .custom-scrollbar::-webkit-scrollbar {
