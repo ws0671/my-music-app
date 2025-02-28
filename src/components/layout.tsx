@@ -7,18 +7,15 @@ import Playlist from "./playlist";
 export default function Layout() {
   return (
     <div className="p-2 h-screen grid grid-rows-[auto_1fr_auto] grid-cols-[1fr_3fr_1fr] gap-2 bg-purple-700">
-      <div className="bg-purple-700">
-        <Header />
-      </div>
+      <Header />
       <div className="bg-purple-600">
         <Nav />
       </div>
-      <div className="">
-        <div className="bg-purple-600 overflow-y-auto custom-scrollbar">
-          <Outlet />
-        </div>
+      <div className="bg-purple-600 overflow-y-auto custom-scrollbar text-white">
+        <Outlet />
       </div>
-      <div className="bg-purple-600">{/* <Playlist /> */}</div>
+      <Playlist />
+
       <div className="bg-purple-700 col-span-3">
         <Player />
       </div>

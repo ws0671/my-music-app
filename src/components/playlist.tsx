@@ -107,9 +107,9 @@ export default function Playlist() {
   };
 
   return (
-    <div className=" shadow-xl border border-1 ">
-      <div className="flex justify-between font-bold pb-3 border-b-2 border-orange-200">
-        <div>Playlist</div>
+    <div className="p-4 flex flex-col overflow-hidden shadow-xl bg-purple-600 text-white">
+      <div className="flex justify-between font-bold pb-3 ">
+        <div>재생목록</div>
         <div>
           <FontAwesomeIcon
             onClick={removeAll}
@@ -119,7 +119,7 @@ export default function Playlist() {
         </div>
       </div>
 
-      <div className=" mt-3 overflow-y-scroll">
+      <div className=" mt-3 custom-scrollbar overflow-y-auto">
         {session
           ? userPlaylist.map((trackInfo, index) => {
               return (
@@ -130,7 +130,7 @@ export default function Playlist() {
                     data-artists={trackInfo?.artists}
                     data-imgUrl={trackInfo?.imgUrl}
                     onClick={onPlayClick}
-                    className="cursor-pointer gap-3 flex justify-between hover:bg-orange-200 p-2 rounded-xl group "
+                    className="cursor-pointer gap-3 flex justify-between hover:bg-orange-200 rounded-xl group "
                   >
                     <div className="flex w-8 items-center justify-center shrink-0">
                       <img
@@ -202,9 +202,9 @@ export default function Playlist() {
                     data-artists={trackInfo?.artists}
                     data-imgUrl={trackInfo?.imgUrl}
                     onClick={onPlayClick}
-                    className="cursor-pointer gap-3 flex justify-between hover:bg-orange-200 p-2 rounded-xl group "
+                    className="after:content-[''] after:bg-red-700 cursor-pointer grid grid-cols-[auto_1fr_auto] gap-3 justify-between  rounded-xl group "
                   >
-                    <div className="flex w-8 items-center justify-center shrink-0">
+                    <div className="w-8 items-center justify-center shrink-0">
                       <img
                         className={trackInfo ? "w-full h-full rounded" : ""}
                         src={trackInfo?.imgUrl ?? ""}
@@ -239,7 +239,7 @@ export default function Playlist() {
                     </div>
                     <div className="">
                       <FontAwesomeIcon
-                        className="cursor-pointer hover:bg-orange-300 rounded-full p-1"
+                        className="cursor-pointer hover:bg-purple-500 rounded-full p-1"
                         onClick={(e) => onEllipsis(e, index)}
                         icon={faEllipsis}
                       />
