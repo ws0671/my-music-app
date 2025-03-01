@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEllipsis,
   faMinus,
+  faPlay,
   faSquareMinus,
 } from "@fortawesome/free-solid-svg-icons";
 import useSessionStore from "../stores/session";
@@ -107,8 +108,8 @@ export default function Playlist() {
   };
 
   return (
-    <div className="p-4 flex flex-col overflow-hidden shadow-xl bg-purple-600 text-white">
-      <div className="flex justify-between font-bold pb-3 ">
+    <div className="p-4 flex flex-col overflow-hidden  bg-purple-600 text-white">
+      <div className="flex justify-between font-bold pb-3">
         <div>재생목록</div>
         <div>
           <FontAwesomeIcon
@@ -119,7 +120,7 @@ export default function Playlist() {
         </div>
       </div>
 
-      <div className=" mt-3 custom-scrollbar overflow-y-auto">
+      <div className="-mx-2 mt-3 custom-scrollbar overflow-y-auto">
         {session
           ? userPlaylist.map((trackInfo, index) => {
               return (
@@ -132,7 +133,7 @@ export default function Playlist() {
                     onClick={onPlayClick}
                     className="cursor-pointer gap-3 flex justify-between hover:bg-orange-200 rounded-xl group "
                   >
-                    <div className="flex w-8 items-center justify-center shrink-0">
+                    <div className="flex w-8 items-center justify-center shrink-0 ">
                       <img
                         className={trackInfo ? "w-full h-full rounded" : ""}
                         src={trackInfo?.imgUrl ?? ""}
@@ -195,32 +196,48 @@ export default function Playlist() {
             })
           : playlist.map((trackInfo, index) => {
               return (
-                <div key={index} className="">
+                <div key={index} className="group">
                   <div
                     data-trackId={trackInfo?.trackId}
                     data-name={trackInfo?.name}
                     data-artists={trackInfo?.artists}
                     data-imgUrl={trackInfo?.imgUrl}
                     onClick={onPlayClick}
-                    className="after:content-[''] after:bg-red-700 cursor-pointer grid grid-cols-[auto_1fr_auto] gap-3 justify-between  rounded-xl group "
+                    className="p-2 hover:rounded-md relative rounded-xl hover:bg-purple-500  cursor-pointer grid gap-3 grid-cols-[auto_1fr_auto] justify-between group "
                   >
-                    <div className="w-8 items-center justify-center shrink-0">
+                    <div className="w-12 items-center justify-center relative shrink-0 ">
                       <img
-                        className={trackInfo ? "w-full h-full rounded" : ""}
+                        className={
+                          trackInfo
+                            ? "w-full h-full rounded group-hover:opacity-50"
+                            : ""
+                        }
                         src={trackInfo?.imgUrl ?? ""}
                         alt={trackInfo?.name ?? ""}
                       />
+                      <div className="hidden justify-center items-center group-hover:flex">
+                        <FontAwesomeIcon
+                          className="hover:cursor-pointer absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] text-xl"
+                          data-trackId={trackInfo?.trackId}
+                          data-name={trackInfo?.name}
+                          data-artists={trackInfo?.artists}
+                          data-imgUrl={trackInfo?.imgUrl}
+                          onClick={onPlayClick}
+                          icon={faPlay}
+                        />
+                      </div>
                     </div>
+
                     <div
                       ref={containerRef}
-                      className=" overflow-hidden grow whitespace-nowrap "
+                      className="flex flex-col gap-1 overflow-hidden grow whitespace-nowrap "
                       id={trackInfo?.trackId ?? ""}
                     >
-                      <div className={`group-hover:hidden text-xs`}>
+                      <div className={`group-hover:hidden `}>
                         {trackInfo?.name}
                       </div>
                       {trackInfo.name && trackInfo?.name.length > 25 ? (
-                        <div className={"group-hover:block  text-xs hidden"}>
+                        <div className={"group-hover:block  hidden"}>
                           <div className="animate-marquee  inline-block pr-10">
                             {trackInfo?.name}
                           </div>
@@ -229,15 +246,15 @@ export default function Playlist() {
                           </div>
                         </div>
                       ) : (
-                        <div className={`hidden group-hover:block text-xs`}>
+                        <div className={`hidden group-hover:block `}>
                           {trackInfo?.name}
                         </div>
                       )}
-                      <div className="text-[11px] text-gray-300">
+                      <div className="text-sm text-gray-300">
                         {trackInfo?.artists}
                       </div>
                     </div>
-                    <div className="">
+                    <div className="items-center justify-center hidden group-hover:flex">
                       <FontAwesomeIcon
                         className="cursor-pointer hover:bg-purple-500 rounded-full p-1"
                         onClick={(e) => onEllipsis(e, index)}

@@ -75,6 +75,7 @@ export default function Search() {
       {tracks &&
         tracks.map((item, index) => {
           const artists = item.artists.map((i) => i.name).join(", ");
+
           // const duration_min = Math.floor(item.duration_ms / 1000 / 60);
           // let duration_sec: string | number = Math.ceil(
           //   (item.duration_ms / 1000) % 60
