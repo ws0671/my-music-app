@@ -83,7 +83,7 @@ export default function Home() {
                     const isLast = index === item.artists.length - 1;
                     return (
                       <>
-                        <Link to={`artist/${artist.id}`}>
+                        <Link to={`artist/${artist.id}`} key={artist.id}>
                           <span className="hover:underline">{artist.name}</span>
                         </Link>
                         {!isLast && <span>, </span>}

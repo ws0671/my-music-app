@@ -103,12 +103,18 @@ export const getAlbumTracks = async (id: string) => {
 };
 
 export const getArtist = async (id: string) => {
+  console.log(id);
+  const apiUrl = `https://api.spotify.com/artists/${id}`;
+
   const token = await getAccessToken();
+  console.log("Token:", token);
+
   const response = await axios.get(`https://api.spotify.com/v1/artists/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
+  console.log("Requesting:", apiUrl);
 
   return response.data;
 };
@@ -127,19 +133,19 @@ export const getArtistTopTracks = async (id: string) => {
   return response.data.tracks;
 };
 
-export const getRelatedArtist = async (id: string) => {
-  const token = await getAccessToken();
-  const response = await axios.get(
-    `https://api.spotify.com/v1/artists/${id}/related-artists`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+// export const getRelatedArtist = async (id: string) => {
+//   const token = await getAccessToken();
+//   const response = await axios.get(
+//     `https://api.spotify.com/v1/artists/${id}/related-artists`,
+//     {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//       },
+//     }
+//   );
 
-  return response.data.artists;
-};
+//   return response.data.artists;
+// };
 
 export const getFeaturedPlaylists = async () => {
   const token = await getAccessToken();

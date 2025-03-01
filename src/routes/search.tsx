@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getSpotifyTrackInfo, searchTracks } from "../api/spotify";
 import Loading from "../components/loading";
@@ -26,12 +26,14 @@ export default function Search() {
   const { setVideoId } = useVideoIdStore();
   const { setTrackInfo, togglePlay } = useTrackInfoStore();
   const { session } = useSessionStore();
+
   useEffect(() => {
     const fetchSearchedData = async () => {
       try {
         setIsLoading(true);
         if (id) {
           const searchedData = await searchTracks(id);
+
           setTracks(searchedData.tracks.items);
           setArtists(searchedData.artists.items);
           setPlaylists(searchedData.playlists.items);
@@ -45,12 +47,11 @@ export default function Search() {
     };
     fetchSearchedData();
   }, [id]);
-  console.log(artists);
   const onPlayClick = async (e: React.MouseEvent<SVGSVGElement>) => {
-    const trackId = e.currentTarget.getAttribute("data-trackId");
+    const trackId = e.currentTarget.getAttribute("data-trackid");
     const name = e.currentTarget.getAttribute("data-name");
     const artists = e.currentTarget.getAttribute("data-artists");
-    const imgUrl = e.currentTarget.getAttribute("data-imgUrl");
+    const imgUrl = e.currentTarget.getAttribute("data-imgurl");
 
     const trackInfo = await getSpotifyTrackInfo(trackId);
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
@@ -73,8 +74,8 @@ export default function Search() {
     <div className="m-6">
       <h3 className="mt-10 mb-5 text-2xl font-bold">곡</h3>
       {tracks &&
-        tracks.map((item, index) => {
-          const artists = item.artists.map((i) => i.name).join(", ");
+        tracks.map((track) => {
+          const artists = track.artists.map((i) => i.name).join(", ");
 
           // const duration_min = Math.floor(item.duration_ms / 1000 / 60);
           // let duration_sec: string | number = Math.ceil(
@@ -83,7 +84,7 @@ export default function Search() {
           // duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
           return (
             <div
-              key={index}
+              key={track.id}
               className="p-2 grid grid-cols-[10fr_10fr_1fr]  gap-3 hover:rounded-md hover:bg-purple-500  group relative "
             >
               {/* <div className="group-hover:hidden flex justify-center items-center">
@@ -95,26 +96,26 @@ export default function Search() {
                   <div className="absolute z-10 top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100">
                     <FontAwesomeIcon
                       className="hover:cursor-pointer text-white"
-                      data-trackId={item.id}
-                      data-name={item.name}
+                      data-trackid={track.id}
+                      data-name={track.name}
                       data-artists={artists}
-                      data-imgUrl={item.album.images[0].url}
+                      data-imgurl={track.album.images[0].url}
                       onClick={onPlayClick}
                       icon={faPlay}
                     />
                   </div>
                   <img
                     className="w-10 h-10 rounded group-hover:opacity-50"
-                    src={item.album.images[0].url}
-                    alt={item.album.name}
+                    src={track.album.images[0].url}
+                    alt={track.album.name}
                   />
                 </div>
                 <div className="ml-3">
-                  <div className="font-bold">{item.name}</div>
+                  <div className="font-bold">{track.name}</div>
 
                   <div className="text-sm text-gray-400">
-                    {item.artists.map((artist, index) => {
-                      const isLast = index === item.artists.length - 1;
+                    {track.artists.map((artist, index) => {
+                      const isLast = index === track.artists.length - 1;
                       return (
                         <div className="inline-block" key={index}>
                           <Link to={`/artist/${artist.id}`}>
@@ -130,15 +131,15 @@ export default function Search() {
                 </div>
               </div>
               <div className="flex items-center text-sm">
-                <Link to={`/album/${item.album.id}`}>
-                  <span className="hover:underline">{item.album.name}</span>
+                <Link to={`/album/${track.album.id}`}>
+                  <span className="hover:underline">{track.album.name}</span>
                 </Link>
               </div>
               <EllipsisMenu
-                trackId={item.id}
-                name={item.name}
+                trackId={track.id}
+                name={track.name}
                 artists={artists}
-                imgUrl={item.album.images[0].url}
+                imgUrl={track.album.images[0]}
               />
             </div>
           );
@@ -165,20 +166,23 @@ export default function Search() {
       <h3 className="mt-10 mb-5 text-2xl font-bold">앨범</h3>
       <div className="grid grid-cols-5 gap-6 ">
         {albums &&
-          albums.slice(0, 5).map((item) => {
+          albums.slice(0, 5).map((track) => {
             return (
-              <Link to={`/album/${item.id}`} key={item.id}>
+              <Link to={`/album/${track.id}`} key={track.id}>
                 <div className="">
-                  <img className="rounded-lg w-full" src={item.images[0].url} />
-                  <div className="my-1 truncate font-bold" key={item.id}>
-                    {item.name}
+                  <img
+                    className="rounded-lg w-full"
+                    src={track.images[0].url}
+                  />
+                  <div className="my-1 truncate font-bold" key={track.id}>
+                    {track.name}
                   </div>
                   <div className="truncate text-sm  text-gray-400">
-                    {item.artists.map((artist, index) => {
-                      const isLast = index === item.artists.length - 1;
+                    {track.artists.map((artist, index) => {
+                      const isLast = index === track.artists.length - 1;
                       return (
                         <div className="inline-block" key={index}>
-                          <Link to={`artist/${artist.id}`}>
+                          <Link to={`/artist/${artist.id}`}>
                             <span className="hover:underline">
                               {artist.name}
                             </span>

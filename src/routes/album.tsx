@@ -36,10 +36,10 @@ export default function Album() {
   }, [id]);
 
   const onPlayClick = async (e: MouseEvent<SVGSVGElement>) => {
-    const trackId = e.currentTarget.getAttribute("data-trackId");
+    const trackId = e.currentTarget.getAttribute("data-trackid");
     const name = e.currentTarget.getAttribute("data-name");
     const artists = e.currentTarget.getAttribute("data-artists");
-    const imgUrl = e.currentTarget.getAttribute("data-imgUrl");
+    const imgUrl = e.currentTarget.getAttribute("data-imgurl");
 
     const trackInfo = await getSpotifyTrackInfo(trackId);
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
@@ -114,10 +114,10 @@ export default function Album() {
                 <div className="hidden justify-center items-center group-hover:flex">
                   <FontAwesomeIcon
                     className="hover:cursor-pointer"
-                    data-trackId={item.id}
+                    data-trackid={item.id}
                     data-name={item.name}
                     data-artists={artists}
-                    data-imgUrl={item.images}
+                    data-imgurl={item.images}
                     onClick={onPlayClick}
                     icon={faPlay}
                   />

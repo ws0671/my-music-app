@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import {
   getArtist,
   getArtistTopTracks,
-  getRelatedArtist,
   getSpotifyTrackInfo,
 } from "../api/spotify";
 import { Link, useParams } from "react-router-dom";
@@ -31,7 +30,6 @@ export default function Artist() {
         if (id) {
           const artist = await getArtist(id);
           const tracks = await getArtistTopTracks(id);
-          const relatedArtists = await getRelatedArtist(id);
           setArtist(artist);
           setTracks(tracks);
           setRelatedArtists(relatedArtists);
@@ -46,10 +44,10 @@ export default function Artist() {
   }, [id]);
   console.log(tracks);
   const onPlayClick = async (e: React.MouseEvent<SVGSVGElement>) => {
-    const trackId = e.currentTarget.getAttribute("data-trackId");
+    const trackId = e.currentTarget.getAttribute("data-trackid");
     const name = e.currentTarget.getAttribute("data-name");
     const artists = e.currentTarget.getAttribute("data-artists");
-    const imgUrl = e.currentTarget.getAttribute("data-imgUrl");
+    const imgUrl = e.currentTarget.getAttribute("data-imgurl");
 
     const trackInfo = await getSpotifyTrackInfo(trackId);
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
@@ -112,10 +110,10 @@ export default function Artist() {
             <div className="hidden justify-center items-center group-hover:flex">
               <FontAwesomeIcon
                 className="hover:cursor-pointer"
-                data-trackId={item.id}
+                data-trackid={item.id}
                 data-name={item.name}
                 data-artists={artists}
-                data-imgUrl={item.album.images[0].url}
+                data-imgurl={item.album.images[0].url}
                 onClick={onPlayClick}
                 icon={faPlay}
               />

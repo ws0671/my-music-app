@@ -1,6 +1,6 @@
 import { Session } from "@supabase/supabase-js";
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 interface ISessionStore {
   session: Session | null;
@@ -15,7 +15,7 @@ const useSessionStore = create(
     }),
     {
       name: "session-storage", // 저장소의 이름
-      getStorage: () => localStorage, // 로컬 스토리지에 저장
+      storage: createJSONStorage(() => localStorage), // 로컬 스토리지에 저장
     }
   )
 );

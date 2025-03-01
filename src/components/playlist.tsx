@@ -18,6 +18,17 @@ import useSessionStore from "../stores/session";
 import { deleteAllTrack, deleteTrack } from "../utils/playlist";
 
 export default function Playlist() {
+  const [showShadow, setShowShadow] = useState(false);
+  const scrollContainerRef = useRef(null);
+
+  const handleScroll = () => {
+    if (scrollContainerRef.current.scrollTop > 50) {
+      setShowShadow(true);
+    } else {
+      setShowShadow(false);
+    }
+  };
+
   const containerRef = useRef<HTMLDivElement>(null);
   const { setVideoId } = useVideoIdStore();
   const { setTrackInfo, togglePlay } = useTrackInfoStore();
@@ -50,10 +61,10 @@ export default function Playlist() {
   }, []);
 
   const onPlayClick = async (e: React.MouseEvent) => {
-    const trackId = e.currentTarget.getAttribute("data-trackId");
+    const trackId = e.currentTarget.getAttribute("data-trackid");
     const name = e.currentTarget.getAttribute("data-name");
     const artists = e.currentTarget.getAttribute("data-artists");
-    const imgUrl = e.currentTarget.getAttribute("data-imgUrl");
+    const imgUrl = e.currentTarget.getAttribute("data-imgurl");
 
     const trackInfo = await getSpotifyTrackInfo(trackId);
 
@@ -108,8 +119,12 @@ export default function Playlist() {
   };
 
   return (
-    <div className="p-4 flex flex-col overflow-hidden  bg-purple-600 text-white">
-      <div className="flex justify-between font-bold pb-3">
+    <div className="flex flex-col overflow-hidden  bg-purple-600 text-white">
+      <div
+        className={`${
+          showShadow ? "shadow-custom" : ""
+        } px-4 py-[18px] transition-shadow duration-300 flex justify-between font-bold`}
+      >
         <div>재생목록</div>
         <div>
           <FontAwesomeIcon
@@ -120,16 +135,20 @@ export default function Playlist() {
         </div>
       </div>
 
-      <div className="-mx-2 mt-3 custom-scrollbar overflow-y-auto">
+      <div
+        ref={scrollContainerRef}
+        onScroll={handleScroll}
+        className="p-4 -mx-2 custom-scrollbar overflow-y-auto "
+      >
         {session
           ? userPlaylist.map((trackInfo, index) => {
               return (
                 <div key={index} className="">
                   <div
-                    data-trackId={trackInfo?.trackId}
+                    data-trackid={trackInfo?.trackId}
                     data-name={trackInfo?.name}
                     data-artists={trackInfo?.artists}
-                    data-imgUrl={trackInfo?.imgUrl}
+                    data-imgurl={trackInfo?.imgUrl}
                     onClick={onPlayClick}
                     className="cursor-pointer gap-3 flex justify-between hover:bg-orange-200 rounded-xl group "
                   >
@@ -198,10 +217,10 @@ export default function Playlist() {
               return (
                 <div key={index} className="group">
                   <div
-                    data-trackId={trackInfo?.trackId}
+                    data-trackid={trackInfo?.trackId}
                     data-name={trackInfo?.name}
                     data-artists={trackInfo?.artists}
-                    data-imgUrl={trackInfo?.imgUrl}
+                    data-imgurl={trackInfo?.imgUrl}
                     onClick={onPlayClick}
                     className="p-2 hover:rounded-md relative rounded-xl hover:bg-purple-500  cursor-pointer grid gap-3 grid-cols-[auto_1fr_auto] justify-between group "
                   >
@@ -218,10 +237,10 @@ export default function Playlist() {
                       <div className="hidden justify-center items-center group-hover:flex">
                         <FontAwesomeIcon
                           className="hover:cursor-pointer absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] text-xl"
-                          data-trackId={trackInfo?.trackId}
+                          data-trackid={trackInfo?.trackId}
                           data-name={trackInfo?.name}
                           data-artists={trackInfo?.artists}
-                          data-imgUrl={trackInfo?.imgUrl}
+                          data-imgurl={trackInfo?.imgUrl}
                           onClick={onPlayClick}
                           icon={faPlay}
                         />

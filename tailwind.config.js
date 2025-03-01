@@ -3,6 +3,9 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      boxShadow: {
+        custom: "0 4px 12px 0 rgba(0, 0, 0, 0.3)", // 0 4px 12px 0 rgba(0, 0, 0, 0.3)로 변환
+      },
       fontFamily: {
         pretendard: ["Pretendard-Regular", "sans-serif"],
         gmarket: ["GmarketSansMedium", "sans-serif"],

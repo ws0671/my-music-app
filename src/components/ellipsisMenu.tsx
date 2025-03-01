@@ -31,10 +31,10 @@ export default function EllipsisMenu({
   };
   const addTrack = async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     setEllipsis(false);
-    const trackId = e.currentTarget.getAttribute("data-trackId");
+    const trackId = e.currentTarget.getAttribute("data-trackid");
     const name = e.currentTarget.getAttribute("data-name");
     const artists = e.currentTarget.getAttribute("data-artists");
-    const imgUrl = e.currentTarget.getAttribute("data-imgUrl");
+    const imgUrl = e.currentTarget.getAttribute("data-imgurl");
     const trackInfo = await getSpotifyTrackInfo(trackId);
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
     const fetchedVideoId = await searchYouTubeVideo(searchQuery);
@@ -66,9 +66,9 @@ export default function EllipsisMenu({
       <div
         onClick={(e) => addTrack(e)}
         data-name={name}
-        data-trackId={trackId}
+        data-trackid={trackId}
         data-artists={artists}
-        data-imgUrl={imgUrl}
+        data-imgurl={imgUrl}
         className={
           ellipsis && selectedId === trackId
             ? " absolute top-10 cursor-pointer  hover:bg-orange-100 bg-white border shadow-md px-3 py-2 rounded-md z-[1000] right-0"
