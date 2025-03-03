@@ -138,7 +138,7 @@ export default function Playlist() {
       <div
         ref={scrollContainerRef}
         onScroll={handleScroll}
-        className="p-4 -mx-2 custom-scrollbar overflow-y-auto "
+        className="p-4 -ml-2 custom-scrollbar overflow-y-auto "
       >
         {session
           ? userPlaylist.map((trackInfo, index) => {
