@@ -23,11 +23,15 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-track {
+    color: ;
     background: transparent; /* 스크롤바 배경 숨기기 */
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #a855f7; /* 보라색 스크롤 */
+    background-color: transparent;
+  }
+  :hover.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #a855f7;
   }
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background-color: #c084fc; /* 보라색 스크롤 */
