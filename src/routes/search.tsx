@@ -75,8 +75,12 @@ export default function Search() {
       <h3 className="mt-10 mb-5 text-2xl font-bold">곡</h3>
       {tracks &&
         tracks.map((track) => {
-          const artists = track.artists.map((i) => i.name).join(", ");
+          console.log(track);
 
+          const artists = track.artists.map((i) => i.name).join(", ");
+          const image = track.album.images[0]
+            ? track.album.images[0].url
+            : "/images/headphone.jpg";
           // const duration_min = Math.floor(item.duration_ms / 1000 / 60);
           // let duration_sec: string | number = Math.ceil(
           //   (item.duration_ms / 1000) % 60
@@ -99,14 +103,14 @@ export default function Search() {
                       data-trackid={track.id}
                       data-name={track.name}
                       data-artists={artists}
-                      data-imgurl={track.album.images[0].url}
+                      data-imgurl={image}
                       onClick={onPlayClick}
                       icon={faPlay}
                     />
                   </div>
                   <img
                     className="w-10 h-10 rounded group-hover:opacity-50"
-                    src={track.album.images[0].url}
+                    src={image}
                     alt={track.album.name}
                   />
                 </div>
@@ -139,7 +143,7 @@ export default function Search() {
                 trackId={track.id}
                 name={track.name}
                 artists={artists}
-                imgUrl={track.album.images[0]}
+                imgUrl={image}
               />
             </div>
           );
