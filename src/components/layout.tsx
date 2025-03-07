@@ -16,9 +16,7 @@ export default function Layout() {
       </div>
       <Playlist />
 
-      <div className="bg-purple-700 col-span-3">
-        <Player />
-      </div>
+      <Player />
     </div>
   );
 }

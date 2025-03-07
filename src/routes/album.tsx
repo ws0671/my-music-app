@@ -3,19 +3,26 @@ import { Link, useParams } from "react-router-dom";
 import { getAlbumTracks, getSpotifyTrackInfo } from "../api/spotify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loading from "../components/loading";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCirclePause,
+  faPause,
+  faPlay,
+} from "@fortawesome/free-solid-svg-icons";
 import { searchYouTubeVideo } from "../api/youtube";
 import { useTrackInfoStore, useVideoIdStore } from "../stores/video";
 import useSessionStore from "../stores/session";
 import EllipsisMenu from "../components/ellipsisMenu";
 import { ITracksAllData } from "../types/spotify";
+
 export default function Album() {
   const [tracks, setTracks] = useState<ITracksAllData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { id } = useParams();
   const { setVideoId } = useVideoIdStore();
-  const { setTrackInfo, togglePlay } = useTrackInfoStore();
+  const { isPlaying, trackInfo, setTrackInfo, togglePlay } =
+    useTrackInfoStore();
   const { session } = useSessionStore();
+
   useEffect(() => {
     const fetchAlbumTracks = async () => {
       setIsLoading(true);
@@ -36,24 +43,31 @@ export default function Album() {
   }, [id]);
 
   const onPlayClick = async (e: MouseEvent<SVGSVGElement>) => {
-    const trackId = e.currentTarget.getAttribute("data-trackid");
-    const name = e.currentTarget.getAttribute("data-name");
-    const artists = e.currentTarget.getAttribute("data-artists");
-    const imgUrl = e.currentTarget.getAttribute("data-imgurl");
+    if (trackInfo) {
+      togglePlay();
+    } else {
+      const trackId = e.currentTarget.getAttribute("data-trackid");
+      const name = e.currentTarget.getAttribute("data-name");
+      const artists = e.currentTarget.getAttribute("data-artists");
+      const imgUrl = e.currentTarget.getAttribute("data-imgurl");
 
-    const trackInfo = await getSpotifyTrackInfo(trackId);
-    const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
-    const fetchedVideoId = await searchYouTubeVideo(searchQuery);
-    const trackInfoOne = {
-      userId: session?.user.id,
-      trackId,
-      name,
-      artists,
-      imgUrl,
-      videoId: fetchedVideoId,
-    };
-    setVideoId(fetchedVideoId);
-    setTrackInfo(trackInfoOne);
+      const trackInfo = await getSpotifyTrackInfo(trackId);
+      const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
+      const fetchedVideoId = await searchYouTubeVideo(searchQuery);
+      const trackInfoOne = {
+        userId: session?.user.id,
+        trackId,
+        name,
+        artists,
+        imgUrl,
+        videoId: fetchedVideoId,
+      };
+      setVideoId(fetchedVideoId);
+      setTrackInfo(trackInfoOne);
+      togglePlay();
+    }
+  };
+  const pauseVideo = () => {
     togglePlay();
   };
 
@@ -112,15 +126,23 @@ export default function Album() {
                   {item.track_number}
                 </div>
                 <div className="hidden justify-center items-center group-hover:flex">
-                  <FontAwesomeIcon
-                    className="hover:cursor-pointer"
-                    data-trackid={item.id}
-                    data-name={item.name}
-                    data-artists={artists}
-                    data-imgurl={item.images}
-                    onClick={onPlayClick}
-                    icon={faPlay}
-                  />
+                  {isPlaying ? (
+                    <FontAwesomeIcon
+                      icon={faPause}
+                      className="cursor-pointer"
+                      onClick={pauseVideo}
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      className="hover:cursor-pointer"
+                      data-trackid={item.id}
+                      data-name={item.name}
+                      data-artists={artists}
+                      data-imgurl={item.images}
+                      onClick={onPlayClick}
+                      icon={faPlay}
+                    />
+                  )}
                 </div>
                 <div>
                   <div className="font-bold">{item.name}</div>
