@@ -76,20 +76,20 @@ export default function Album() {
   }
   return (
     <div className="">
-      <div className="flex shadow-2xl gap-10 relative">
+      <div className="flex shadow-2xl gap-6 relative h-[250px]">
         <img
-          className="w-52 h-auto"
+          className="h-auto shadow-[rgba(0,0,0,0.35)_0px_5px_15px]"
           src={tracks[0].images ?? ""}
           alt={tracks[0].name}
         />
-        <div className="flex space-y-3 flex-col justify-center">
+        <div className="flex space-y-2 font-rowdies flex-col justify-end items-start gap-4 pb-5">
           <div className="">앨범</div>
-          <div className={`font-bold ${"text-5xl"}`}>{tracks[0].name}</div>
-          <div className="font-bold">
+          <div className="text-6xl ">{tracks[0].name}</div>
+          <div className="">
             {tracks[0].artists.map((artist, index) => {
               const isLast = index === tracks[0].artists.length - 1;
               return (
-                <span key={artist.id}>
+                <span className="font-bold" key={artist.id}>
                   <Link to={`/artist/${artist.id}`}>
                     <span className="hover:underline">{artist.name}</span>
                   </Link>
@@ -97,8 +97,8 @@ export default function Album() {
                 </span>
               );
             })}
-            <span className="mx-3">·</span>
-            <span>{tracks[0].release_date}</span>
+            <span className="mx-1">·</span>
+            <span className=" opacity-70">{tracks[0].release_date}</span>
           </div>
         </div>
       </div>
@@ -120,7 +120,7 @@ export default function Album() {
             return (
               <div
                 key={item.id}
-                className="relative p-2 hover:bg-purple-500 hover:rounded-md grid grid-cols-[1fr_20fr_1fr] group"
+                className="relative gap-4 py-2 px-4 hover:bg-purple-500 hover:rounded-md grid grid-cols-[1fr_20fr_1fr] group"
               >
                 <div className="group-hover:hidden flex justify-center items-center">
                   {item.track_number}

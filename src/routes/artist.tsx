@@ -68,15 +68,21 @@ export default function Artist() {
   if (isLoading) return <Loading />;
   return (
     <div>
-      <div className="flex shadow-2xl gap-10 relative box-border">
-        <img className="" src={artist?.images[0].url} alt={artist?.name} />
-        <div className="pb-10 flex flex-col break-all justify-center space-y-10">
-          <div className=" text-xl">아티스트</div>
-          <div className="font-bold text-8xl ">{artist?.name}</div>
-          <div className="font-bold text-5xl ">
-            팔로워 {artist?.followers.total.toLocaleString()}
+      <div className="shadow-2xl gap-10 relative h-[300px] font-rowdies box-border overflow-hidden">
+        <img
+          className="opacity-80 object-[0%_10%] w-full object-cover h-full"
+          src={artist?.images[0].url}
+          alt={artist?.name}
+        />
+        <div className="absolute bottom-5 left-5 break-all justify-center flex flex-col gap-4">
+          <div className="">아티스트</div>
+          <div className="font-[1000] text-8xl tracking-tighter">
+            {artist?.name}
           </div>
-          <span className="font-bold text-sm">
+          <div className="font-bold">
+            팔로워 {artist?.followers.total.toLocaleString()}명
+          </div>
+          {/* <span className="font-bold text-sm">
             {artist?.genres.map((item, index) => {
               return (
                 <span
@@ -87,77 +93,61 @@ export default function Artist() {
                 </span>
               );
             })}
-          </span>
+          </span> */}
         </div>
       </div>
-      <div className="mt-10 text-2xl font-bold">인기</div>
-      <div className="border border-gray-200 my-3"></div>
-      {tracks.map((item, index) => {
-        const artists = item.artists.map((i) => i.name).join(", ");
-        // const duration_min = Math.floor(item.duration_ms / 1000 / 60);
-        // let duration_sec: string | number = Math.ceil(
-        //   (item.duration_ms / 1000) % 60
-        // );
-        // duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
-        return (
-          <div
-            key={item.id}
-            className="py-1 hover:bg-orange-200 hover:rounded-md grid grid-cols-[1fr_20fr_1fr] group mr-5 relative"
-          >
-            <div className="group-hover:hidden flex justify-center items-center">
-              {index + 1}
-            </div>
-            <div className="hidden justify-center items-center group-hover:flex">
-              <FontAwesomeIcon
-                className="hover:cursor-pointer"
-                data-trackid={item.id}
-                data-name={item.name}
-                data-artists={artists}
-                data-imgurl={item.album.images[0].url}
-                onClick={onPlayClick}
-                icon={faPlay}
+      <div className="m-6">
+        <div className="mt-10 text-2xl font-bold">인기</div>
+        <div className="border border-gray-200 my-3"></div>
+        {tracks.map((item, index) => {
+          const artists = item.artists.map((i) => i.name).join(", ");
+          // const duration_min = Math.floor(item.duration_ms / 1000 / 60);
+          // let duration_sec: string | number = Math.ceil(
+          //   (item.duration_ms / 1000) % 60
+          // );
+          // duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
+          return (
+            <div
+              key={item.id}
+              className="relative gap-4 py-2 px-4 hover:bg-purple-500 hover:rounded-md grid grid-cols-[1fr_20fr_1fr] group"
+            >
+              <div className="group-hover:hidden flex justify-center items-center">
+                {index + 1}
+              </div>
+              <div className="hidden justify-center items-center group-hover:flex">
+                <FontAwesomeIcon
+                  className="hover:cursor-pointer"
+                  data-trackid={item.id}
+                  data-name={item.name}
+                  data-artists={artists}
+                  data-imgurl={item.album.images[0].url}
+                  onClick={onPlayClick}
+                  icon={faPlay}
+                />
+              </div>
+              <div>
+                <div className="font-bold">{item.name}</div>
+                <div className="text-sm text-gray-400">
+                  {item.artists.map((artist, index) => {
+                    const isLast = index === item.artists.length - 1;
+                    return (
+                      <span key={artist.id}>
+                        <Link to={`/artist/${artist.id}`}>
+                          <span className="hover:underline">{artist.name}</span>
+                        </Link>
+                        {!isLast && <span>, </span>}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+              <EllipsisMenu
+                trackId={item.id}
+                name={item.name}
+                artists={artists}
+                imgUrl={item.album.images[0].url}
               />
             </div>
-            <div>
-              <div className="font-bold">{item.name}</div>
-              <div className="text-sm text-gray-400">
-                {item.artists.map((artist, index) => {
-                  const isLast = index === item.artists.length - 1;
-                  return (
-                    <span key={artist.id}>
-                      <Link to={`/artist/${artist.id}`}>
-                        <span className="hover:underline">{artist.name}</span>
-                      </Link>
-                      {!isLast && <span>, </span>}
-                    </span>
-                  );
-                })}
-              </div>
-            </div>
-            <EllipsisMenu
-              trackId={item.id}
-              name={item.name}
-              artists={artists}
-              imgUrl={item.album.images[0].url}
-            />
-          </div>
-        );
-      })}
-      <h3 className="mt-10 mb-5 text-2xl font-bold">연관된 아티스트</h3>
-      <div className="flex gap-10 flex-wrap ">
-        {relatedArtists.map((artist) => {
-          return (
-            <Link key={artist.id} to={`/artist/${artist.id}`}>
-              <div className=" w-40">
-                <img
-                  className="w-40 h-40 rounded-full"
-                  src={artist.images[0].url}
-                  alt={artist.name}
-                />
-                <div className="truncate font-bold">{artist.name}</div>
-                <div className="text-sm text-gray-400">아티스트</div>
-              </div>
-            </Link>
           );
         })}
       </div>

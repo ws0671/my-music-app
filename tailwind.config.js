@@ -11,6 +11,8 @@ export default {
         gmarket: ["GmarketSansMedium", "sans-serif"],
         dongle: ["Dongle", "serif"],
         jua: ["Jua", "serif"],
+        serifText: ['"DM Serif Text"', "serif"],
+        rowdies: ['"Rowdies"', "sans-serif"],
       },
       animation: {
         appear: "appear 1s",
