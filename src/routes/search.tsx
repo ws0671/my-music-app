@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getSpotifyTrackInfo, searchTracks } from "../api/spotify";
 import Loading from "../components/loading";
-import TruncatedText from "../components/truncated-text";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTrackInfoStore, useVideoIdStore } from "../stores/video";
 import { searchYouTubeVideo } from "../api/youtube";
@@ -21,7 +20,7 @@ export default function Search() {
   const [tracks, setTracks] = useState<ITracksAllData[]>([]);
   const [artists, setArtists] = useState<ISpecificArtist[]>([]);
   const [albums, setAlbums] = useState<ITrack[]>([]);
-  const [playlists, setPlaylists] = useState<IPlaylists[]>([]);
+  const [_playlists, setPlaylists] = useState<IPlaylists[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { setVideoId } = useVideoIdStore();
   const { setTrackInfo, togglePlay } = useTrackInfoStore();

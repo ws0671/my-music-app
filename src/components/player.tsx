@@ -1,9 +1,6 @@
 import {
   faCirclePause,
   faCirclePlay,
-  faList,
-  faPause,
-  faPlay,
   faRepeat,
   faShuffle,
   faStepBackward,
@@ -19,9 +16,8 @@ import {
 import { useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
 import { useVideoIdStore } from "../stores/video";
-import Playlist from "./playlist";
 import useSessionStore from "../stores/session";
-import { addToPlaylist, fetchPlaylist } from "../utils/playlist";
+import { fetchPlaylist } from "../utils/playlist";
 
 interface OnReady {
   target: {
@@ -30,21 +26,19 @@ interface OnReady {
 }
 export default function Player() {
   const { videoId, setVideoId } = useVideoIdStore();
-  const { playlist, setPlaylist } = usePlaylistStore();
+  const { playlist } = usePlaylistStore();
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
-  const [onPlaylist, setOnPlaylist] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
-  const { trackInfo, isPlaying, togglePlay, setTrackInfo, isTrackPlaying } =
+  const { trackInfo, isPlaying, togglePlay, setTrackInfo } =
     useTrackInfoStore();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isShort, setIsShort] = useState(false);
+  const [_isShort, setIsShort] = useState(false);
   const { currentTrackIndex, setCurrentTrackIndex } =
     useCurrentTrackIndexStore();
   const { session } = useSessionStore();
-  const { userPlaylist, setUserPlaylist, replaceUserPlaylist } =
-    useUserPlaylistStore();
+  const { userPlaylist, replaceUserPlaylist } = useUserPlaylistStore();
   const ignoreTrackInfoEffect = useRef(false);
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState(false);
@@ -262,9 +256,9 @@ export default function Player() {
   };
 
   // 로그인 & 비로그인시 플레이리스트가 비어있을 때
-  const isPlaylistEmpty = session
-    ? userPlaylist.length === 0
-    : playlist.length === 0;
+  // const isPlaylistEmpty = session
+  //   ? userPlaylist.length === 0
+  //   : playlist.length === 0;
   return (
     <>
       <div></div>

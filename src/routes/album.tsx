@@ -3,11 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { getAlbumTracks, getSpotifyTrackInfo } from "../api/spotify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loading from "../components/loading";
-import {
-  faCirclePause,
-  faPause,
-  faPlay,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { searchYouTubeVideo } from "../api/youtube";
 import { useTrackInfoStore, useVideoIdStore } from "../stores/video";
 import useSessionStore from "../stores/session";

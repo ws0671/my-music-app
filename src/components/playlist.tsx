@@ -19,10 +19,13 @@ import { deleteAllTrack, deleteTrack } from "../utils/playlist";
 
 export default function Playlist() {
   const [showShadow, setShowShadow] = useState(false);
-  const scrollContainerRef = useRef(null);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   const handleScroll = () => {
-    if (scrollContainerRef.current.scrollTop > 50) {
+    if (
+      scrollContainerRef.current &&
+      scrollContainerRef.current.scrollTop > 50
+    ) {
       setShowShadow(true);
     } else {
       setShowShadow(false);

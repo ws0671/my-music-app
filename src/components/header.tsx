@@ -3,11 +3,7 @@ import useSessionStore from "../stores/session";
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "../utils/supabaseClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronLeft,
-  faChevronRight,
-  faMagnifyingGlass,
-} from "@fortawesome/free-solid-svg-icons";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 
 export default function Header() {
   const navigate = useNavigate();
