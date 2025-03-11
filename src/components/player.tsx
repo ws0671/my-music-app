@@ -1,6 +1,9 @@
 import {
   faCirclePause,
   faCirclePlay,
+  faList,
+  faPause,
+  faPlay,
   faRepeat,
   faShuffle,
   faStepBackward,
@@ -16,8 +19,9 @@ import {
 import { useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
 import { useVideoIdStore } from "../stores/video";
+import Playlist from "./playlist";
 import useSessionStore from "../stores/session";
-import { fetchPlaylist } from "../utils/playlist";
+import { addToPlaylist, fetchPlaylist } from "../utils/playlist";
 
 interface OnReady {
   target: {
@@ -26,19 +30,21 @@ interface OnReady {
 }
 export default function Player() {
   const { videoId, setVideoId } = useVideoIdStore();
-  const { playlist } = usePlaylistStore();
+  const { playlist, setPlaylist } = usePlaylistStore();
   const [player, setPlayer] = useState<YouTubePlayer | null>(null);
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const [onPlaylist, setOnPlaylist] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
   const { trackInfo, isPlaying, togglePlay, setTrackInfo } =
     useTrackInfoStore();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [_isShort, setIsShort] = useState(false);
+  const [isShort, setIsShort] = useState(false);
   const { currentTrackIndex, setCurrentTrackIndex } =
     useCurrentTrackIndexStore();
   const { session } = useSessionStore();
-  const { userPlaylist, replaceUserPlaylist } = useUserPlaylistStore();
+  const { userPlaylist, setUserPlaylist, replaceUserPlaylist } =
+    useUserPlaylistStore();
   const ignoreTrackInfoEffect = useRef(false);
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState(false);
@@ -67,25 +73,25 @@ export default function Player() {
     };
     handleUserPlaylist();
   }, [session, replaceUserPlaylist]);
-  // useEffect(() => {
-  //   const handleUpdatedPlaylist = () => {
-  //     if (trackInfo) {
-  //       if (trackInfo?.state === "playlist") return;
+  useEffect(() => {
+    const handleUpdatedPlaylist = () => {
+      if (trackInfo) {
+        if (trackInfo?.state === "playlist") return;
 
-  //       if (session) {
-  //         addToPlaylist(trackInfo);
-  //         setUserPlaylist(trackInfo);
-  //       } else {
-  //         setPlaylist(trackInfo);
-  //       }
-  //     }
-  //   };
-  //   if (!ignoreTrackInfoEffect.current) {
-  //     handleUpdatedPlaylist();
-  //   } else {
-  //     ignoreTrackInfoEffect.current = false;
-  //   }
-  // }, [trackInfo, setPlaylist, setUserPlaylist, session]);
+        if (session) {
+          addToPlaylist(trackInfo);
+          setUserPlaylist(trackInfo);
+        } else {
+          setPlaylist(trackInfo);
+        }
+      }
+    };
+    if (!ignoreTrackInfoEffect.current) {
+      handleUpdatedPlaylist();
+    } else {
+      ignoreTrackInfoEffect.current = false;
+    }
+  }, [trackInfo, setPlaylist, setUserPlaylist, session]);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -195,7 +201,10 @@ export default function Player() {
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${String(minutes)}:${String(secs).padStart(2, "0")}`;
+    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(
+      2,
+      "0"
+    )}`;
   };
   const progressBarWidth = duration
     ? `${(currentTime / duration) * 100}%`
@@ -256,13 +265,14 @@ export default function Player() {
   };
 
   // 로그인 & 비로그인시 플레이리스트가 비어있을 때
-  // const isPlaylistEmpty = session
-  //   ? userPlaylist.length === 0
-  //   : playlist.length === 0;
+  const isPlaylistEmpty = session
+    ? userPlaylist.length === 0
+    : playlist.length === 0;
   return (
     <>
       <div></div>
-      {/* <div className="basis-1/3 flex gap-10 text-sm items-center justify-center ">
+      <div className=" text-white ">
+        {/* <div className="basis-1/3 flex gap-10 text-sm items-center justify-center ">
           <div
             onClick={() => {
               if (!isPlaylistEmpty) {
@@ -308,82 +318,85 @@ export default function Player() {
             </div>
           </div>
         </div> */}
-      <div
-        aria-label="플레이어 컨트롤"
-        className={`${
-          trackInfo ? "" : "opacity-50  cursor-not-allowed "
-        } text-white`}
-      >
         <div
-          aria-label="재생부"
-          className={` flex justify-center items-center ${
-            trackInfo ? "" : "pointer-events-none"
+          aria-label="플레이어 컨트롤"
+          className={`${
+            isPlaylistEmpty ? "" : "opacity-50 cursor-not-allowed "
           }`}
         >
-          <div className="flex justify-center items-center gap-3">
-            <div>
-              <YouTube
-                videoId={videoId}
-                opts={opts}
-                onReady={onReady}
-                onEnd={onEnd}
+          <div
+            aria-label="재생부"
+            className={`basis-1/3 flex justify-center items-center ${
+              isPlaylistEmpty ? "" : "pointer-events-none"
+            }`}
+          >
+            <div className="flex justify-center items-center gap-3">
+              <div>
+                <YouTube
+                  videoId={videoId}
+                  opts={opts}
+                  onReady={onReady}
+                  onEnd={onEnd}
+                />
+                <FontAwesomeIcon
+                  icon={faShuffle}
+                  onClick={handleShuffle}
+                  className={
+                    shuffle
+                      ? "cursor-pointer text-orange-400"
+                      : "cursor-pointer"
+                  }
+                />
+              </div>
+              <FontAwesomeIcon
+                icon={faStepBackward}
+                onClick={handlePreviousTrack}
+                className="cursor-pointer"
+              />
+              <div className=" w-10 h-10 rounded-full flex justify-center items-center">
+                {isPlaying ? (
+                  <FontAwesomeIcon
+                    icon={faCirclePause}
+                    className="cursor-pointer text-white text-3xl"
+                    onClick={pauseVideo}
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    icon={faCirclePlay}
+                    className="cursor-pointer text-white text-3xl "
+                    onClick={playVideo}
+                  />
+                )}
+              </div>
+              <FontAwesomeIcon
+                icon={faStepForward}
+                onClick={handleNextTrack}
+                className="cursor-pointer"
               />
               <FontAwesomeIcon
-                icon={faShuffle}
-                onClick={handleShuffle}
+                onClick={handleRepeat}
+                icon={faRepeat}
                 className={
-                  shuffle ? "cursor-pointer text-orange-400" : "cursor-pointer"
+                  repeat ? "cursor-pointer text-orange-400" : "cursor-pointer"
                 }
               />
             </div>
-            <FontAwesomeIcon
-              icon={faStepBackward}
-              onClick={handlePreviousTrack}
-              className="cursor-pointer"
-            />
-            <div className=" w-10 h-10 rounded-full flex justify-center items-center">
-              {isPlaying ? (
-                <FontAwesomeIcon
-                  icon={faCirclePause}
-                  className="cursor-pointer text-white text-3xl"
-                  onClick={pauseVideo}
-                />
-              ) : (
-                <FontAwesomeIcon
-                  icon={faCirclePlay}
-                  className="cursor-pointer text-white text-3xl "
-                  onClick={playVideo}
-                />
-              )}
-            </div>
-            <FontAwesomeIcon
-              icon={faStepForward}
-              onClick={handleNextTrack}
-              className="cursor-pointer"
-            />
-            <FontAwesomeIcon
-              onClick={handleRepeat}
-              icon={faRepeat}
-              className={
-                repeat ? "cursor-pointer text-orange-400" : "cursor-pointer"
-              }
-            />
+            <div></div>
           </div>
-          <div></div>
-        </div>
-        <div className="flex basis-1/3  text-xs gap-2 items-center justify-center">
-          <span>{formatTime(currentTime)}</span>
-          <div
-            className="relative w-[500px] rounded-sm h-1 bg-gray-500"
-            onClick={handleProgressBarClick}
-            ref={progressBarRef}
-          >
+          <div className="flex basis-1/3  text-xs gap-2 items-center justify-center">
+            <span>{formatTime(currentTime)}</span>
             <div
-              className=" absolute left-0 top-0 h-1 bg-white rounded-sm"
-              style={{ width: progressBarWidth }}
-            ></div>
+              className="relative w-[500px] rounded-sm h-1 bg-gray-300"
+              onClick={handleProgressBarClick}
+              ref={progressBarRef}
+            >
+              <div
+                className=" absolute left-0 top-0 h-1 bg-black"
+                style={{ width: progressBarWidth }}
+              ></div>
+            </div>
+            <span>{formatTime(duration)}</span>
           </div>
-          <span>{formatTime(duration)}</span>
         </div>
       </div>
       <div></div>

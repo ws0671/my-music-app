@@ -6,7 +6,7 @@ import Playlist from "./playlist";
 
 export default function Layout() {
   return (
-    <div className="p-2 h-screen grid grid-rows-[auto_1fr_auto] grid-cols-[1fr_3fr_1fr] gap-2 bg-purple-700">
+    <div className="p-2 h-screen grid grid-rows-[auto_1fr_auto] grid-cols-3 lg:grid-cols-[1fr_3fr_1fr] gap-2 bg-purple-700">
       <Header />
       <div className="bg-purple-600">
         <Nav />

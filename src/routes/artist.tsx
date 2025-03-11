@@ -76,7 +76,7 @@ export default function Artist() {
         />
         <div className="absolute bottom-5 left-5 break-all justify-center flex flex-col gap-4">
           <div className="">아티스트</div>
-          <div className="font-[1000] text-8xl tracking-tighter">
+          <div className="font-[1000] text-responsive tracking-tighter">
             {artist?.name}
           </div>
           <div className="font-bold">

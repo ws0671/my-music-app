@@ -78,7 +78,7 @@ export default function Album() {
           src={tracks[0].images ?? ""}
           alt={tracks[0].name}
         />
-        <div className="flex space-y-2 font-rowdies flex-col justify-end items-start gap-4 pb-5">
+        <div className="flex font-rowdies flex-col justify-end items-start gap-4 pb-5">
           <div className="">앨범</div>
           <div className="text-6xl ">{tracks[0].name}</div>
           <div className="">
