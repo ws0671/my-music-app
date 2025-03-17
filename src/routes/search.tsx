@@ -5,7 +5,7 @@ import Loading from "../components/loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTrackInfoStore, useVideoIdStore } from "../stores/video";
 import { searchYouTubeVideo } from "../api/youtube";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 import useSessionStore from "../stores/session";
 import EllipsisMenu from "../components/ellipsisMenu";
 import {
@@ -23,7 +23,8 @@ export default function Search() {
   const [_playlists, setPlaylists] = useState<IPlaylists[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { setVideoId } = useVideoIdStore();
-  const { setTrackInfo, togglePlay } = useTrackInfoStore();
+  const { isPlaying, trackInfo, setTrackInfo, playing, pause } =
+    useTrackInfoStore();
   const { session } = useSessionStore();
 
   useEffect(() => {
@@ -65,7 +66,10 @@ export default function Search() {
     };
     setVideoId(fetchedVideoId);
     setTrackInfo(trackInfoOne);
-    togglePlay();
+    playing();
+  };
+  const pauseVideo = () => {
+    pause();
   };
 
   if (isLoading) return <Loading />;
@@ -73,12 +77,10 @@ export default function Search() {
     <div className="m-6">
       <h3 className="mt-10 mb-5 text-2xl font-bold">곡</h3>
       {tracks &&
-        tracks.map((track) => {
-          console.log(track);
-
-          const artists = track.artists.map((i) => i.name).join(", ");
-          const image = track.album.images[0]
-            ? track.album.images[0].url
+        tracks.map((item) => {
+          const artists = item.artists.map((i) => i.name).join(", ");
+          const image = item.album.images[0]
+            ? item.album.images[0].url
             : "/images/headphone.jpg";
           // const duration_min = Math.floor(item.duration_ms / 1000 / 60);
           // let duration_sec: string | number = Math.ceil(
@@ -87,7 +89,7 @@ export default function Search() {
           // duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
           return (
             <div
-              key={track.id}
+              key={item.id}
               className="p-2 grid grid-cols-[10fr_10fr_1fr]  gap-3 hover:rounded-md hover:bg-purple-500  group relative "
             >
               {/* <div className="group-hover:hidden flex justify-center items-center">
@@ -97,28 +99,36 @@ export default function Search() {
               <div className="flex items-center">
                 <div className="relative">
                   <div className="absolute z-10 top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100">
-                    <FontAwesomeIcon
-                      className="hover:cursor-pointer text-white"
-                      data-trackid={track.id}
-                      data-name={track.name}
-                      data-artists={artists}
-                      data-imgurl={image}
-                      onClick={onPlayClick}
-                      icon={faPlay}
-                    />
+                    {isPlaying && trackInfo?.trackId === item.id ? (
+                      <FontAwesomeIcon
+                        icon={faPause}
+                        className="cursor-pointer"
+                        onClick={pauseVideo}
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        className="hover:cursor-pointer"
+                        data-trackid={item.id}
+                        data-name={item.name}
+                        data-artists={artists}
+                        data-imgurl={image}
+                        onClick={onPlayClick}
+                        icon={faPlay}
+                      />
+                    )}
                   </div>
                   <img
                     className="w-10 h-10 rounded group-hover:opacity-50"
                     src={image}
-                    alt={track.album.name}
+                    alt={item.album.name}
                   />
                 </div>
                 <div className="ml-3">
-                  <div className="font-bold">{track.name}</div>
+                  <div className="font-bold">{item.name}</div>
 
                   <div className="text-sm text-gray-400">
-                    {track.artists.map((artist, index) => {
-                      const isLast = index === track.artists.length - 1;
+                    {item.artists.map((artist, index) => {
+                      const isLast = index === item.artists.length - 1;
                       return (
                         <div className="inline-block" key={index}>
                           <Link to={`/artist/${artist.id}`}>
@@ -134,13 +144,13 @@ export default function Search() {
                 </div>
               </div>
               <div className="flex items-center text-sm">
-                <Link to={`/album/${track.album.id}`}>
-                  <span className="hover:underline">{track.album.name}</span>
+                <Link to={`/album/${item.album.id}`}>
+                  <span className="hover:underline">{item.album.name}</span>
                 </Link>
               </div>
               <EllipsisMenu
-                trackId={track.id}
-                name={track.name}
+                trackId={item.id}
+                name={item.name}
                 artists={artists}
                 imgUrl={image}
               />
@@ -169,20 +179,17 @@ export default function Search() {
       <h3 className="mt-10 mb-5 text-2xl font-bold">앨범</h3>
       <div className="grid grid-cols-5 gap-6 ">
         {albums &&
-          albums.slice(0, 5).map((track) => {
+          albums.slice(0, 5).map((item) => {
             return (
-              <Link to={`/album/${track.id}`} key={track.id}>
+              <Link to={`/album/${item.id}`} key={item.id}>
                 <div className="">
-                  <img
-                    className="rounded-lg w-full"
-                    src={track.images[0].url}
-                  />
-                  <div className="my-1 truncate font-bold" key={track.id}>
-                    {track.name}
+                  <img className="rounded-lg w-full" src={item.images[0].url} />
+                  <div className="my-1 truncate font-bold" key={item.id}>
+                    {item.name}
                   </div>
                   <div className="truncate text-sm  text-gray-400">
-                    {track.artists.map((artist, index) => {
-                      const isLast = index === track.artists.length - 1;
+                    {item.artists.map((artist, index) => {
+                      const isLast = index === item.artists.length - 1;
                       return (
                         <div className="inline-block" key={index}>
                           <Link to={`/artist/${artist.id}`}>

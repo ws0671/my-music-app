@@ -25,7 +25,6 @@ export default function Album() {
       try {
         if (id) {
           const tracks = await getAlbumTracks(id);
-          console.log(tracks);
 
           setTracks(tracks);
         }
@@ -102,8 +101,6 @@ export default function Album() {
         <div className="border border-gray-200 my-3"></div>
         <div className="">
           {tracks.map((item) => {
-            console.log(item);
-
             const artists = item.artists.map((i) => i.name).join(", ");
             // const duration_min = Math.floor(item.duration_ms / 1000 / 60);
             // let duration_sec: string | number = Math.ceil(

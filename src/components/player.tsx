@@ -15,11 +15,11 @@ import {
   usePlaylistStore,
   useTrackInfoStore,
   useUserPlaylistStore,
+  useYouTubeStore,
 } from "../stores/video";
 import { useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
 import { useVideoIdStore } from "../stores/video";
-import Playlist from "./playlist";
 import useSessionStore from "../stores/session";
 import { addToPlaylist, fetchPlaylist } from "../utils/playlist";
 
@@ -31,12 +31,15 @@ interface OnReady {
 export default function Player() {
   const { videoId, setVideoId } = useVideoIdStore();
   const { playlist, setPlaylist } = usePlaylistStore();
-  const [player, setPlayer] = useState<YouTubePlayer | null>(null);
+  const [player, setPlayer] = useYouTubeStore((state) => [
+    state.player,
+    state.setPlayer,
+  ]);
+  const { currentTime, setCurrentTime } = useYouTubeStore();
   const [duration, setDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
   const [onPlaylist, setOnPlaylist] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
-  const { trackInfo, isPlaying, togglePlay, setTrackInfo } =
+  const { trackInfo, isPlaying, togglePlay, setTrackInfo, playing, pause } =
     useTrackInfoStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isShort, setIsShort] = useState(false);
@@ -56,12 +59,12 @@ export default function Player() {
 
   const playVideo = () => {
     player?.playVideo();
-    togglePlay();
+    playing();
   };
 
   const pauseVideo = () => {
     player?.pauseVideo();
-    togglePlay();
+    pause();
   };
 
   useEffect(() => {
@@ -110,17 +113,21 @@ export default function Player() {
     }
   }, [trackInfo?.name]);
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.code === "Space") {
-        e.preventDefault();
-        togglePlay();
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+    console.log(playlist.length);
+
+    if (playlist.length > 0) {
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.code === "Space") {
+          e.preventDefault();
+          togglePlay();
+        }
+      };
+      document.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [playlist.length]);
   useEffect(() => {
     if (player) {
       if (isPlaying) {
@@ -266,9 +273,9 @@ export default function Player() {
     ? userPlaylist.length === 0
     : playlist.length === 0;
   return (
-    <>
+    <div className="col-span-3 flex justify-between gap-10">
       <div></div>
-      <div className=" text-white ">
+      <div className=" text-white w-[40%] ">
         {/* <div className="basis-1/3 flex gap-10 text-sm items-center justify-center ">
           <div
             onClick={() => {
@@ -324,7 +331,7 @@ export default function Player() {
           <div
             aria-label="재생부"
             className={`basis-1/3 flex justify-center items-center ${
-              isPlaylistEmpty ? "" : "pointer-events-none"
+              isPlaylistEmpty ? "pointer-events-none" : ""
             }`}
           >
             <div className="flex justify-center items-center gap-6">
@@ -385,7 +392,7 @@ export default function Player() {
           <div className="flex basis-1/3  text-xs gap-2 items-center justify-center mb-1">
             <span>{formatTime(currentTime)}</span>
             <div
-              className="relative w-3/5 rounded-xl h-1 bg-purple-600"
+              className="relative w-full rounded-xl h-1 bg-purple-400"
               onClick={handleProgressBarClick}
               ref={progressBarRef}
             >
@@ -399,6 +406,6 @@ export default function Player() {
         </div>
       </div>
       <div></div>
-    </>
+    </div>
   );
 }

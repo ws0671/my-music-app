@@ -8,7 +8,7 @@ import { Link, useParams } from "react-router-dom";
 import Loading from "../components/loading";
 import { ISpecificArtist, ITracksAllData } from "../types/spotify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { useTrackInfoStore, useVideoIdStore } from "../stores/video";
 import { searchYouTubeVideo } from "../api/youtube";
 import useSessionStore from "../stores/session";
@@ -21,7 +21,8 @@ export default function Artist() {
   const [relatedArtists, setRelatedArtists] = useState<ISpecificArtist[]>([]);
   const { id } = useParams();
   const { setVideoId } = useVideoIdStore();
-  const { setTrackInfo, togglePlay } = useTrackInfoStore();
+  const { isPlaying, trackInfo, setTrackInfo, playing, pause } =
+    useTrackInfoStore();
   const { session } = useSessionStore();
   useEffect(() => {
     const fetchArtist = async () => {
@@ -42,7 +43,6 @@ export default function Artist() {
     };
     fetchArtist();
   }, [id]);
-  console.log(tracks);
   const onPlayClick = async (e: React.MouseEvent<SVGSVGElement>) => {
     const trackId = e.currentTarget.getAttribute("data-trackid");
     const name = e.currentTarget.getAttribute("data-name");
@@ -62,7 +62,10 @@ export default function Artist() {
     };
     setVideoId(fetchedVideoId);
     setTrackInfo(trackInfoOne);
-    togglePlay();
+    playing();
+  };
+  const pauseVideo = () => {
+    pause();
   };
 
   if (isLoading) return <Loading />;
@@ -101,6 +104,7 @@ export default function Artist() {
         <div className="border border-gray-200 my-3"></div>
         {tracks.map((item, index) => {
           const artists = item.artists.map((i) => i.name).join(", ");
+
           // const duration_min = Math.floor(item.duration_ms / 1000 / 60);
           // let duration_sec: string | number = Math.ceil(
           //   (item.duration_ms / 1000) % 60
@@ -115,15 +119,23 @@ export default function Artist() {
                 {index + 1}
               </div>
               <div className="hidden justify-center items-center group-hover:flex">
-                <FontAwesomeIcon
-                  className="hover:cursor-pointer"
-                  data-trackid={item.id}
-                  data-name={item.name}
-                  data-artists={artists}
-                  data-imgurl={item.album.images[0].url}
-                  onClick={onPlayClick}
-                  icon={faPlay}
-                />
+                {isPlaying && trackInfo?.trackId === item.id ? (
+                  <FontAwesomeIcon
+                    icon={faPause}
+                    className="cursor-pointer"
+                    onClick={pauseVideo}
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    className="hover:cursor-pointer"
+                    data-trackid={item.id}
+                    data-name={item.name}
+                    data-artists={artists}
+                    data-imgurl={item.album.images[0].url}
+                    onClick={onPlayClick}
+                    icon={faPlay}
+                  />
+                )}
               </div>
               <div>
                 <div className="font-bold">{item.name}</div>

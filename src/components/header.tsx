@@ -12,8 +12,6 @@ export default function Header() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    console.log(session);
-
     const checkAuth = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) setSession(data.session);

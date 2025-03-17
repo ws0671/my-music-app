@@ -1,5 +1,31 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import type { YouTubePlayer } from "react-youtube";
+
+interface YouTubeState {
+  player: YouTubePlayer | null;
+  setPlayer: (player: YouTubePlayer) => void;
+  play: () => void;
+  pause: () => void;
+  currentTime: number;
+  setCurrentTime: (time: number) => void;
+}
+
+export const useYouTubeStore = create<YouTubeState>((set, get) => ({
+  player: null,
+  setPlayer: (player) => set({ player }),
+  play: () => {
+    const { player } = get();
+    if (player) player.playVideo();
+  },
+  pause: () => {
+    const { player } = get();
+    if (player) player.pauseVideo();
+  },
+  currentTime: 0,
+  setCurrentTime: (time) => set({ currentTime: time }),
+}));
+
 interface VideoId {
   videoId: string;
   setVideoId: (id: string) => void;

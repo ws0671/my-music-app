@@ -4,6 +4,7 @@ import {
   useTrackInfoStore,
   useUserPlaylistStore,
   useVideoIdStore,
+  useYouTubeStore,
 } from "../stores/video";
 import { getSpotifyTrackInfo } from "../api/spotify";
 import { searchYouTubeVideo } from "../api/youtube";
@@ -41,6 +42,8 @@ export default function Playlist() {
   const [selectedId, setSelectedId] = useState(0);
   const { playlist, removePlaylist, resetPlaylist } = usePlaylistStore();
   const dropdownRef = useRef<HTMLElement[]>([]);
+  const { player, setCurrentTime } = useYouTubeStore();
+
   const {
     userPlaylist,
 
@@ -123,6 +126,9 @@ export default function Playlist() {
       } else {
         resetPlaylist();
       }
+      pause();
+      player?.stopVideo();
+      setCurrentTime(0);
     }
   };
 
