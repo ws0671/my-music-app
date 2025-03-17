@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEllipsis,
   faMinus,
+  faPause,
   faPlay,
   faSquareMinus,
 } from "@fortawesome/free-solid-svg-icons";
@@ -34,7 +35,8 @@ export default function Playlist() {
 
   const containerRef = useRef<HTMLDivElement>(null);
   const { setVideoId } = useVideoIdStore();
-  const { setTrackInfo, togglePlay } = useTrackInfoStore();
+  const { isPlaying, trackInfo, setTrackInfo, togglePlay, playing, pause } =
+    useTrackInfoStore();
   const [ellipsis, setEllipsis] = useState(false);
   const [selectedId, setSelectedId] = useState(0);
   const { playlist, removePlaylist, resetPlaylist } = usePlaylistStore();
@@ -83,7 +85,10 @@ export default function Playlist() {
     };
     setVideoId(fetchedVideoId);
     setTrackInfo(trackInfoOne);
-    togglePlay();
+    playing();
+  };
+  const pauseVideo = () => {
+    pause();
   };
   const onEllipsis = (
     e: React.MouseEvent<SVGSVGElement, MouseEvent>,
@@ -216,64 +221,69 @@ export default function Playlist() {
                 </div>
               );
             })
-          : playlist.map((trackInfo, index) => {
+          : playlist.map((item, index) => {
               return (
                 <div key={index} className="group">
                   <div
-                    data-trackid={trackInfo?.trackId}
-                    data-name={trackInfo?.name}
-                    data-artists={trackInfo?.artists}
-                    data-imgurl={trackInfo?.imgUrl}
-                    onClick={onPlayClick}
+                    data-trackid={item?.trackId}
+                    data-name={item?.name}
+                    data-artists={item?.artists}
+                    data-imgurl={item?.imgUrl}
                     className="p-2 hover:rounded-md relative rounded-xl hover:bg-purple-500  cursor-pointer grid gap-3 grid-cols-[auto_1fr_auto] justify-between group "
                   >
                     <div className="w-12 items-center justify-center relative shrink-0 ">
                       <img
                         className={
-                          trackInfo
+                          item
                             ? "w-full h-full rounded group-hover:opacity-50"
                             : ""
                         }
-                        src={trackInfo?.imgUrl ?? ""}
-                        alt={trackInfo?.name ?? ""}
+                        src={item?.imgUrl ?? ""}
+                        alt={item?.name ?? ""}
                       />
                       <div className="hidden justify-center items-center group-hover:flex">
-                        <FontAwesomeIcon
-                          className="hover:cursor-pointer absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] text-xl"
-                          data-trackid={trackInfo?.trackId}
-                          data-name={trackInfo?.name}
-                          data-artists={trackInfo?.artists}
-                          data-imgurl={trackInfo?.imgUrl}
-                          onClick={onPlayClick}
-                          icon={faPlay}
-                        />
+                        {isPlaying && trackInfo?.trackId === item.trackId ? (
+                          <FontAwesomeIcon
+                            icon={faPause}
+                            className="hover:cursor-pointer absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] text-xl"
+                            onClick={pauseVideo}
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            className="hover:cursor-pointer absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] text-xl"
+                            data-trackid={item?.trackId}
+                            data-name={item?.name}
+                            data-artists={item?.artists}
+                            data-imgurl={item?.imgUrl}
+                            onClick={onPlayClick}
+                            icon={faPlay}
+                          />
+                        )}
                       </div>
                     </div>
 
                     <div
                       ref={containerRef}
                       className="flex flex-col gap-1 overflow-hidden grow whitespace-nowrap "
-                      id={trackInfo?.trackId ?? ""}
+                      id={item?.trackId ?? ""}
                     >
-                      <div className={`group-hover:hidden `}>
-                        {trackInfo?.name}
-                      </div>
-                      {trackInfo.name && trackInfo?.name.length > 25 ? (
+                      <div className={`group-hover:hidden `}>{item?.name}</div>
+                      {item.name && item?.name.length > 25 ? (
                         <div className={"group-hover:block  hidden"}>
                           <div className="animate-marquee  inline-block pr-10">
-                            {trackInfo?.name}
+                            {item?.name}
                           </div>
                           <div className="animate-marquee  inline-block pr-10">
-                            {trackInfo?.name}
+                            {item?.name}
                           </div>
                         </div>
                       ) : (
                         <div className={`hidden group-hover:block `}>
-                          {trackInfo?.name}
+                          {item?.name}
                         </div>
                       )}
                       <div className="text-sm text-gray-300">
-                        {trackInfo?.artists}
+                        {item?.artists}
                       </div>
                     </div>
                     <div className="items-center justify-center hidden group-hover:flex">

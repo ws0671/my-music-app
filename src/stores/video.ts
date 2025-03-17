@@ -22,6 +22,8 @@ interface TrackInfoState {
   isPlaying: boolean;
   setTrackInfo: (trackInfo: ITrackInfo) => void;
   togglePlay: () => void;
+  playing: () => void;
+  pause: () => void;
   isTrackPlaying: () => boolean;
 }
 export const useTrackInfoStore = create<TrackInfoState>((set, get) => ({
@@ -29,6 +31,8 @@ export const useTrackInfoStore = create<TrackInfoState>((set, get) => ({
   isPlaying: false,
   setTrackInfo: (trackInfo) => set({ trackInfo }),
   togglePlay: () => set((state) => ({ isPlaying: !state.isPlaying })),
+  playing: () => set(() => ({ isPlaying: true })),
+  pause: () => set(() => ({ isPlaying: false })),
   isTrackPlaying: () => {
     const { trackInfo } = get();
     return trackInfo !== null;

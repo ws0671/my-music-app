@@ -15,7 +15,7 @@ export default function Album() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { id } = useParams();
   const { setVideoId } = useVideoIdStore();
-  const { isPlaying, trackInfo, setTrackInfo, togglePlay } =
+  const { isPlaying, trackInfo, setTrackInfo, playing, pause } =
     useTrackInfoStore();
   const { session } = useSessionStore();
 
@@ -39,32 +39,27 @@ export default function Album() {
   }, [id]);
 
   const onPlayClick = async (e: MouseEvent<SVGSVGElement>) => {
-    if (trackInfo) {
-      togglePlay();
-    } else {
-      const trackId = e.currentTarget.getAttribute("data-trackid");
-      const name = e.currentTarget.getAttribute("data-name");
-      const artists = e.currentTarget.getAttribute("data-artists");
-      const imgUrl = e.currentTarget.getAttribute("data-imgurl");
-
-      const trackInfo = await getSpotifyTrackInfo(trackId);
-      const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
-      const fetchedVideoId = await searchYouTubeVideo(searchQuery);
-      const trackInfoOne = {
-        userId: session?.user.id,
-        trackId,
-        name,
-        artists,
-        imgUrl,
-        videoId: fetchedVideoId,
-      };
-      setVideoId(fetchedVideoId);
-      setTrackInfo(trackInfoOne);
-      togglePlay();
-    }
+    const trackId = e.currentTarget.getAttribute("data-trackid");
+    const name = e.currentTarget.getAttribute("data-name");
+    const artists = e.currentTarget.getAttribute("data-artists");
+    const imgUrl = e.currentTarget.getAttribute("data-imgurl");
+    const trackInfo = await getSpotifyTrackInfo(trackId);
+    const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
+    const fetchedVideoId = await searchYouTubeVideo(searchQuery);
+    const trackInfoOne = {
+      userId: session?.user.id,
+      trackId,
+      name,
+      artists,
+      imgUrl,
+      videoId: fetchedVideoId,
+    };
+    setVideoId(fetchedVideoId);
+    setTrackInfo(trackInfoOne);
+    playing();
   };
   const pauseVideo = () => {
-    togglePlay();
+    pause();
   };
 
   if (isLoading) {
@@ -107,6 +102,8 @@ export default function Album() {
         <div className="border border-gray-200 my-3"></div>
         <div className="">
           {tracks.map((item) => {
+            console.log(item);
+
             const artists = item.artists.map((i) => i.name).join(", ");
             // const duration_min = Math.floor(item.duration_ms / 1000 / 60);
             // let duration_sec: string | number = Math.ceil(
@@ -122,7 +119,7 @@ export default function Album() {
                   {item.track_number}
                 </div>
                 <div className="hidden justify-center items-center group-hover:flex">
-                  {isPlaying ? (
+                  {isPlaying && trackInfo?.trackId === item.id ? (
                     <FontAwesomeIcon
                       icon={faPause}
                       className="cursor-pointer"
