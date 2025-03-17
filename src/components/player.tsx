@@ -201,10 +201,7 @@ export default function Player() {
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${String(minutes).padStart(2, "0")}:${String(secs).padStart(
-      2,
-      "0"
-    )}`;
+    return `${String(minutes)}:${String(secs).padStart(2, "0")}`;
   };
   const progressBarWidth = duration
     ? `${(currentTime / duration) * 100}%`
@@ -321,7 +318,7 @@ export default function Player() {
         <div
           aria-label="플레이어 컨트롤"
           className={`${
-            isPlaylistEmpty ? "" : "opacity-50 cursor-not-allowed "
+            isPlaylistEmpty ? "opacity-50 cursor-not-allowed" : " "
           }`}
         >
           <div
@@ -330,7 +327,7 @@ export default function Player() {
               isPlaylistEmpty ? "" : "pointer-events-none"
             }`}
           >
-            <div className="flex justify-center items-center gap-3">
+            <div className="flex justify-center items-center gap-6">
               <div>
                 <YouTube
                   videoId={videoId}
@@ -343,27 +340,27 @@ export default function Player() {
                   onClick={handleShuffle}
                   className={
                     shuffle
-                      ? "cursor-pointer text-orange-400"
-                      : "cursor-pointer"
+                      ? "cursor-pointer text-orange-400 text-xl"
+                      : "cursor-pointer text-xl"
                   }
                 />
               </div>
               <FontAwesomeIcon
                 icon={faStepBackward}
                 onClick={handlePreviousTrack}
-                className="cursor-pointer"
+                className="cursor-pointer text-xl"
               />
-              <div className=" w-10 h-10 rounded-full flex justify-center items-center">
+              <div className=" my-2">
                 {isPlaying ? (
                   <FontAwesomeIcon
                     icon={faCirclePause}
-                    className="cursor-pointer text-white text-3xl"
+                    className="cursor-pointer text-white text-4xl"
                     onClick={pauseVideo}
                   />
                 ) : (
                   <FontAwesomeIcon
                     icon={faCirclePlay}
-                    className="cursor-pointer text-white text-3xl "
+                    className="cursor-pointer text-white text-4xl "
                     onClick={playVideo}
                   />
                 )}
@@ -371,27 +368,29 @@ export default function Player() {
               <FontAwesomeIcon
                 icon={faStepForward}
                 onClick={handleNextTrack}
-                className="cursor-pointer"
+                className="cursor-pointer text-xl"
               />
               <FontAwesomeIcon
                 onClick={handleRepeat}
                 icon={faRepeat}
                 className={
-                  repeat ? "cursor-pointer text-orange-400" : "cursor-pointer"
+                  repeat
+                    ? "cursor-pointer text-orange-400 text-xl"
+                    : "text-xl cursor-pointer"
                 }
               />
             </div>
             <div></div>
           </div>
-          <div className="flex basis-1/3  text-xs gap-2 items-center justify-center">
+          <div className="flex basis-1/3  text-xs gap-2 items-center justify-center mb-1">
             <span>{formatTime(currentTime)}</span>
             <div
-              className="relative w-[500px] rounded-sm h-1 bg-gray-300"
+              className="relative w-3/5 rounded-xl h-1 bg-purple-600"
               onClick={handleProgressBarClick}
               ref={progressBarRef}
             >
               <div
-                className=" absolute left-0 top-0 h-1 bg-black"
+                className=" absolute left-0 top-0 h-1 rounded-xl bg-white"
                 style={{ width: progressBarWidth }}
               ></div>
             </div>

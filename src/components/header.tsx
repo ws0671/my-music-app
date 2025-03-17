@@ -36,33 +36,6 @@ export default function Header() {
   return (
     <>
       <div className="flex items-center justify-between sm:hidden col-span-3 mx-2 ">
-        <div className="">
-          <Link
-            to={"/"}
-            className=""
-            style={{ clipPath: "circle(33.9% at 50% 50%)" }}
-          >
-            <img
-              className="w-10"
-              src="/images/3-removebg-preview.png"
-              alt="logo"
-            />
-          </Link>
-        </div>
-        <div>
-          <form className="relative" onSubmit={onSubmit}>
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 ">
-              <FontAwesomeIcon icon={faMagnifyingGlass} />
-            </div>
-            <input
-              ref={inputRef}
-              onChange={onSearch}
-              className="w-full transition-transform duration-300 ease-in-out hover:scale-[1.5] focus:scale-[1.5] shadow-[0px_0px_10px_5px_rgba(0,_0,_0,_0.1)] focus:outline-none p-1 pl-9 rounded-3xl
-                 "
-              type="text"
-            />
-          </form>
-        </div>
         <div className="text-white">
           <FontAwesomeIcon className="text-2xl" icon={faBars} />
         </div>
@@ -74,7 +47,7 @@ export default function Header() {
           style={{ clipPath: "circle(33.9% at 50% 50%)" }}
         >
           <img
-            className="w-10"
+            className="w-20"
             src="/images/3-removebg-preview.png"
             alt="logo"
           />
