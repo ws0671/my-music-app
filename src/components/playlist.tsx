@@ -18,6 +18,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import useSessionStore from "../stores/session";
 import { deleteAllTrack, deleteTrack } from "../utils/playlist";
+import { Link } from "react-router-dom";
 
 export default function Playlist() {
   const [showShadow, setShowShadow] = useState(false);
@@ -228,6 +229,13 @@ export default function Playlist() {
               );
             })
           : playlist.map((item, index) => {
+              console.log(item.artists);
+              console.log(item);
+              console.log(item.artistsId);
+              const artistsId = item.artistsId?.split(",");
+              const artists = item.artists?.split(",");
+              console.log(artistsId);
+
               return (
                 <div key={index} className="group">
                   <div
@@ -288,8 +296,21 @@ export default function Playlist() {
                           {item?.name}
                         </div>
                       )}
-                      <div className="text-sm text-gray-300">
-                        {item?.artists}
+                      <div>
+                        {artistsId?.map((id, index) => {
+                          return (
+                            <Link to={"/artist/" + id}>
+                              <span
+                                key={index}
+                                className="text-sm text-gray-300 hover:underline"
+                              >
+                                {artists && index !== artists.length - 1
+                                  ? artists?.[index] + ", "
+                                  : artists?.[index]}
+                              </span>
+                            </Link>
+                          );
+                        })}
                       </div>
                     </div>
                     <div className="items-center justify-center hidden group-hover:flex">

@@ -113,8 +113,6 @@ export default function Player() {
     }
   }, [trackInfo?.name]);
   useEffect(() => {
-    console.log(playlist.length);
-
     if (playlist.length > 0) {
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.code === "Space") {

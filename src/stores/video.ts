@@ -39,6 +39,7 @@ export interface ITrackInfo {
   trackId: string | null;
   name: string | null;
   artists: string | null;
+  artistsId: string | null;
   imgUrl: string | null;
   state?: string;
   videoId: string;
