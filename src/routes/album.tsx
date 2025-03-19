@@ -3,7 +3,14 @@ import { Link, useParams } from "react-router-dom";
 import { getAlbumTracks, getSpotifyTrackInfo } from "../api/spotify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loading from "../components/loading";
-import { faEllipsis, faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircle,
+  faCirclePlus,
+  faEllipsis,
+  faPause,
+  faPlay,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { searchYouTubeVideo } from "../api/youtube";
 import { useTrackInfoStore, useVideoIdStore } from "../stores/video";
 import useSessionStore from "../stores/session";
@@ -64,9 +71,27 @@ export default function Album() {
   const pauseVideo = () => {
     pause();
   };
-  const handleMenu = (id) => {
-    setSelectedTrackId(id);
+  const addToPlaylist = async (e: MouseEvent<SVGSVGElement>) => {
+    const trackId = e.currentTarget.getAttribute("data-trackid");
+    const name = e.currentTarget.getAttribute("data-name");
+    const artists = e.currentTarget.getAttribute("data-artists");
+    const artistsId = e.currentTarget.getAttribute("data-artistsid");
+    const imgUrl = e.currentTarget.getAttribute("data-imgurl");
+    const trackInfo = await getSpotifyTrackInfo(trackId);
+    const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
+    const fetchedVideoId = await searchYouTubeVideo(searchQuery);
+    const trackInfoOne = {
+      userId: session?.user.id,
+      trackId,
+      name,
+      artists,
+      artistsId,
+      imgUrl,
+      videoId: fetchedVideoId,
+    };
+    setTrackInfo(trackInfoOne);
   };
+
   if (isLoading) {
     return <Loading />;
   }
@@ -158,7 +183,16 @@ export default function Album() {
                 </div>
 
                 <div className="flex justify-center items-center">
-                  <FontAwesomeIcon icon={faEllipsis} />
+                  <FontAwesomeIcon
+                    className="hover:cursor-pointer"
+                    data-trackid={item.id}
+                    data-name={item.name}
+                    data-artists={artists}
+                    data-artistsid={artistsId}
+                    data-imgurl={item.images}
+                    icon={faCirclePlus}
+                    onClick={addToPlaylist}
+                  />
                 </div>
               </div>
             );

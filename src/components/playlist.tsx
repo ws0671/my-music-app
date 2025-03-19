@@ -10,6 +10,7 @@ import { getSpotifyTrackInfo } from "../api/spotify";
 import { searchYouTubeVideo } from "../api/youtube";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCircleMinus,
   faEllipsis,
   faMinus,
   faPause,
@@ -73,6 +74,7 @@ export default function Playlist() {
     const trackId = e.currentTarget.getAttribute("data-trackid");
     const name = e.currentTarget.getAttribute("data-name");
     const artists = e.currentTarget.getAttribute("data-artists");
+    const artistsId = e.currentTarget.getAttribute("data-artsitsid");
     const imgUrl = e.currentTarget.getAttribute("data-imgurl");
 
     const trackInfo = await getSpotifyTrackInfo(trackId);
@@ -83,6 +85,7 @@ export default function Playlist() {
       trackId,
       name,
       artists,
+      artistsId,
       imgUrl,
       state: "playlist",
       videoId: fetchedVideoId,
@@ -93,19 +96,6 @@ export default function Playlist() {
   };
   const pauseVideo = () => {
     pause();
-  };
-  const onEllipsis = (
-    e: React.MouseEvent<SVGSVGElement, MouseEvent>,
-    id: number
-  ) => {
-    e.stopPropagation();
-
-    setSelectedId(id);
-    if (ellipsis) {
-      setEllipsis(false);
-    } else {
-      setEllipsis(true);
-    }
   };
   const removeSong = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
@@ -237,7 +227,8 @@ export default function Playlist() {
                   <div
                     data-trackid={item?.trackId}
                     data-name={item?.name}
-                    data-artists={item?.artists}
+                    data-artists={artists}
+                    data-artistsid={artistsId}
                     data-imgurl={item?.imgUrl}
                     className="p-2 hover:rounded-md relative rounded-xl hover:bg-purple-500  cursor-pointer grid gap-3 grid-cols-[auto_1fr_auto] justify-between group "
                   >
@@ -312,26 +303,9 @@ export default function Playlist() {
                     <div className="items-center justify-center hidden group-hover:flex">
                       <FontAwesomeIcon
                         className="cursor-pointer hover:bg-purple-500 rounded-full p-1"
-                        onClick={(e) => onEllipsis(e, index)}
-                        icon={faEllipsis}
+                        onClick={(e) => removeSong(e, index)}
+                        icon={faCircleMinus}
                       />
-                    </div>
-                    <div
-                      ref={(el) =>
-                        el ? (dropdownRef.current[index] = el) : null
-                      }
-                      onClick={(e) => removeSong(e, index)}
-                      id={trackInfo?.trackId ?? ""}
-                      className={
-                        ellipsis && selectedId === index
-                          ? "z-30 absolute right-[-70px]  hover:bg-orange-100 bg-white border shadow-md px-3 py-2 rounded-md "
-                          : "hidden"
-                      }
-                    >
-                      <span className="text-xs">
-                        <FontAwesomeIcon className="mr-2" icon={faMinus} />
-                        제거하기
-                      </span>
                     </div>
                   </div>
                 </div>
