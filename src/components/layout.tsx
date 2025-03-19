@@ -11,7 +11,7 @@ export default function Layout() {
       <div className="bg-purple-600">
         <Nav />
       </div>
-      <div className="bg-purple-600 custom-scrollbar text-white">
+      <div className={`bg-purple-600 custom-scrollbar text-white`}>
         <Outlet />
       </div>
       <Playlist />

@@ -1,9 +1,9 @@
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getAlbumTracks, getSpotifyTrackInfo } from "../api/spotify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loading from "../components/loading";
-import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsis, faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { searchYouTubeVideo } from "../api/youtube";
 import { useTrackInfoStore, useVideoIdStore } from "../stores/video";
 import useSessionStore from "../stores/session";
@@ -13,6 +13,7 @@ import { ITracksAllData } from "../types/spotify";
 export default function Album() {
   const [tracks, setTracks] = useState<ITracksAllData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [selectedTrackId, setSelectedTrackId] = useState("");
   const { id } = useParams();
   const { setVideoId } = useVideoIdStore();
   const { isPlaying, trackInfo, setTrackInfo, playing, pause } =
@@ -63,12 +64,14 @@ export default function Album() {
   const pauseVideo = () => {
     pause();
   };
-
+  const handleMenu = (id) => {
+    setSelectedTrackId(id);
+  };
   if (isLoading) {
     return <Loading />;
   }
   return (
-    <div className="">
+    <div className="relative">
       <div className="flex shadow-2xl gap-6 relative h-[250px]">
         <img
           className="h-auto shadow-[rgba(0,0,0,0.35)_0px_5px_15px]"
@@ -153,12 +156,10 @@ export default function Album() {
                     })}
                   </div>
                 </div>
-                <EllipsisMenu
-                  trackId={item.id}
-                  name={item.name}
-                  artists={artists}
-                  imgUrl={item.images}
-                />
+
+                <div className="flex justify-center items-center">
+                  <FontAwesomeIcon icon={faEllipsis} />
+                </div>
               </div>
             );
           })}
