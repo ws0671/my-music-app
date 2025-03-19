@@ -294,7 +294,7 @@ export default function Player() {
     : playlist.length === 0;
   return (
     <div className="col-span-3 flex justify-between gap-10">
-      <div></div>
+      <div className="w-[30%]"></div>
       <div className=" text-white w-[40%] ">
         {/* <div className="basis-1/3 flex gap-10 text-sm items-center justify-center ">
           <div
@@ -425,27 +425,29 @@ export default function Player() {
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-2 mr-5">
-        <FontAwesomeIcon
-          className="text-purple-300 w-6 cursor-pointer hover:text-white"
-          icon={isMuted ? faVolumeXmark : faVolumeLow}
-          onClick={handleMute}
-        />
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value={volume}
-          onChange={handleVolumeChange}
-          className="w-full h-2 appearance-none cursor-pointer 
-            bg-purple-400 rounded-lg outline-none
-               [&::-webkit-slider-thumb]:appearance-none
-                [&::-webkit-slider-thumb]:w-4 
-               "
-          style={{
-            background: `linear-gradient(to right, #fff ${volume}%, #c084fc ${volume}%)`,
-          }}
-        />
+      <div className="w-[30%] flex items-center justify-center">
+        <div className="flex items-center gap-2">
+          <FontAwesomeIcon
+            className="text-purple-300 w-6 cursor-pointer hover:text-white"
+            icon={isMuted ? faVolumeXmark : faVolumeLow}
+            onClick={handleMute}
+          />
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={volume}
+            onChange={handleVolumeChange}
+            className="w-full h-2 appearance-none cursor-pointer
+              bg-purple-400 rounded-lg outline-none
+                 [&::-webkit-slider-thumb]:appearance-none
+                  [&::-webkit-slider-thumb]:w-4
+                 "
+            style={{
+              background: `linear-gradient(to right, #fff ${volume}%, #c084fc ${volume}%)`,
+            }}
+          />
+        </div>
       </div>
     </div>
   );
