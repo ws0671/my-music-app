@@ -41,6 +41,7 @@ export default function Album() {
     const trackId = e.currentTarget.getAttribute("data-trackid");
     const name = e.currentTarget.getAttribute("data-name");
     const artists = e.currentTarget.getAttribute("data-artists");
+    const artistsId = e.currentTarget.getAttribute("data-artistsid");
     const imgUrl = e.currentTarget.getAttribute("data-imgurl");
     const trackInfo = await getSpotifyTrackInfo(trackId);
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
@@ -50,6 +51,7 @@ export default function Album() {
       trackId,
       name,
       artists,
+      artistsId,
       imgUrl,
       videoId: fetchedVideoId,
     };
@@ -102,14 +104,9 @@ export default function Album() {
         <div className="border border-gray-200 my-3"></div>
         <div className="">
           {tracks.map((item) => {
-            console.log(item);
+            const artists = item.artists.map((i) => i.name).join(",");
+            const artistsId = item.artists.map((i) => i.id).join(",");
 
-            const artists = item.artists.map((i) => i.name).join(", ");
-            // const duration_min = Math.floor(item.duration_ms / 1000 / 60);
-            // let duration_sec: string | number = Math.ceil(
-            //   (item.duration_ms / 1000) % 60
-            // );
-            // duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
             return (
               <div
                 key={item.id}
@@ -131,6 +128,7 @@ export default function Album() {
                       data-trackid={item.id}
                       data-name={item.name}
                       data-artists={artists}
+                      data-artistsid={artistsId}
                       data-imgurl={item.images}
                       onClick={onPlayClick}
                       icon={faPlay}

@@ -229,12 +229,8 @@ export default function Playlist() {
               );
             })
           : playlist.map((item, index) => {
-              console.log(item.artists);
-              console.log(item);
-              console.log(item.artistsId);
               const artistsId = item.artistsId?.split(",");
               const artists = item.artists?.split(",");
-              console.log(artistsId);
 
               return (
                 <div key={index} className="group">
@@ -302,7 +298,7 @@ export default function Playlist() {
                             <Link to={"/artist/" + id}>
                               <span
                                 key={index}
-                                className="text-sm text-gray-300 hover:underline"
+                                className="text-sm text-gray-400 hover:underline"
                               >
                                 {artists && index !== artists.length - 1
                                   ? artists?.[index] + ", "

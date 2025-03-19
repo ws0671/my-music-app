@@ -51,6 +51,7 @@ export default function Search() {
     const trackId = e.currentTarget.getAttribute("data-trackid");
     const name = e.currentTarget.getAttribute("data-name");
     const artists = e.currentTarget.getAttribute("data-artists");
+    const artistsId = e.currentTarget.getAttribute("data-artistsid");
     const imgUrl = e.currentTarget.getAttribute("data-imgurl");
 
     const trackInfo = await getSpotifyTrackInfo(trackId);
@@ -61,6 +62,7 @@ export default function Search() {
       trackId,
       name,
       artists,
+      artistsId,
       imgUrl,
       videoId: fetchedVideoId,
     };
@@ -78,7 +80,8 @@ export default function Search() {
       <h3 className="mt-10 mb-5 text-2xl font-bold">곡</h3>
       {tracks &&
         tracks.map((item) => {
-          const artists = item.artists.map((i) => i.name).join(", ");
+          const artists = item.artists.map((i) => i.name).join(",");
+          const artistsId = item.artists.map((i) => i.id).join(",");
           const image = item.album.images[0]
             ? item.album.images[0].url
             : "/images/headphone.jpg";
@@ -111,6 +114,7 @@ export default function Search() {
                         data-trackid={item.id}
                         data-name={item.name}
                         data-artists={artists}
+                        data-artistsid={artistsId}
                         data-imgurl={image}
                         onClick={onPlayClick}
                         icon={faPlay}

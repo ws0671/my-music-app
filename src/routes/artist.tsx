@@ -47,6 +47,7 @@ export default function Artist() {
     const trackId = e.currentTarget.getAttribute("data-trackid");
     const name = e.currentTarget.getAttribute("data-name");
     const artists = e.currentTarget.getAttribute("data-artists");
+    const artistsId = e.currentTarget.getAttribute("data-artistsid");
     const imgUrl = e.currentTarget.getAttribute("data-imgurl");
 
     const trackInfo = await getSpotifyTrackInfo(trackId);
@@ -57,6 +58,7 @@ export default function Artist() {
       trackId,
       name,
       artists,
+      artistsId,
       imgUrl,
       videoId: fetchedVideoId,
     };
@@ -103,13 +105,8 @@ export default function Artist() {
         <div className="mt-10 text-2xl font-bold">인기</div>
         <div className="border border-gray-200 my-3"></div>
         {tracks.map((item, index) => {
-          const artists = item.artists.map((i) => i.name).join(", ");
-
-          // const duration_min = Math.floor(item.duration_ms / 1000 / 60);
-          // let duration_sec: string | number = Math.ceil(
-          //   (item.duration_ms / 1000) % 60
-          // );
-          // duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
+          const artists = item.artists.map((i) => i.name).join(",");
+          const artistsId = item.artists.map((i) => i.id).join(",");
           return (
             <div
               key={item.id}
@@ -131,6 +128,7 @@ export default function Artist() {
                     data-trackid={item.id}
                     data-name={item.name}
                     data-artists={artists}
+                    data-artistsid={artistsId}
                     data-imgurl={item.album.images[0].url}
                     onClick={onPlayClick}
                     icon={faPlay}
