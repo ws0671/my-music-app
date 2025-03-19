@@ -8,6 +8,10 @@ import {
   faShuffle,
   faStepBackward,
   faStepForward,
+  faVolumeLow,
+  faVolumeOff,
+  faVolumeUp,
+  faVolumeXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -51,7 +55,25 @@ export default function Player() {
   const ignoreTrackInfoEffect = useRef(false);
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState(false);
+  const [volume, setVolume] = useState(50);
+  const [isMuted, setIsMuted] = useState(false);
 
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setVolume(value);
+    player?.setVolume(value);
+  };
+  const handleMute = () => {
+    if (player.isMuted()) {
+      player.unMute();
+      setVolume(50);
+      setIsMuted(false);
+    } else {
+      player.mute();
+      setVolume(0);
+      setIsMuted(true);
+    }
+  };
   const onReady = (e: OnReady) => {
     setPlayer(e.target);
     setDuration(e.target.getDuration());
@@ -403,7 +425,28 @@ export default function Player() {
           </div>
         </div>
       </div>
-      <div></div>
+      <div className="flex items-center gap-2 mr-5">
+        <FontAwesomeIcon
+          className="text-purple-300 w-6 cursor-pointer hover:text-white"
+          icon={isMuted ? faVolumeXmark : faVolumeLow}
+          onClick={handleMute}
+        />
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value={volume}
+          onChange={handleVolumeChange}
+          className="w-full h-2 appearance-none cursor-pointer 
+            bg-purple-400 rounded-lg outline-none
+               [&::-webkit-slider-thumb]:appearance-none
+                [&::-webkit-slider-thumb]:w-4 
+               "
+          style={{
+            background: `linear-gradient(to right, #fff ${volume}%, #c084fc ${volume}%)`,
+          }}
+        />
+      </div>
     </div>
   );
 }
