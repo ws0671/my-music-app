@@ -5,7 +5,11 @@ import Loading from "../components/loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useTrackInfoStore, useVideoIdStore } from "../stores/video";
 import { searchYouTubeVideo } from "../api/youtube";
-import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCirclePlus,
+  faPause,
+  faPlay,
+} from "@fortawesome/free-solid-svg-icons";
 import useSessionStore from "../stores/session";
 import EllipsisMenu from "../components/ellipsisMenu";
 import {
@@ -73,7 +77,26 @@ export default function Search() {
   const pauseVideo = () => {
     pause();
   };
-
+  const addToPlaylist = async (e: React.MouseEvent<SVGSVGElement>) => {
+    const trackId = e.currentTarget.getAttribute("data-trackid");
+    const name = e.currentTarget.getAttribute("data-name");
+    const artists = e.currentTarget.getAttribute("data-artists");
+    const artistsId = e.currentTarget.getAttribute("data-artistsid");
+    const imgUrl = e.currentTarget.getAttribute("data-imgurl");
+    const trackInfo = await getSpotifyTrackInfo(trackId);
+    const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
+    const fetchedVideoId = await searchYouTubeVideo(searchQuery);
+    const trackInfoOne = {
+      userId: session?.user.id,
+      trackId,
+      name,
+      artists,
+      artistsId,
+      imgUrl,
+      videoId: fetchedVideoId,
+    };
+    setTrackInfo(trackInfoOne);
+  };
   if (isLoading) return <Loading />;
   return (
     <div className="m-6">
@@ -99,8 +122,13 @@ export default function Search() {
                 {index + 1}
               </div> */}
 
-              <div className="flex items-center">
-                <div className="relative">
+              <div className="flex flex-grow w-full items-center truncate">
+                <div className="relative w-10 h-10 shrink-0">
+                  <img
+                    className="w-full h-full rounded group-hover:opacity-50"
+                    src={image}
+                    alt={item.album.name}
+                  />
                   <div className="absolute z-10 top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100">
                     {isPlaying && trackInfo?.trackId === item.id ? (
                       <FontAwesomeIcon
@@ -121,14 +149,11 @@ export default function Search() {
                       />
                     )}
                   </div>
-                  <img
-                    className="w-10 h-10 rounded group-hover:opacity-50"
-                    src={image}
-                    alt={item.album.name}
-                  />
                 </div>
-                <div className="ml-3">
-                  <div className="font-bold">{item.name}</div>
+                <div className="ml-3 truncate">
+                  <div aria-label="곡 제목" className="font-bold truncate">
+                    {item.name}
+                  </div>
 
                   <div className="text-sm text-gray-400">
                     {item.artists.map((artist, index) => {
@@ -152,12 +177,18 @@ export default function Search() {
                   <span className="hover:underline">{item.album.name}</span>
                 </Link>
               </div>
-              <EllipsisMenu
-                trackId={item.id}
-                name={item.name}
-                artists={artists}
-                imgUrl={image}
-              />
+              <div className="flex justify-center items-center">
+                <FontAwesomeIcon
+                  className="hover:cursor-pointer"
+                  data-trackid={item.id}
+                  data-name={item.name}
+                  data-artists={artists}
+                  data-artistsid={artistsId}
+                  data-imgurl={image}
+                  icon={faCirclePlus}
+                  onClick={addToPlaylist}
+                />
+              </div>
             </div>
           );
         })}
@@ -211,31 +242,6 @@ export default function Search() {
             );
           })}
       </div>
-      {/* <h3 className="mt-10 mb-5 text-2xl font-bold">플레이리스트</h3> */}
-      {/* <div className="flex flex-wrap gap-6 ">
-        {playlists.map((item) => {
-          return (
-            <Link
-              to={`/playlist/${item.id}`}
-              state={{
-                imageUrl: item.images[0].url,
-                name: item.name,
-                description: item.description,
-              }}
-              key={item.id}
-            >
-              <div className="w-44">
-                <img
-                  className="rounded-lg w-44 h-44"
-                  src={item.images[0].url}
-                />
-                <div className="my-1 truncate font-bold">{item.name}</div>
-                <TruncatedText text={item.description} />
-              </div>
-            </Link>
-          );
-        })}
-      </div> */}
     </div>
   );
 }

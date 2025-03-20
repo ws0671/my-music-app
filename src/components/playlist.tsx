@@ -157,7 +157,7 @@ export default function Playlist() {
                     onClick={onPlayClick}
                     className="cursor-pointer gap-3 flex justify-between hover:bg-orange-200 rounded-xl group "
                   >
-                    <div className="flex w-8 items-center justify-center shrink-0 ">
+                    <div className="flex w-8 h-8 items-center justify-center shrink-0 ">
                       <img
                         className={trackInfo ? "w-full h-full rounded" : ""}
                         src={trackInfo?.imgUrl ?? ""}
@@ -189,13 +189,6 @@ export default function Playlist() {
                       <div className="text-[11px] text-gray-300">
                         {trackInfo?.artists}
                       </div>
-                    </div>
-                    <div className="">
-                      <FontAwesomeIcon
-                        className="cursor-pointer hover:bg-orange-300 rounded-full p-1"
-                        onClick={(e) => onEllipsis(e, index)}
-                        icon={faEllipsis}
-                      />
                     </div>
                     <div
                       ref={(el) =>
@@ -232,7 +225,7 @@ export default function Playlist() {
                     data-imgurl={item?.imgUrl}
                     className="p-2 hover:rounded-md relative rounded-xl hover:bg-purple-500  cursor-pointer grid gap-3 grid-cols-[auto_1fr_auto] justify-between group "
                   >
-                    <div className="w-12 items-center justify-center relative shrink-0 ">
+                    <div className="w-12 h-12 items-center justify-center relative shrink-0 ">
                       <img
                         className={
                           item
