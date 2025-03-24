@@ -32,9 +32,9 @@ export default function Home() {
   // }
   return (
     <div className="h-full flex flex-col p-6">
-      <div className="flex items-center flex-col my-6">
-        <span className="font-bold text-4xl mb-3">새로나온 앨범</span>
-        <span className="space-x-2 text-base">
+      <div className="flex items-center flex-col mb-7">
+        <span className="font-bold text-4xl mb-4">새로나온 앨범</span>
+        <span className="space-x-3 text-base">
           <span
             onClick={() => onChangeCountryCode("KR")}
             className={

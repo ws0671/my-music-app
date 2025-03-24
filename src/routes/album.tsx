@@ -41,7 +41,7 @@ export default function Album() {
         />
         <div className="flex font-rowdies flex-col justify-end items-start gap-4 pb-5">
           <div className="">앨범</div>
-          <div className="text-6xl ">{tracks[0].name}</div>
+          <div className="text-5xl ">{tracks[0].name}</div>
           <div className="">
             {tracks[0].artists.map((artist, index) => {
               const isLast = index === tracks[0].artists.length - 1;
