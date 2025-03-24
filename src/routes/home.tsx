@@ -27,13 +27,13 @@ export default function Home() {
   const onChangeCountryCode = (code: string) => {
     setContryCode(code);
   };
-  if (isLoading) {
-    return <Loading />;
-  }
+  // if (isLoading) {
+  //   return <Loading />;
+  // }
   return (
-    <div className="m-6">
+    <div className="h-full flex flex-col p-6">
       <div className="flex items-center flex-col my-6">
-        <span className="font-bold text-4xl mb-3 ">새로나온 앨범</span>
+        <span className="font-bold text-4xl mb-3">새로나온 앨범</span>
         <span className="space-x-2 text-base">
           <span
             onClick={() => onChangeCountryCode("KR")}
@@ -69,33 +69,39 @@ export default function Home() {
           </span>
         </span>
       </div>
-      <div className="grid grid-cols-5 gap-6 ">
-        {music.map((item) => {
-          return (
-            <Link className="" to={`album/${item.id}`} key={item.id}>
-              <div className="">
-                <img className="rounded-lg w-full" src={item.images[0].url} />
-                <div className="my-1 truncate font-bold" key={item.id}>
-                  {item.name}
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <div className="grid grid-cols-5 gap-6 ">
+          {music.map((item) => {
+            return (
+              <Link className="" to={`album/${item.id}`} key={item.id}>
+                <div className="">
+                  <img className="rounded-lg w-full" src={item.images[0].url} />
+                  <div className="my-1 truncate font-bold" key={item.id}>
+                    {item.name}
+                  </div>
+                  <div className="truncate text-sm font-bold text-gray-400">
+                    {item.artists.map((artist, index) => {
+                      const isLast = index === item.artists.length - 1;
+                      return (
+                        <>
+                          <Link to={`artist/${artist.id}`} key={artist.id}>
+                            <span className="hover:underline">
+                              {artist.name}
+                            </span>
+                          </Link>
+                          {!isLast && <span>, </span>}
+                        </>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div className="truncate text-sm font-bold text-gray-400">
-                  {item.artists.map((artist, index) => {
-                    const isLast = index === item.artists.length - 1;
-                    return (
-                      <>
-                        <Link to={`artist/${artist.id}`} key={artist.id}>
-                          <span className="hover:underline">{artist.name}</span>
-                        </Link>
-                        {!isLast && <span>, </span>}
-                      </>
-                    );
-                  })}
-                </div>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

@@ -15,7 +15,8 @@
 
 @layer utilities {
   .custom-scrollbar {
-    @apply overflow-y-auto;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
   }
 
   .custom-scrollbar::-webkit-scrollbar {
@@ -23,7 +24,6 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-track {
-    color: ;
     background: transparent; /* 스크롤바 배경 숨기기 */
   }
 
