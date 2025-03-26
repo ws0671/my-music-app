@@ -27,11 +27,9 @@ export default function Home() {
   const onChangeCountryCode = (code: string) => {
     setContryCode(code);
   };
-  // if (isLoading) {
-  //   return <Loading />;
-  // }
+
   return (
-    <div className="h-full flex flex-col p-6">
+    <div className="h-full flex sm:flex flex-col p-6">
       <div className="flex items-center flex-col mb-7">
         <span className="font-bold text-4xl mb-4">새로나온 앨범</span>
         <span className="space-x-3 text-base">
@@ -72,7 +70,7 @@ export default function Home() {
       {isLoading ? (
         <Loading />
       ) : (
-        <div className="grid grid-cols-5 gap-6 ">
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-6 ">
           {music.map((item) => {
             return (
               <Link className="" to={`album/${item.id}`} key={item.id}>

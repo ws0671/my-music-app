@@ -124,7 +124,7 @@ export default function Playlist() {
   };
 
   return (
-    <div className="flex flex-col overflow-hidden  bg-purple-600 text-white">
+    <div className="hidden sm:flex flex-col overflow-hidden  bg-purple-600 text-white">
       <div
         className={`${
           showShadow ? "shadow-custom" : ""

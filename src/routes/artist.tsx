@@ -36,11 +36,13 @@ export default function Artist() {
   return (
     <div>
       <div className="shadow-2xl gap-10 relative h-[300px] font-rowdies box-border overflow-hidden">
-        <img
-          className="opacity-80 object-[0%_10%] w-full object-cover h-full"
-          src={artist?.images[0].url}
-          alt={artist?.name}
-        />
+        <div className="flex justify-center items-center max-sm:py-5">
+          <img
+            className="max-sm:rounded-full max-sm:w-[150px] max-sm:h-[150px] opacity-80 object-[0%_10%] w-full object-cover h-full"
+            src={artist?.images[0].url}
+            alt={artist?.name}
+          />
+        </div>
         <div className="absolute bottom-5 left-5 break-all justify-center flex flex-col gap-4">
           <div className="">아티스트</div>
           <div className="font-[1000] text-responsive tracking-tighter">

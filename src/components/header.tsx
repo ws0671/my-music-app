@@ -33,8 +33,35 @@ export default function Header() {
   };
   return (
     <>
-      <div className="flex items-center justify-between sm:hidden col-span-3 mx-2 ">
-        <div className="text-white">
+      <div className="flex justify-between items-center sm:hidden col-span-3 mx-2 ">
+        <div>
+          <Link to={"/"}>
+            <img
+              className="w-10"
+              src="/images/3-removebg-preview.png"
+              alt="logo"
+            />
+          </Link>
+        </div>
+        <div className="flex relative justify-center items-center">
+          <div className="group flex items-center ">
+            <div className="fixed inset-0 bg-black opacity-0 transition-opacity duration-300 pointer-events-none group-hover:opacity-50 group-focus-within:opacity-50"></div>
+
+            <form className="relative" onSubmit={onSubmit}>
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 ">
+                <FontAwesomeIcon icon={faMagnifyingGlass} />
+              </div>
+              <input
+                ref={inputRef}
+                onChange={onSearch}
+                className="w-full transition-transform duration-300 ease-in-out hover:scale-[1.5] focus:scale-[1.5] shadow-[0px_0px_10px_5px_rgba(0,_0,_0,_0.1)] focus:outline-none p-1 pl-9 rounded-3xl
+                 "
+                type="text"
+              />
+            </form>
+          </div>
+        </div>
+        <div className="text-white ">
           <FontAwesomeIcon className="text-2xl" icon={faBars} />
         </div>
       </div>
