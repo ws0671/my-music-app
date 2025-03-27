@@ -29,8 +29,8 @@ export default function Home() {
   };
 
   return (
-    <div className="h-full flex sm:flex flex-col p-6">
-      <div className="flex items-center flex-col mb-7">
+    <div className="h-full flex sm:flex flex-col p-6 bg-piur">
+      <div className="flex items-center flex-col mb-7 ">
         <span className="font-bold text-4xl mb-4">새로나온 앨범</span>
         <span className="space-x-3 text-base">
           <span
@@ -54,7 +54,7 @@ export default function Home() {
           >
             미국
           </span>
-          <span> | </span>
+          <span> | </span> 
           <span
             onClick={() => onChangeCountryCode("JP")}
             className={
@@ -70,7 +70,7 @@ export default function Home() {
       {isLoading ? (
         <Loading />
       ) : (
-        <div className="grid grid-cols-3 sm:grid-cols-5 gap-6 ">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-6 ">
           {music.map((item) => {
             return (
               <Link className="" to={`album/${item.id}`} key={item.id}>

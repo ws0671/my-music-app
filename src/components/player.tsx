@@ -77,6 +77,7 @@ export default function Player() {
   const onReady = (e: OnReady) => {
     setPlayer(e.target);
     setDuration(e.target.getDuration());
+    e.target.unMute();
   };
 
   const playVideo = () => {
@@ -222,6 +223,8 @@ export default function Player() {
       autoplay: 1,
       controls: 0,
       modestbranding: 1,
+      playsinline: 1,
+      mute: 1,
       rel: 0,
     },
   };

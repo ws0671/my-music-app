@@ -279,11 +279,8 @@ export default function Playlist() {
                       <div>
                         {artistsId?.map((id, index) => {
                           return (
-                            <Link to={"/artist/" + id}>
-                              <span
-                                key={index}
-                                className="text-sm text-gray-400 hover:underline"
-                              >
+                            <Link key={index} to={"/artist/" + id}>
+                              <span className="text-sm text-gray-400 hover:underline">
                                 {artists && index !== artists.length - 1
                                   ? artists?.[index] + ", "
                                   : artists?.[index]}

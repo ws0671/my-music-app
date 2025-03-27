@@ -193,7 +193,7 @@ export default function Search() {
           );
         })}
       <h3 className="mt-10 mb-5 text-2xl font-bold">아티스트</h3>
-      <div className="grid grid-cols-5 gap-6 ">
+      <div className="grid max-sm:grid-cols-2 grid-cols-5 gap-6 ">
         {artists &&
           artists.slice(0, 5).map((artist) => {
             return (
@@ -212,7 +212,7 @@ export default function Search() {
           })}
       </div>
       <h3 className="mt-10 mb-5 text-2xl font-bold">앨범</h3>
-      <div className="grid grid-cols-5 gap-6 ">
+      <div className="grid max-sm:grid-cols-2 grid-cols-5 gap-6 ">
         {albums &&
           albums.slice(0, 5).map((item) => {
             return (

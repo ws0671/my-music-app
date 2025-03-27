@@ -3,12 +3,17 @@ import useSessionStore from "../stores/session";
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "../utils/supabaseClient";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBars,
+  faMagnifyingGlass,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 
 export default function Header() {
   const navigate = useNavigate();
   const { session, setSession } = useSessionStore();
   const [word, setWord] = useState("");
+  const [openMenu, setOpenMenu] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -62,8 +67,29 @@ export default function Header() {
           </div>
         </div>
         <div className="text-white ">
-          <FontAwesomeIcon className="text-2xl" icon={faBars} />
+          <FontAwesomeIcon
+            className="text-2xl"
+            icon={faBars}
+            onClick={() => setOpenMenu(true)}
+          />
         </div>
+        {openMenu && (
+          <div className="fixed top-0 left-0 w-full h-full bg-purple-700 text-white flex flex-col gap-5 p-5 pl-10">
+            <div className="flex justify-end">
+              <FontAwesomeIcon
+                className="text-2xl"
+                icon={faXmark}
+                onClick={() => setOpenMenu(false)}
+              />
+            </div>
+            <Link to="/login">
+              <div className="font-bold text-xl">로그인하기</div>
+            </Link>
+            <Link to="/create-account">
+              <div className="font-bold text-xl">가입하기</div>
+            </Link>
+          </div>
+        )}
       </div>
       <div className="hidden justify-center sm:flex">
         <Link
