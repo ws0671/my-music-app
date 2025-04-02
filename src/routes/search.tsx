@@ -138,7 +138,7 @@ export default function Search() {
                       />
                     ) : (
                       <FontAwesomeIcon
-                        className="hover:cursor-pointer"
+                        className="hover:cursor-pointer bg-purple"
                         data-trackid={item.id}
                         data-name={item.name}
                         data-artists={artists}

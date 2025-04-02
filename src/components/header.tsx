@@ -133,12 +133,12 @@ export default function Header() {
         ) : (
           <>
             <Link to="/create-account">
-              <div className="border font-bold transition-all bg-white hover:text-purple-500 rounded-md py-1 px-2">
+              <div className="border font-bold transition-all bg-black text-white border-none hover:bg-gray-600 rounded-lg py-3 px-4">
                 회원가입
               </div>
             </Link>
             <Link to="/login">
-              <div className="border font-bold transition-all bg-white hover:text-purple-500 rounded-md py-1 px-2">
+              <div className="border font-bold transition-all bg-black text-white border-none hover:bg-gray-600 rounded-lg py-3 px-4">
                 로그인
               </div>
             </Link>

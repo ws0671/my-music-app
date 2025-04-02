@@ -58,38 +58,6 @@ export default function Player() {
   const [volume, setVolume] = useState(50);
   const [isMuted, setIsMuted] = useState(false);
 
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
-    setVolume(value);
-    player?.setVolume(value);
-  };
-  const handleMute = () => {
-    if (player.isMuted()) {
-      player.unMute();
-      setVolume(50);
-      setIsMuted(false);
-    } else {
-      player.mute();
-      setVolume(0);
-      setIsMuted(true);
-    }
-  };
-  const onReady = (e: OnReady) => {
-    setPlayer(e.target);
-    setDuration(e.target.getDuration());
-    e.target.unMute();
-  };
-
-  const playVideo = () => {
-    player?.playVideo();
-    playing();
-  };
-
-  const pauseVideo = () => {
-    player?.pauseVideo();
-    pause();
-  };
-
   useEffect(() => {
     const handleUserPlaylist = async () => {
       if (session) {
@@ -99,6 +67,7 @@ export default function Player() {
     };
     handleUserPlaylist();
   }, [session, replaceUserPlaylist]);
+
   useEffect(() => {
     const handleUpdatedPlaylist = () => {
       if (trackInfo) {
@@ -127,7 +96,6 @@ export default function Player() {
       if (childNode instanceof HTMLElement) {
         textWidth = childNode.scrollWidth;
       }
-
       if (textWidth <= containerWidth) {
         setIsShort(true);
       } else {
@@ -135,6 +103,7 @@ export default function Player() {
       }
     }
   }, [trackInfo?.name]);
+
   useEffect(() => {
     if (playlist.length > 0) {
       const handleKeyDown = (e: KeyboardEvent) => {
@@ -149,15 +118,16 @@ export default function Player() {
       };
     }
   }, [playlist.length]);
+
   useEffect(() => {
-    if (player) {
-      if (isPlaying) {
-        player.playVideo();
-      } else {
-        player.pauseVideo();
-      }
+    if (!player) {
+      console.warn("Player is not initialized yet.");
+      return;
+    }
+    if (isPlaying) {
     }
   }, [isPlaying]);
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isPlaying && player) {
@@ -182,6 +152,37 @@ export default function Player() {
       }
     }
   }, [currentTrackIndex]);
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setVolume(value);
+    player?.setVolume(value);
+  };
+  const handleMute = () => {
+    if (player.isMuted()) {
+      player.unMute();
+      setVolume(50);
+      setIsMuted(false);
+    } else {
+      player.mute();
+      setVolume(0);
+      setIsMuted(true);
+    }
+  };
+  const onReady = (e: OnReady) => {
+    setPlayer(e.target);
+    setDuration(e.target.getDuration());
+  };
+
+  const handlePlay = () => {
+    player?.playVideo();
+    playing();
+  };
+
+  const handlePause = () => {
+    player?.pauseVideo();
+    pause();
+  };
 
   const onEnd = () => {
     ignoreTrackInfoEffect.current = true;
@@ -223,8 +224,6 @@ export default function Player() {
       autoplay: 1,
       controls: 0,
       modestbranding: 1,
-      playsinline: 1,
-      mute: 1,
       rel: 0,
     },
   };
@@ -385,13 +384,13 @@ export default function Player() {
                   <FontAwesomeIcon
                     icon={faCirclePause}
                     className="cursor-pointer text-white text-4xl"
-                    onClick={pauseVideo}
+                    onClick={handlePause}
                   />
                 ) : (
                   <FontAwesomeIcon
                     icon={faCirclePlay}
                     className="cursor-pointer text-white text-4xl "
-                    onClick={playVideo}
+                    onClick={handlePlay}
                   />
                 )}
               </div>
@@ -415,7 +414,7 @@ export default function Player() {
           <div className="flex basis-1/3  text-xs gap-2 items-center justify-center mb-1">
             <span>{formatTime(currentTime)}</span>
             <div
-              className="relative w-full rounded-xl h-1 bg-purple-400"
+              className="relative w-full rounded-xl h-1 bg-purple-500"
               onClick={handleProgressBarClick}
               ref={progressBarRef}
             >
@@ -442,12 +441,12 @@ export default function Player() {
             value={volume}
             onChange={handleVolumeChange}
             className="w-full h-2 appearance-none cursor-pointer
-              bg-purple-400 rounded-lg outline-none
+              bg-purple-500 rounded-lg outline-none
                  [&::-webkit-slider-thumb]:appearance-none
                   [&::-webkit-slider-thumb]:w-4
                  "
             style={{
-              background: `linear-gradient(to right, #fff ${volume}%, #c084fc ${volume}%)`,
+              background: `linear-gradient(to right, #fff ${volume}%, #a855f7 ${volume}%)`,
             }}
           />
         </div>

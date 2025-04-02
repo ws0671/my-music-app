@@ -39,11 +39,13 @@ export default function FindPassword() {
     setEmail(email);
   };
   return (
-    <div className="h-screen flex justify-center">
-      <div className="w-[400px] flex gap-4 flex-col justify-center">
-        <div className="relative rounded-md shadow p-8 pt-10 border border-gray-400 flex gap-4 flex-col justify-center">
-          <h1 className="absolute top-0 text-2xl translate-y-[-50%]">
-            <span className="px-4 bg-white">비밀번호 초기화</span>
+    <div className="bg-gradient-to-t from-purple-800 to-purple-600 h-screen flex justify-center items-center text-white font-bold">
+      <div className="rounded-xl bg-purple-800 mt-6 w-[400px] flex gap-4 flex-col justify-center border border-none">
+        <div className="relative   shadow py-6 px-8 flex gap-4 flex-col justify-center">
+          <h1 className="text-center text-2xl">
+            <div className="px-4 bg-transparent font-bold whitespace-nowrap">
+              비밀번호 초기화
+            </div>
           </h1>
           <div className="text-sm">
             비밀번호를 초기화합니다. 이메일을 적어주세요.
@@ -93,7 +95,7 @@ export default function FindPassword() {
               </div>
             ) : (
               <input
-                className="px-4  py-2 hover:cursor-pointer hover:bg-orange-300 text-white bg-orange-400 rounded"
+                className="px-4  py-2 hover:cursor-pointer text-white hover:bg-gray-700 bg-black rounded"
                 type="submit"
                 value="메일 보내기"
               />

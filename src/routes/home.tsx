@@ -37,8 +37,8 @@ export default function Home() {
             onClick={() => onChangeCountryCode("KR")}
             className={
               countryCode === "KR"
-                ? "bg-purple-400 text-white px-2 py-1 rounded cursor-pointer"
-                : "cursor-pointer transition duration-500 px-2 py-1 rounded hover:px-2 hover:py-1 hover:text-white hover:bg-purple-400 hover:rounded"
+                ? "bg-purple-500 text-white px-2 py-1 rounded cursor-pointer"
+                : "cursor-pointer transition duration-500 px-2 py-1 rounded hover:px-2 hover:py-1 hover:text-white hover:bg-purple-500 hover:rounded"
             }
           >
             한국
@@ -48,19 +48,19 @@ export default function Home() {
             onClick={() => onChangeCountryCode("US")}
             className={
               countryCode === "US"
-                ? "bg-purple-400 text-white px-2 py-1 rounded cursor-pointer"
-                : "cursor-pointer transition duration-500 px-2 py-1 rounded hover:px-2 hover:py-1 hover:text-white hover:bg-purple-400 hover:rounded"
+                ? "bg-purple-500 text-white px-2 py-1 rounded cursor-pointer"
+                : "cursor-pointer transition duration-500 px-2 py-1 rounded hover:px-2 hover:py-1 hover:text-white hover:bg-purple-500 hover:rounded"
             }
           >
             미국
           </span>
-          <span> | </span> 
+          <span> | </span>
           <span
             onClick={() => onChangeCountryCode("JP")}
             className={
               countryCode === "JP"
-                ? "bg-purple-400 text-white px-2 py-1 rounded cursor-pointer"
-                : "cursor-pointer transition duration-500 px-2 py-1 rounded hover:px-2 hover:py-1 hover:text-white hover:bg-purple-400 hover:rounded"
+                ? "bg-purple-500 text-white px-2 py-1 rounded cursor-pointer"
+                : "cursor-pointer transition duration-500 px-2 py-1 rounded hover:px-2 hover:py-1 hover:text-white hover:bg-purple-500 hover:rounded"
             }
           >
             일본
