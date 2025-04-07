@@ -40,8 +40,8 @@ export default function FindPassword() {
   };
   return (
     <div className="bg-gradient-to-t from-purple-800 to-purple-600 h-screen flex justify-center items-center text-white font-bold">
-      <div className="rounded-xl bg-purple-800 mt-6 w-[400px] flex gap-4 flex-col justify-center border border-none">
-        <div className="relative   shadow py-6 px-8 flex gap-4 flex-col justify-center">
+      <div className="rounded-xl sm:bg-purple-800 mt-6 w-[400px] flex gap-4 flex-col justify-center border border-none">
+        <div className="relative   sm:shadow py-6 px-8 flex gap-4 flex-col justify-center">
           <h1 className="text-center text-2xl">
             <div className="px-4 bg-transparent font-bold whitespace-nowrap">
               비밀번호 초기화

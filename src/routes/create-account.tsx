@@ -67,8 +67,8 @@ export default function CreateAccount() {
         </Link>
       </div>
       <div className="flex justify-center items-center ">
-        <div className="rounded-xl bg-purple-800 mt-6 w-[400px] flex gap-4 flex-col justify-center border border-none">
-          <div className="relative   shadow py-6 px-8 flex gap-4 flex-col justify-center">
+        <div className="rounded-xl max-sm:bg-transparent bg-purple-800 mt-6 w-[400px] flex gap-4 flex-col justify-center border border-none">
+          <div className="relative   sm:shadow py-6 px-8 flex gap-4 flex-col justify-center">
             <h1 className="text-center text-2xl">
               <div className="px-4 bg-transparent font-bold whitespace-nowrap">
                 회원가입
@@ -123,7 +123,7 @@ export default function CreateAccount() {
                 <div className="border-t border-purple-400 w-full"></div>
               </div>
               <div className="relative flex justify-center">
-                <span className="bg-purple-800 text-sm px-2">또는</span>
+                <span className="bg-transperant text-sm px-2">또는</span>
               </div>
             </div>
             <form className="flex flex-col gap-4 w-full" onSubmit={onSubmit}>

@@ -139,19 +139,19 @@ export default function Player() {
     return () => clearInterval(interval);
   }, [isPlaying, player]);
 
-  useEffect(() => {
-    if (session) {
-      if (player && currentTrackIndex < userPlaylist.length) {
-        setVideoId(userPlaylist[currentTrackIndex].videoId);
-        setTrackInfo(userPlaylist[currentTrackIndex]);
-      }
-    } else {
-      if (player && currentTrackIndex < playlist.length) {
-        setVideoId(playlist[currentTrackIndex].videoId);
-        setTrackInfo(playlist[currentTrackIndex]);
-      }
-    }
-  }, [currentTrackIndex]);
+  // useEffect(() => {
+  //   if (session) {
+  //     if (player && currentTrackIndex < userPlaylist.length) {
+  //       setVideoId(userPlaylist[currentTrackIndex].videoId);
+  //       setTrackInfo(userPlaylist[currentTrackIndex]);
+  //     }
+  //   } else {
+  //     if (player && currentTrackIndex < playlist.length) {
+  //       setVideoId(playlist[currentTrackIndex].videoId);
+  //       setTrackInfo(playlist[currentTrackIndex]);
+  //     }
+  //   }
+  // }, [currentTrackIndex]);
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);

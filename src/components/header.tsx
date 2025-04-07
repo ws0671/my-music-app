@@ -74,7 +74,7 @@ export default function Header() {
           />
         </div>
         {openMenu && (
-          <div className="fixed top-0 left-0 w-full h-full bg-purple-700 text-white flex flex-col gap-5 p-5 pl-10">
+          <div className="z-50 fixed top-0 left-0 w-full h-full bg-purple-700 text-white flex flex-col gap-5 p-5 pl-10">
             <div className="flex justify-end">
               <FontAwesomeIcon
                 className="text-2xl"

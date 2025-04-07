@@ -53,7 +53,7 @@ export default function Login() {
   };
 
   return (
-    <div className="bg-gradient-to-t from-purple-800 to-purple-600 h-screen text-white font-bold">
+    <div className="bg-gradient-to-t from-purple-800 to-purple-600 h-screen text-white font-bold ">
       <div className="flex justify-center pt-3">
         <Link to={"/"}>
           <img
@@ -63,9 +63,9 @@ export default function Login() {
           />
         </Link>
       </div>
-      <div className="flex justify-center items-center">
-        <div className="rounded-xl bg-purple-800 mt-6 w-[400px] flex gap-4 flex-col justify-center border border-none">
-          <div className="relative   shadow py-6 px-8 flex gap-4 flex-col justify-center">
+      <div className=" flex justify-center items-center">
+        <div className="max-sm:bg-transparent rounded-xl bg-purple-800 mt-6 w-[400px] flex gap-4 flex-col justify-center border border-none">
+          <div className="relative  sm:shadow py-6 px-8 flex gap-4 flex-col justify-center">
             <h1 className="text-center text-2xl">
               <div className="px-4 bg-transparent font-bold whitespace-nowrap">
                 로그인
@@ -92,7 +92,7 @@ export default function Login() {
             >
               <img
                 src="/images/icon/github.png"
-                className="ml-2 w-5 h-5 bg-white rounded-full "
+                className="ml-2 w-5 h-5 bg-white rounded-full"
                 alt=""
               />
 
@@ -120,7 +120,7 @@ export default function Login() {
                 <div className="border-t  border-purple-400 w-full"></div>
               </div>
               <div className="relative flex justify-center">
-                <span className="bg-purple-800 text-sm px-2">또는</span>
+                <span className="bg-transparent text-sm px-2">또는</span>
               </div>
             </div>
             <form className="flex flex-col gap-4 w-full" onSubmit={onSubmit}>

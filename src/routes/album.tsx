@@ -34,7 +34,7 @@ export default function Album() {
   return (
     <div className="relative">
       <div className="sm:flex shadow-2xl gap-6 relative sm:h-[250px]">
-        <div className="max-sm:py-5  flex-shrink-0">
+        <div className="max-sm:py-5 flex-shrink-0 flex justify-center">
           <img
             className="max-sm:w-40 h-full shadow-[rgba(0,0,0,0.35)_0px_5px_15px]"
             src={tracks[0].images ?? ""}
