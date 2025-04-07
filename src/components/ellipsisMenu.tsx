@@ -19,6 +19,7 @@ export default function EllipsisMenu({
   name,
   artists,
   imgUrl,
+  onClick,
 }: IEllipsisMenuProps) {
   const [selectedId, setSelectedId] = useState("");
   const [ellipsis, setEllipsis] = useState(false);

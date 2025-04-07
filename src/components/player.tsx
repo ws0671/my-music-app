@@ -8,6 +8,10 @@ import {
   faShuffle,
   faStepBackward,
   faStepForward,
+  faVolumeLow,
+  faVolumeOff,
+  faVolumeUp,
+  faVolumeXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,11 +19,11 @@ import {
   usePlaylistStore,
   useTrackInfoStore,
   useUserPlaylistStore,
+  useYouTubeStore,
 } from "../stores/video";
 import { useEffect, useRef, useState } from "react";
 import YouTube, { YouTubePlayer } from "react-youtube";
 import { useVideoIdStore } from "../stores/video";
-import Playlist from "./playlist";
 import useSessionStore from "../stores/session";
 import { addToPlaylist, fetchPlaylist } from "../utils/playlist";
 
@@ -31,12 +35,15 @@ interface OnReady {
 export default function Player() {
   const { videoId, setVideoId } = useVideoIdStore();
   const { playlist, setPlaylist } = usePlaylistStore();
-  const [player, setPlayer] = useState<YouTubePlayer | null>(null);
+  const [player, setPlayer] = useYouTubeStore((state) => [
+    state.player,
+    state.setPlayer,
+  ]);
+  const { currentTime, setCurrentTime } = useYouTubeStore();
   const [duration, setDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
   const [onPlaylist, setOnPlaylist] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
-  const { trackInfo, isPlaying, togglePlay, setTrackInfo, isTrackPlaying } =
+  const { trackInfo, isPlaying, togglePlay, setTrackInfo, playing, pause } =
     useTrackInfoStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isShort, setIsShort] = useState(false);
@@ -48,21 +55,8 @@ export default function Player() {
   const ignoreTrackInfoEffect = useRef(false);
   const [shuffle, setShuffle] = useState(false);
   const [repeat, setRepeat] = useState(false);
-
-  const onReady = (e: OnReady) => {
-    setPlayer(e.target);
-    setDuration(e.target.getDuration());
-  };
-
-  const playVideo = () => {
-    player?.playVideo();
-    togglePlay();
-  };
-
-  const pauseVideo = () => {
-    player?.pauseVideo();
-    togglePlay();
-  };
+  const [volume, setVolume] = useState(50);
+  const [isMuted, setIsMuted] = useState(false);
 
   useEffect(() => {
     const handleUserPlaylist = async () => {
@@ -73,25 +67,26 @@ export default function Player() {
     };
     handleUserPlaylist();
   }, [session, replaceUserPlaylist]);
-  // useEffect(() => {
-  //   const handleUpdatedPlaylist = () => {
-  //     if (trackInfo) {
-  //       if (trackInfo?.state === "playlist") return;
 
-  //       if (session) {
-  //         addToPlaylist(trackInfo);
-  //         setUserPlaylist(trackInfo);
-  //       } else {
-  //         setPlaylist(trackInfo);
-  //       }
-  //     }
-  //   };
-  //   if (!ignoreTrackInfoEffect.current) {
-  //     handleUpdatedPlaylist();
-  //   } else {
-  //     ignoreTrackInfoEffect.current = false;
-  //   }
-  // }, [trackInfo, setPlaylist, setUserPlaylist, session]);
+  useEffect(() => {
+    const handleUpdatedPlaylist = () => {
+      if (trackInfo) {
+        if (trackInfo?.state === "playlist") return;
+
+        if (session) {
+          addToPlaylist(trackInfo);
+          setUserPlaylist(trackInfo);
+        } else {
+          setPlaylist(trackInfo);
+        }
+      }
+    };
+    if (!ignoreTrackInfoEffect.current) {
+      handleUpdatedPlaylist();
+    } else {
+      ignoreTrackInfoEffect.current = false;
+    }
+  }, [trackInfo, setPlaylist, setUserPlaylist, session]);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -101,7 +96,6 @@ export default function Player() {
       if (childNode instanceof HTMLElement) {
         textWidth = childNode.scrollWidth;
       }
-
       if (textWidth <= containerWidth) {
         setIsShort(true);
       } else {
@@ -109,27 +103,31 @@ export default function Player() {
       }
     }
   }, [trackInfo?.name]);
+
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.code === "Space") {
-        e.preventDefault();
-        togglePlay();
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+    if (playlist.length > 0) {
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.code === "Space") {
+          e.preventDefault();
+          togglePlay();
+        }
+      };
+      document.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [playlist.length]);
+
   useEffect(() => {
-    if (player) {
-      if (isPlaying) {
-        player.playVideo();
-      } else {
-        player.pauseVideo();
-      }
+    if (!player) {
+      console.warn("Player is not initialized yet.");
+      return;
+    }
+    if (isPlaying) {
     }
   }, [isPlaying]);
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isPlaying && player) {
@@ -141,19 +139,50 @@ export default function Player() {
     return () => clearInterval(interval);
   }, [isPlaying, player]);
 
-  useEffect(() => {
-    if (session) {
-      if (player && currentTrackIndex < userPlaylist.length) {
-        setVideoId(userPlaylist[currentTrackIndex].videoId);
-        setTrackInfo(userPlaylist[currentTrackIndex]);
-      }
+  // useEffect(() => {
+  //   if (session) {
+  //     if (player && currentTrackIndex < userPlaylist.length) {
+  //       setVideoId(userPlaylist[currentTrackIndex].videoId);
+  //       setTrackInfo(userPlaylist[currentTrackIndex]);
+  //     }
+  //   } else {
+  //     if (player && currentTrackIndex < playlist.length) {
+  //       setVideoId(playlist[currentTrackIndex].videoId);
+  //       setTrackInfo(playlist[currentTrackIndex]);
+  //     }
+  //   }
+  // }, [currentTrackIndex]);
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setVolume(value);
+    player?.setVolume(value);
+  };
+  const handleMute = () => {
+    if (player.isMuted()) {
+      player.unMute();
+      setVolume(50);
+      setIsMuted(false);
     } else {
-      if (player && currentTrackIndex < playlist.length) {
-        setVideoId(playlist[currentTrackIndex].videoId);
-        setTrackInfo(playlist[currentTrackIndex]);
-      }
+      player.mute();
+      setVolume(0);
+      setIsMuted(true);
     }
-  }, [currentTrackIndex]);
+  };
+  const onReady = (e: OnReady) => {
+    setPlayer(e.target);
+    setDuration(e.target.getDuration());
+  };
+
+  const handlePlay = () => {
+    player?.playVideo();
+    playing();
+  };
+
+  const handlePause = () => {
+    player?.pauseVideo();
+    pause();
+  };
 
   const onEnd = () => {
     ignoreTrackInfoEffect.current = true;
@@ -266,9 +295,10 @@ export default function Player() {
     ? userPlaylist.length === 0
     : playlist.length === 0;
   return (
-    <>
-      <div></div>
-      {/* <div className="basis-1/3 flex gap-10 text-sm items-center justify-center ">
+    <div className="col-span-3 flex justify-between gap-10">
+      <div className="w-[30%]"></div>
+      <div className=" text-white w-[40%] ">
+        {/* <div className="basis-1/3 flex gap-10 text-sm items-center justify-center ">
           <div
             onClick={() => {
               if (!isPlaylistEmpty) {
@@ -314,85 +344,113 @@ export default function Player() {
             </div>
           </div>
         </div> */}
-      <div
-        aria-label="플레이어 컨트롤"
-        className={`${
-          trackInfo ? "" : "opacity-50  cursor-not-allowed "
-        } text-white`}
-      >
         <div
-          aria-label="재생부"
-          className={` flex justify-center items-center ${
-            trackInfo ? "" : "pointer-events-none"
+          aria-label="플레이어 컨트롤"
+          className={`${
+            isPlaylistEmpty ? "opacity-50 cursor-not-allowed" : " "
           }`}
         >
-          <div className="flex justify-center items-center gap-3">
-            <div>
-              <YouTube
-                videoId={videoId}
-                opts={opts}
-                onReady={onReady}
-                onEnd={onEnd}
+          <div
+            aria-label="재생부"
+            className={`basis-1/3 flex justify-center items-center ${
+              isPlaylistEmpty ? "pointer-events-none" : ""
+            }`}
+          >
+            <div className="flex justify-center items-center gap-6">
+              <div>
+                <YouTube
+                  videoId={videoId}
+                  opts={opts}
+                  onReady={onReady}
+                  onEnd={onEnd}
+                />
+                <FontAwesomeIcon
+                  icon={faShuffle}
+                  onClick={handleShuffle}
+                  className={
+                    shuffle
+                      ? "cursor-pointer text-orange-400 text-xl"
+                      : "cursor-pointer text-xl"
+                  }
+                />
+              </div>
+              <FontAwesomeIcon
+                icon={faStepBackward}
+                onClick={handlePreviousTrack}
+                className="cursor-pointer text-xl"
+              />
+              <div className=" my-2">
+                {isPlaying ? (
+                  <FontAwesomeIcon
+                    icon={faCirclePause}
+                    className="cursor-pointer text-white text-4xl"
+                    onClick={handlePause}
+                  />
+                ) : (
+                  <FontAwesomeIcon
+                    icon={faCirclePlay}
+                    className="cursor-pointer text-white text-4xl "
+                    onClick={handlePlay}
+                  />
+                )}
+              </div>
+              <FontAwesomeIcon
+                icon={faStepForward}
+                onClick={handleNextTrack}
+                className="cursor-pointer text-xl"
               />
               <FontAwesomeIcon
-                icon={faShuffle}
-                onClick={handleShuffle}
+                onClick={handleRepeat}
+                icon={faRepeat}
                 className={
-                  shuffle ? "cursor-pointer text-orange-400" : "cursor-pointer"
+                  repeat
+                    ? "cursor-pointer text-orange-400 text-xl"
+                    : "text-xl cursor-pointer"
                 }
               />
             </div>
-            <FontAwesomeIcon
-              icon={faStepBackward}
-              onClick={handlePreviousTrack}
-              className="cursor-pointer"
-            />
-            <div className=" w-10 h-10 rounded-full flex justify-center items-center">
-              {isPlaying ? (
-                <FontAwesomeIcon
-                  icon={faCirclePause}
-                  className="cursor-pointer text-white text-3xl"
-                  onClick={pauseVideo}
-                />
-              ) : (
-                <FontAwesomeIcon
-                  icon={faCirclePlay}
-                  className="cursor-pointer text-white text-3xl "
-                  onClick={playVideo}
-                />
-              )}
-            </div>
-            <FontAwesomeIcon
-              icon={faStepForward}
-              onClick={handleNextTrack}
-              className="cursor-pointer"
-            />
-            <FontAwesomeIcon
-              onClick={handleRepeat}
-              icon={faRepeat}
-              className={
-                repeat ? "cursor-pointer text-orange-400" : "cursor-pointer"
-              }
-            />
+            <div></div>
           </div>
-          <div></div>
-        </div>
-        <div className="flex basis-1/3  text-xs gap-2 items-center justify-center">
-          <span>{formatTime(currentTime)}</span>
-          <div
-            className="relative w-[500px] rounded-sm h-1 bg-gray-500"
-            onClick={handleProgressBarClick}
-            ref={progressBarRef}
-          >
+          <div className="flex basis-1/3  text-xs gap-2 items-center justify-center mb-1">
+            <span>{formatTime(currentTime)}</span>
             <div
-              className=" absolute left-0 top-0 h-1 bg-white rounded-sm"
-              style={{ width: progressBarWidth }}
-            ></div>
+              className="relative w-full rounded-xl h-1 bg-purple-500"
+              onClick={handleProgressBarClick}
+              ref={progressBarRef}
+            >
+              <div
+                className=" absolute left-0 top-0 h-1 rounded-xl bg-white"
+                style={{ width: progressBarWidth }}
+              ></div>
+            </div>
+            <span>{formatTime(duration)}</span>
           </div>
-          <span>{formatTime(duration)}</span>
         </div>
       </div>
-      <div></div>
-    </>
+      <div className="w-[30%] flex items-center justify-center">
+        <div className="flex items-center gap-2">
+          <FontAwesomeIcon
+            className="text-purple-300 w-6 cursor-pointer hover:text-white"
+            icon={isMuted ? faVolumeXmark : faVolumeLow}
+            onClick={handleMute}
+          />
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={volume}
+            onChange={handleVolumeChange}
+            className="w-full h-2 appearance-none cursor-pointer
+              bg-purple-500 rounded-lg outline-none
+                 [&::-webkit-slider-thumb]:appearance-none
+                  [&::-webkit-slider-thumb]:w-4
+                 "
+            style={{
+              background: `linear-gradient(to right, #fff ${volume}%, #a855f7 ${volume}%)`,
+            }}
+          />
+        </div>
+      </div>
+    </div>
   );
 }
