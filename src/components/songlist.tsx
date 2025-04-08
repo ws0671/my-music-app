@@ -1,6 +1,11 @@
 import React from "react";
 import { ISpecificArtist, ITracksAllData } from "../types/spotify";
-import { useTrackInfoStore, useVideoIdStore } from "../stores/video";
+import {
+  useTrackInfoStore,
+  useUserPlaylistStore,
+  useVideoIdStore,
+  useYouTubeStore,
+} from "../stores/video";
 import useSessionStore from "../stores/session";
 import { getSpotifyTrackInfo } from "../api/spotify";
 import { Link, useParams } from "react-router-dom";
@@ -19,8 +24,11 @@ interface IPageProps {
 }
 export default function Songlist({ isArtist, isAlbum, tracks }: IPageProps) {
   const { setVideoId } = useVideoIdStore();
-  const { isPlaying, trackInfo, setTrackInfo, playing, pause } =
+  const { isPlaying, trackInfo, setTrackInfo, statePlay, statePause } =
     useTrackInfoStore();
+  const { userPlaylist, setUserPlaylist, replaceUserPlaylist } =
+    useUserPlaylistStore();
+  const { play, pause } = useYouTubeStore();
   const { session } = useSessionStore();
 
   const onPlayClick = async (e: React.MouseEvent<SVGSVGElement>) => {
@@ -39,14 +47,18 @@ export default function Songlist({ isArtist, isAlbum, tracks }: IPageProps) {
       artists,
       artistsId,
       imgUrl,
+      state: "playlist",
       videoId: fetchedVideoId,
     };
 
     setVideoId(fetchedVideoId);
     setTrackInfo(trackInfoOne);
-    playing();
+    statePlay();
+    play();
   };
+
   const pauseVideo = () => {
+    statePause();
     pause();
   };
   const addToPlaylist = async (e: React.MouseEvent<SVGSVGElement>) => {
@@ -65,6 +77,7 @@ export default function Songlist({ isArtist, isAlbum, tracks }: IPageProps) {
       artists,
       artistsId,
       imgUrl,
+      state: "playlist",
       videoId: fetchedVideoId,
     };
     setTrackInfo(trackInfoOne);

@@ -11,7 +11,7 @@ import {
   faPlay,
 } from "@fortawesome/free-solid-svg-icons";
 import useSessionStore from "../stores/session";
-import EllipsisMenu from "../components/ellipsisMenu";
+
 import {
   IPlaylists,
   ISpecificArtist,

@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../utils/supabaseClient";
 import { useNavigate, Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGithub, faGoogle } from "@fortawesome/free-brands-svg-icons";
-import { RiKakaoTalkFill } from "react-icons/ri";
 import useSessionStore from "../stores/session";
 import { PostgrestError, Provider } from "@supabase/supabase-js";
 
