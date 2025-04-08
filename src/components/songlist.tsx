@@ -46,7 +46,7 @@ export default function Songlist({ isArtist, isAlbum, tracks }: IPageProps) {
       artists,
       artistsId,
       imgUrl,
-      state: "playlist",
+      state: "now",
       videoId: fetchedVideoId,
     };
 

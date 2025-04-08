@@ -1,6 +1,7 @@
 import {
   faCirclePause,
   faCirclePlay,
+  faList,
   faRepeat,
   faShuffle,
   faStepBackward,
@@ -10,6 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  ITrackInfo,
   useCurrentTrackIndexStore,
   usePlaylistStore,
   useTrackInfoStore,
@@ -38,8 +40,8 @@ export default function Player() {
   const [duration, setDuration] = useState(0);
   const progressBarRef = useRef<HTMLDivElement>(null);
   const { trackInfo, isPlaying, statePlay, statePause } = useTrackInfoStore();
-  // const containerRef = useRef<HTMLDivElement>(null);
-  // const [setIsShort] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isShort, setIsShort] = useState(false);
   const { currentTrackIndex, setCurrentTrackIndex } =
     useCurrentTrackIndexStore();
   const { session } = useSessionStore();
@@ -289,54 +291,23 @@ export default function Player() {
     : playlist.length === 0;
   return (
     <div className="col-span-3 flex justify-between gap-10">
-      <div className="w-[30%]"></div>
-      <div className=" text-white w-[40%] ">
-        {/* <div className="basis-1/3 flex gap-10 text-sm items-center justify-center ">
+      <div className="text-white w-[30%]">
+        <div className="flex pl-2 items-center h-full w-full">
+          <img
+            className={trackInfo ? "w-14 rounded-lg " : ""}
+            src={trackInfo?.imgUrl ?? ""}
+            alt={trackInfo?.name ?? ""}
+          />
           <div
-            onClick={() => {
-              if (!isPlaylistEmpty) {
-                setOnPlaylist((prev) => !prev);
-              }
-            }}
-            className={`text-xl w-10 transition-all h-10 flex justify-center items-center ${
-              isPlaylistEmpty
-                ? ""
-                : "hover:cursor-pointer hover:rounded-full hover:bg-orange-200"
-            }`}
+            ref={containerRef}
+            className="ml-3 relative overflow-hidden whitespace-nowrap "
           >
-            <FontAwesomeIcon icon={faList} />
+            <div className="text-sm">{trackInfo?.name}</div>
+            <div className="text-xs text-gray-400">{trackInfo?.artists}</div>
           </div>
-          <div className="flex justify-center w-[300px]">
-            <img
-              className={trackInfo ? "w-10 rounded " : ""}
-              src={trackInfo?.imgUrl ?? ""}
-              alt={trackInfo?.name ?? ""}
-            />
-            <div
-              ref={containerRef}
-              className="ml-3 relative overflow-hidden whitespace-nowrap "
-            >
-              <div
-                className={`${
-                  isShort ? "" : "animate-marquee"
-                } inline-block pr-10`}
-              >
-                {trackInfo?.name}
-              </div>
-              {!isShort && (
-                <>
-                  <div className="animate-marquee inline-block pr-10">
-                    {trackInfo?.name}
-                  </div>
-                  <div className="animate-marquee inline-block pr-10">
-                    {trackInfo?.name}
-                  </div>
-                </>
-              )}
-              <div className="text-xs text-gray-300">{trackInfo?.artists}</div>
-            </div>
-          </div>
-        </div> */}
+        </div>
+      </div>
+      <div className=" text-white w-[40%] ">
         <div
           aria-label="플레이어 컨트롤"
           className={`${
