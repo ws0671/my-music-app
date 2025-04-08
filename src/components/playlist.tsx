@@ -24,27 +24,22 @@ export default function Playlist() {
   const [showShadow, setShowShadow] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const handleScroll = () => {
-    if (
-      scrollContainerRef.current &&
-      scrollContainerRef.current.scrollTop > 50
-    ) {
-      setShowShadow(true);
-    } else {
-      setShowShadow(false);
-    }
-  };
-
   const containerRef = useRef<HTMLDivElement>(null);
   const { setVideoId } = useVideoIdStore();
   const { isPlaying, trackInfo, setTrackInfo, statePlay, statePause } =
     useTrackInfoStore();
   const [ellipsis, setEllipsis] = useState(false);
-  const [selectedId, setSelectedId] = useState(0);
+  const [selectedId] = useState(0);
   const { playlist, removePlaylist, resetPlaylist } = usePlaylistStore();
   const dropdownRef = useRef<HTMLElement[]>([]);
   const { player, setCurrentTime, play, pause } = useYouTubeStore();
 
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   const {
     userPlaylist,
 
@@ -62,13 +57,16 @@ export default function Playlist() {
     }
   };
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
+  const handleScroll = () => {
+    if (
+      scrollContainerRef.current &&
+      scrollContainerRef.current.scrollTop > 50
+    ) {
+      setShowShadow(true);
+    } else {
+      setShowShadow(false);
+    }
+  };
   const onPlayClick = async (e: React.MouseEvent) => {
     const trackId = e.currentTarget.getAttribute("data-trackid");
     const name = e.currentTarget.getAttribute("data-name");

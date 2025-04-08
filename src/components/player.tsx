@@ -17,7 +17,7 @@ import {
   useYouTubeStore,
 } from "../stores/video";
 import { useEffect, useRef, useState } from "react";
-import YouTube, { YouTubePlayer } from "react-youtube";
+import YouTube from "react-youtube";
 import { useVideoIdStore } from "../stores/video";
 import useSessionStore from "../stores/session";
 import { addToPlaylist, fetchPlaylist } from "../utils/playlist";
@@ -38,8 +38,8 @@ export default function Player() {
   const [duration, setDuration] = useState(0);
   const progressBarRef = useRef<HTMLDivElement>(null);
   const { trackInfo, isPlaying, statePlay, statePause } = useTrackInfoStore();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [setIsShort] = useState(false);
+  // const containerRef = useRef<HTMLDivElement>(null);
+  // const [setIsShort] = useState(false);
   const { currentTrackIndex, setCurrentTrackIndex } =
     useCurrentTrackIndexStore();
   const { session } = useSessionStore();
