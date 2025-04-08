@@ -11,7 +11,6 @@ import { searchYouTubeVideo } from "../api/youtube";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleMinus,
-  faEllipsis,
   faMinus,
   faPause,
   faPlay,
@@ -25,27 +24,22 @@ export default function Playlist() {
   const [showShadow, setShowShadow] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const handleScroll = () => {
-    if (
-      scrollContainerRef.current &&
-      scrollContainerRef.current.scrollTop > 50
-    ) {
-      setShowShadow(true);
-    } else {
-      setShowShadow(false);
-    }
-  };
-
   const containerRef = useRef<HTMLDivElement>(null);
   const { setVideoId } = useVideoIdStore();
-  const { isPlaying, trackInfo, setTrackInfo, togglePlay, playing, pause } =
+  const { isPlaying, trackInfo, setTrackInfo, statePlay, statePause } =
     useTrackInfoStore();
   const [ellipsis, setEllipsis] = useState(false);
-  const [selectedId, setSelectedId] = useState(0);
+  const [selectedId] = useState(0);
   const { playlist, removePlaylist, resetPlaylist } = usePlaylistStore();
   const dropdownRef = useRef<HTMLElement[]>([]);
-  const { player, setCurrentTime } = useYouTubeStore();
+  const { player, setCurrentTime, play, pause } = useYouTubeStore();
 
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   const {
     userPlaylist,
 
@@ -63,13 +57,16 @@ export default function Playlist() {
     }
   };
 
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
+  const handleScroll = () => {
+    if (
+      scrollContainerRef.current &&
+      scrollContainerRef.current.scrollTop > 50
+    ) {
+      setShowShadow(true);
+    } else {
+      setShowShadow(false);
+    }
+  };
   const onPlayClick = async (e: React.MouseEvent) => {
     const trackId = e.currentTarget.getAttribute("data-trackid");
     const name = e.currentTarget.getAttribute("data-name");
@@ -92,9 +89,11 @@ export default function Playlist() {
     };
     setVideoId(fetchedVideoId);
     setTrackInfo(trackInfoOne);
-    playing();
+    statePlay();
+    play();
   };
   const pauseVideo = () => {
+    statePause();
     pause();
   };
   const removeSong = (e: React.MouseEvent, index: number) => {
@@ -143,7 +142,7 @@ export default function Playlist() {
       <div
         ref={scrollContainerRef}
         onScroll={handleScroll}
-        className="p-4 -ml-2 custom-scrollbar overflow-y-auto "
+        className="pl-4 custom-scrollbar overflow-y-auto "
       >
         {session
           ? userPlaylist.map((trackInfo, index) => {
@@ -153,6 +152,7 @@ export default function Playlist() {
                     data-trackid={trackInfo?.trackId}
                     data-name={trackInfo?.name}
                     data-artists={trackInfo?.artists}
+                    data-artistsId={trackInfo?.artistsId}
                     data-imgurl={trackInfo?.imgUrl}
                     onClick={onPlayClick}
                     className="cursor-pointer gap-3 flex justify-between hover:bg-orange-200 rounded-xl group "
@@ -262,7 +262,7 @@ export default function Playlist() {
                       id={item?.trackId ?? ""}
                     >
                       <div className={`group-hover:hidden `}>{item?.name}</div>
-                      {item.name && item?.name.length > 25 ? (
+                      {item.name && item?.name.length > 15 ? (
                         <div className={"group-hover:block  hidden"}>
                           <div className="animate-marquee  inline-block pr-10">
                             {item?.name}

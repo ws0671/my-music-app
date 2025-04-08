@@ -1,16 +1,11 @@
 import {
   faCirclePause,
   faCirclePlay,
-  faList,
-  faPause,
-  faPlay,
   faRepeat,
   faShuffle,
   faStepBackward,
   faStepForward,
   faVolumeLow,
-  faVolumeOff,
-  faVolumeUp,
   faVolumeXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -22,7 +17,7 @@ import {
   useYouTubeStore,
 } from "../stores/video";
 import { useEffect, useRef, useState } from "react";
-import YouTube, { YouTubePlayer } from "react-youtube";
+import YouTube from "react-youtube";
 import { useVideoIdStore } from "../stores/video";
 import useSessionStore from "../stores/session";
 import { addToPlaylist, fetchPlaylist } from "../utils/playlist";
@@ -33,20 +28,18 @@ interface OnReady {
   };
 }
 export default function Player() {
-  const { videoId, setVideoId } = useVideoIdStore();
+  const { videoId } = useVideoIdStore();
   const { playlist, setPlaylist } = usePlaylistStore();
   const [player, setPlayer] = useYouTubeStore((state) => [
     state.player,
     state.setPlayer,
   ]);
-  const { currentTime, setCurrentTime } = useYouTubeStore();
+  const { currentTime, setCurrentTime, play, pause } = useYouTubeStore();
   const [duration, setDuration] = useState(0);
-  const [onPlaylist, setOnPlaylist] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
-  const { trackInfo, isPlaying, togglePlay, setTrackInfo, playing, pause } =
-    useTrackInfoStore();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isShort, setIsShort] = useState(false);
+  const { trackInfo, isPlaying, statePlay, statePause } = useTrackInfoStore();
+  // const containerRef = useRef<HTMLDivElement>(null);
+  // const [setIsShort] = useState(false);
   const { currentTrackIndex, setCurrentTrackIndex } =
     useCurrentTrackIndexStore();
   const { session } = useSessionStore();
@@ -71,9 +64,11 @@ export default function Player() {
   useEffect(() => {
     const handleUpdatedPlaylist = () => {
       if (trackInfo) {
-        if (trackInfo?.state === "playlist") return;
+        if (playlist.some((track) => track.trackId === trackInfo.trackId))
+          return;
 
         if (session) {
+          //supabase에 추가
           addToPlaylist(trackInfo);
           setUserPlaylist(trackInfo);
         } else {
@@ -88,45 +83,43 @@ export default function Player() {
     }
   }, [trackInfo, setPlaylist, setUserPlaylist, session]);
 
-  useEffect(() => {
-    if (containerRef.current) {
-      const containerWidth = containerRef.current.offsetWidth;
-      let textWidth = 0;
-      const childNode: ChildNode = containerRef.current.childNodes[0];
-      if (childNode instanceof HTMLElement) {
-        textWidth = childNode.scrollWidth;
-      }
-      if (textWidth <= containerWidth) {
-        setIsShort(true);
-      } else {
-        setIsShort(false);
-      }
-    }
-  }, [trackInfo?.name]);
+  // useEffect(() => {
+  //   if (containerRef.current) {
+  //     const containerWidth = containerRef.current.offsetWidth;
+  //     let textWidth = 0;
+  //     const childNode: ChildNode = containerRef.current.childNodes[0];
+  //     if (childNode instanceof HTMLElement) {
+  //       textWidth = childNode.scrollWidth;
+  //     }
+  //     if (textWidth <= containerWidth) {
+  //       setIsShort(true);
+  //     } else {
+  //       setIsShort(false);
+  //     }
+  //   }
+  // }, [trackInfo?.name]);
 
-  useEffect(() => {
-    if (playlist.length > 0) {
-      const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.code === "Space") {
-          e.preventDefault();
-          togglePlay();
-        }
-      };
-      document.addEventListener("keydown", handleKeyDown);
-      return () => {
-        document.removeEventListener("keydown", handleKeyDown);
-      };
-    }
-  }, [playlist.length]);
+  // useEffect(() => {
+  //   if (playlist.length > 0) {
+  //     const handleKeyDown = (e: KeyboardEvent) => {
+  //       if (e.code === "Space") {
+  //         console.log("asd");
 
-  useEffect(() => {
-    if (!player) {
-      console.warn("Player is not initialized yet.");
-      return;
-    }
-    if (isPlaying) {
-    }
-  }, [isPlaying]);
+  //         if (!isPlaying) {
+  //           player?.playVideo();
+  //           playing();
+  //         } else {
+  //           player?.pauseVideo();
+  //           pause();
+  //         }
+  //       }
+  //     };
+  //     document.addEventListener("keydown", handleKeyDown);
+  //     return () => {
+  //       document.removeEventListener("keydown", handleKeyDown);
+  //     };
+  //   }
+  // }, [playlist.length, isPlaying]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -175,12 +168,12 @@ export default function Player() {
   };
 
   const handlePlay = () => {
-    player?.playVideo();
-    playing();
+    statePlay();
+    play();
   };
 
   const handlePause = () => {
-    player?.pauseVideo();
+    statePause();
     pause();
   };
 

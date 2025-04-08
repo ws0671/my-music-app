@@ -3,7 +3,12 @@ import { Link, useParams } from "react-router-dom";
 import { getSpotifyTrackInfo, searchTracks } from "../api/spotify";
 import Loading from "../components/loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useTrackInfoStore, useVideoIdStore } from "../stores/video";
+import {
+  usePlaylistStore,
+  useTrackInfoStore,
+  useVideoIdStore,
+  useYouTubeStore,
+} from "../stores/video";
 import { searchYouTubeVideo } from "../api/youtube";
 import {
   faCirclePlus,
@@ -11,7 +16,7 @@ import {
   faPlay,
 } from "@fortawesome/free-solid-svg-icons";
 import useSessionStore from "../stores/session";
-import EllipsisMenu from "../components/ellipsisMenu";
+
 import {
   IPlaylists,
   ISpecificArtist,
@@ -27,9 +32,11 @@ export default function Search() {
   const [_playlists, setPlaylists] = useState<IPlaylists[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { setVideoId } = useVideoIdStore();
-  const { isPlaying, trackInfo, setTrackInfo, playing, pause } =
+  const { isPlaying, trackInfo, setTrackInfo, statePlay, statePause } =
     useTrackInfoStore();
   const { session } = useSessionStore();
+  const { setPlaylist } = usePlaylistStore();
+  const { play, pause } = useYouTubeStore();
 
   useEffect(() => {
     const fetchSearchedData = async () => {
@@ -72,9 +79,11 @@ export default function Search() {
     };
     setVideoId(fetchedVideoId);
     setTrackInfo(trackInfoOne);
-    playing();
+    statePlay();
+    play();
   };
   const pauseVideo = () => {
+    statePause();
     pause();
   };
   const addToPlaylist = async (e: React.MouseEvent<SVGSVGElement>) => {
@@ -95,7 +104,7 @@ export default function Search() {
       imgUrl,
       videoId: fetchedVideoId,
     };
-    setTrackInfo(trackInfoOne);
+    setPlaylist(trackInfoOne);
   };
   if (isLoading) return <Loading />;
   return (
@@ -196,15 +205,21 @@ export default function Search() {
       <div className="grid max-sm:grid-cols-2 grid-cols-5 gap-6 ">
         {artists &&
           artists.slice(0, 5).map((artist) => {
+            console.log(artist);
+
             return (
               <Link key={artist.id} to={`/artist/${artist.id}`}>
                 <div className=" ">
                   <img
                     className="w-full aspect-square rounded-full"
-                    src={artist.images[0].url}
+                    src={
+                      artist.images[0]
+                        ? artist.images[0]?.url
+                        : "/images/headphone.jpg"
+                    }
                     alt={artist.name}
                   />
-                  <div className="truncate font-bold">{artist.name}</div>
+                  <div className="my-1 truncate font-bold">{artist.name}</div>
                   <div className="text-sm text-gray-400">아티스트</div>
                 </div>
               </Link>

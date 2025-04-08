@@ -1,6 +1,6 @@
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getAlbumTracks, getSpotifyTrackInfo } from "../api/spotify";
+import { getAlbumTracks } from "../api/spotify";
 import Loading from "../components/loading";
 import { ITracksAllData } from "../types/spotify";
 import Songlist from "../components/songlist";
@@ -29,7 +29,11 @@ export default function Album() {
   }, [id]);
 
   if (isLoading) {
-    return <Loading />;
+    return (
+      <div className="h-full flex">
+        <Loading />
+      </div>
+    );
   }
   return (
     <div className="relative">
