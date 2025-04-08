@@ -1,30 +1,18 @@
 import { useEffect, useState } from "react";
-import {
-  getArtist,
-  getArtistTopTracks,
-  getSpotifyTrackInfo,
-} from "../api/spotify";
+import { getArtist, getArtistTopTracks } from "../api/spotify";
 import { Link, useParams } from "react-router-dom";
 import Loading from "../components/loading";
 import { ISpecificArtist, ITracksAllData } from "../types/spotify";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
-import { useTrackInfoStore, useVideoIdStore } from "../stores/video";
-import { searchYouTubeVideo } from "../api/youtube";
-import useSessionStore from "../stores/session";
-import EllipsisMenu from "../components/ellipsisMenu";
+import Songlist from "../components/songlist";
 
 export default function Artist() {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [artist, setArtist] = useState<ISpecificArtist>();
   const [tracks, setTracks] = useState<ITracksAllData[]>([]);
+  const [artist, setArtist] = useState<ISpecificArtist>();
   const [relatedArtists, setRelatedArtists] = useState<ISpecificArtist[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { id } = useParams();
-  const { setVideoId } = useVideoIdStore();
-  const { setTrackInfo, togglePlay } = useTrackInfoStore();
-  const { session } = useSessionStore();
   useEffect(() => {
-    const fetchArtist = async () => {
+    const fetchAlbumTracks = async () => {
       setIsLoading(true);
       try {
         if (id) {
@@ -40,40 +28,21 @@ export default function Artist() {
         setIsLoading(false);
       }
     };
-    fetchArtist();
+    fetchAlbumTracks();
   }, [id]);
-  console.log(tracks);
-  const onPlayClick = async (e: React.MouseEvent<SVGSVGElement>) => {
-    const trackId = e.currentTarget.getAttribute("data-trackid");
-    const name = e.currentTarget.getAttribute("data-name");
-    const artists = e.currentTarget.getAttribute("data-artists");
-    const imgUrl = e.currentTarget.getAttribute("data-imgurl");
-
-    const trackInfo = await getSpotifyTrackInfo(trackId);
-    const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
-    const fetchedVideoId = await searchYouTubeVideo(searchQuery);
-    const trackInfoOne = {
-      userId: session?.user.id,
-      trackId,
-      name,
-      artists,
-      imgUrl,
-      videoId: fetchedVideoId,
-    };
-    setVideoId(fetchedVideoId);
-    setTrackInfo(trackInfoOne);
-    togglePlay();
-  };
-
-  if (isLoading) return <Loading />;
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <div>
       <div className="shadow-2xl gap-10 relative h-[300px] font-rowdies box-border overflow-hidden">
-        <img
-          className="opacity-80 object-[0%_10%] w-full object-cover h-full"
-          src={artist?.images[0].url}
-          alt={artist?.name}
-        />
+        <div className="flex justify-center items-center max-sm:py-5">
+          <img
+            className="max-sm:rounded-full max-sm:w-[150px] max-sm:h-[150px] opacity-80 object-[0%_10%] w-full object-cover h-full"
+            src={artist?.images[0].url}
+            alt={artist?.name}
+          />
+        </div>
         <div className="absolute bottom-5 left-5 break-all justify-center flex flex-col gap-4">
           <div className="">아티스트</div>
           <div className="font-[1000] text-responsive tracking-tighter">
@@ -99,57 +68,7 @@ export default function Artist() {
       <div className="m-6">
         <div className="mt-10 text-2xl font-bold">인기</div>
         <div className="border border-gray-200 my-3"></div>
-        {tracks.map((item, index) => {
-          const artists = item.artists.map((i) => i.name).join(", ");
-          // const duration_min = Math.floor(item.duration_ms / 1000 / 60);
-          // let duration_sec: string | number = Math.ceil(
-          //   (item.duration_ms / 1000) % 60
-          // );
-          // duration_sec = duration_sec < 10 ? "0" + duration_sec : duration_sec;
-          return (
-            <div
-              key={item.id}
-              className="relative gap-4 py-2 px-4 hover:bg-purple-500 hover:rounded-md grid grid-cols-[1fr_20fr_1fr] group"
-            >
-              <div className="group-hover:hidden flex justify-center items-center">
-                {index + 1}
-              </div>
-              <div className="hidden justify-center items-center group-hover:flex">
-                <FontAwesomeIcon
-                  className="hover:cursor-pointer"
-                  data-trackid={item.id}
-                  data-name={item.name}
-                  data-artists={artists}
-                  data-imgurl={item.album.images[0].url}
-                  onClick={onPlayClick}
-                  icon={faPlay}
-                />
-              </div>
-              <div>
-                <div className="font-bold">{item.name}</div>
-                <div className="text-sm text-gray-400">
-                  {item.artists.map((artist, index) => {
-                    const isLast = index === item.artists.length - 1;
-                    return (
-                      <span key={artist.id}>
-                        <Link to={`/artist/${artist.id}`}>
-                          <span className="hover:underline">{artist.name}</span>
-                        </Link>
-                        {!isLast && <span>, </span>}
-                      </span>
-                    );
-                  })}
-                </div>
-              </div>
-              <EllipsisMenu
-                trackId={item.id}
-                name={item.name}
-                artists={artists}
-                imgUrl={item.album.images[0].url}
-              />
-            </div>
-          );
-        })}
+        <Songlist isArtist={true} tracks={tracks} />
       </div>
     </div>
   );

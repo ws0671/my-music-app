@@ -11,6 +11,7 @@ export async function addToPlaylist(track: ITrackInfo) {
         trackId: track.trackId,
         name: track.name,
         artists: track.artists,
+        artistsId: track.artistsId,
         imgUrl: track.imgUrl,
         videoId: track.videoId,
         state: track.state,

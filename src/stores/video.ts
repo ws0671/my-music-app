@@ -1,5 +1,31 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import type { YouTubePlayer } from "react-youtube";
+
+interface YouTubeState {
+  player: YouTubePlayer | null;
+  setPlayer: (player: YouTubePlayer) => void;
+  play: () => void;
+  pause: () => void;
+  currentTime: number;
+  setCurrentTime: (time: number) => void;
+}
+
+export const useYouTubeStore = create<YouTubeState>((set, get) => ({
+  player: null,
+  setPlayer: (player) => set({ player }),
+  play: () => {
+    const { player } = get();
+    if (player) player.playVideo();
+  },
+  pause: () => {
+    const { player } = get();
+    if (player) player.pauseVideo();
+  },
+  currentTime: 0,
+  setCurrentTime: (time) => set({ currentTime: time }),
+}));
+
 interface VideoId {
   videoId: string;
   setVideoId: (id: string) => void;
@@ -13,6 +39,7 @@ export interface ITrackInfo {
   trackId: string | null;
   name: string | null;
   artists: string | null;
+  artistsId: string | null;
   imgUrl: string | null;
   state?: string;
   videoId: string;
@@ -22,6 +49,8 @@ interface TrackInfoState {
   isPlaying: boolean;
   setTrackInfo: (trackInfo: ITrackInfo) => void;
   togglePlay: () => void;
+  statePlay: () => void;
+  statePause: () => void;
   isTrackPlaying: () => boolean;
 }
 export const useTrackInfoStore = create<TrackInfoState>((set, get) => ({
@@ -29,15 +58,13 @@ export const useTrackInfoStore = create<TrackInfoState>((set, get) => ({
   isPlaying: false,
   setTrackInfo: (trackInfo) => set({ trackInfo }),
   togglePlay: () => set((state) => ({ isPlaying: !state.isPlaying })),
+  statePlay: () => set(() => ({ isPlaying: true })),
+  statePause: () => set(() => ({ isPlaying: false })),
   isTrackPlaying: () => {
     const { trackInfo } = get();
     return trackInfo !== null;
   },
 }));
-// export const useIsPlayingStore = create((set) => ({
-//   isPlaying: false,
-//   setIsPlaying: (state: boolean) => set({ isPlaying: state }),
-// }));
 interface CurrentTackIndexStore {
   currentTrackIndex: number;
   setCurrentTrackIndex: (index: number) => void;
