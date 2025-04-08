@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getArtist, getArtistTopTracks } from "../api/spotify";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Loading from "../components/loading";
 import { ISpecificArtist, ITracksAllData } from "../types/spotify";
 import Songlist from "../components/songlist";
