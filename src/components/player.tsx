@@ -52,8 +52,14 @@ export default function Player() {
   const [repeat, setRepeat] = useState(false);
   const [volume, setVolume] = useState(50);
   const [isMuted, setIsMuted] = useState(false);
+  // 로그인 & 비로그인시 플레이리스트가 비어있을 때
+  let currentPlaylist = session ? userPlaylist : playlist;
+
+  const isPlaylistEmpty = currentPlaylist.length === 0;
 
   useEffect(() => {
+    currentPlaylist = session ? userPlaylist : playlist;
+
     const handleUserPlaylist = async () => {
       if (session) {
         const data = await fetchPlaylist(session);
@@ -65,12 +71,16 @@ export default function Player() {
 
   useEffect(() => {
     const handleUpdatedPlaylist = () => {
+      console.log(trackInfo);
       if (trackInfo) {
-        if (playlist.some((track) => track.trackId === trackInfo.trackId))
+        if (
+          currentPlaylist.some((track) => track.trackId === trackInfo.trackId)
+        )
           return;
 
         if (session) {
           //supabase에 추가
+
           addToPlaylist(trackInfo);
           setUserPlaylist(trackInfo);
         } else {
@@ -285,10 +295,6 @@ export default function Player() {
     setRepeat((prev) => !prev);
   };
 
-  // 로그인 & 비로그인시 플레이리스트가 비어있을 때
-  const isPlaylistEmpty = session
-    ? userPlaylist.length === 0
-    : playlist.length === 0;
   return (
     <div className="col-span-3 flex justify-between gap-10">
       <div className="text-white w-[30%]">

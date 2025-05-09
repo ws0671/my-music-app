@@ -125,7 +125,7 @@ export default function Header() {
       <div className="hidden sm:flex justify-center gap-2 md:gap-5 items-center">
         {session ? (
           <div
-            className="border font-bold transition-all cursor-pointer hover:text-white hover:bg-orange-400 rounded-3xl py-2 px-3"
+            className="border cursor-pointer font-bold transition-all bg-black text-white border-none hover:bg-gray-600 rounded-lg py-3 px-4"
             onClick={signOut}
           >
             로그아웃

@@ -33,13 +33,6 @@ export default function Playlist() {
   const { playlist, removePlaylist, resetPlaylist } = usePlaylistStore();
   const dropdownRef = useRef<HTMLElement[]>([]);
   const { player, setCurrentTime, play, pause } = useYouTubeStore();
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
   const {
     userPlaylist,
 
@@ -47,6 +40,14 @@ export default function Playlist() {
     resetUserPlaylist,
   } = useUserPlaylistStore();
   const { session } = useSessionStore();
+  const currentPlaylist = session ? userPlaylist : playlist;
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleClickOutside = (e: MouseEvent) => {
     if (
@@ -144,163 +145,96 @@ export default function Playlist() {
         onScroll={handleScroll}
         className="pl-4 custom-scrollbar overflow-y-auto "
       >
-        {session
-          ? userPlaylist.map((trackInfo, index) => {
-              return (
-                <div key={index} className="">
-                  <div
-                    data-trackid={trackInfo?.trackId}
-                    data-name={trackInfo?.name}
-                    data-artists={trackInfo?.artists}
-                    data-artistsId={trackInfo?.artistsId}
-                    data-imgurl={trackInfo?.imgUrl}
-                    onClick={onPlayClick}
-                    className="cursor-pointer gap-3 flex justify-between hover:bg-orange-200 rounded-xl group "
-                  >
-                    <div className="flex w-8 h-8 items-center justify-center shrink-0 ">
-                      <img
-                        className={trackInfo ? "w-full h-full rounded" : ""}
-                        src={trackInfo?.imgUrl ?? ""}
-                        alt={trackInfo?.name ?? ""}
-                      />
-                    </div>
-                    <div
-                      ref={containerRef}
-                      className=" overflow-hidden grow whitespace-nowrap "
-                      id={trackInfo?.trackId ?? ""}
-                    >
-                      <div className={`group-hover:hidden text-xs`}>
-                        {trackInfo?.name}
-                      </div>
-                      {trackInfo.name && trackInfo.name.length > 25 ? (
-                        <div className={"group-hover:block  text-xs hidden"}>
-                          <div className="animate-marquee  inline-block pr-10">
-                            {trackInfo?.name}
-                          </div>
-                          <div className="animate-marquee  inline-block pr-10">
-                            {trackInfo?.name}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className={`hidden group-hover:block text-xs`}>
-                          {trackInfo?.name}
-                        </div>
-                      )}
-                      <div className="text-[11px] text-gray-300">
-                        {trackInfo?.artists}
-                      </div>
-                    </div>
-                    <div
-                      ref={(el) =>
-                        el ? (dropdownRef.current[index] = el) : null
-                      }
-                      onClick={(e) => removeSong(e, index)}
-                      id={trackInfo?.trackId ?? ""}
-                      className={
-                        ellipsis && selectedId === index
-                          ? "z-30 absolute right-[-70px]  hover:bg-orange-100 bg-white border shadow-md px-3 py-2 rounded-md "
-                          : "hidden"
-                      }
-                    >
-                      <span className="text-xs">
-                        <FontAwesomeIcon className="mr-2" icon={faMinus} />
-                        제거하기
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              );
-            })
-          : playlist.map((item, index) => {
-              const artistsId = item.artistsId?.split(",");
-              const artists = item.artists?.split(",");
+        {currentPlaylist.map((item, index) => {
+          console.log(item);
 
-              return (
-                <div key={index} className="group">
-                  <div
-                    data-trackid={item?.trackId}
-                    data-name={item?.name}
-                    data-artists={artists}
-                    data-artistsid={artistsId}
-                    data-imgurl={item?.imgUrl}
-                    className="p-2 hover:rounded-md relative rounded-xl hover:bg-purple-500  cursor-pointer grid gap-3 grid-cols-[auto_1fr_auto] justify-between group "
-                  >
-                    <div className="w-12 h-12 items-center justify-center relative shrink-0 ">
-                      <img
-                        className={
-                          item
-                            ? "w-full h-full rounded group-hover:opacity-50"
-                            : ""
-                        }
-                        src={item?.imgUrl ?? ""}
-                        alt={item?.name ?? ""}
-                      />
-                      <div className="hidden justify-center items-center group-hover:flex">
-                        {isPlaying && trackInfo?.trackId === item.trackId ? (
-                          <FontAwesomeIcon
-                            icon={faPause}
-                            className="hover:cursor-pointer absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] text-xl"
-                            onClick={pauseVideo}
-                          />
-                        ) : (
-                          <FontAwesomeIcon
-                            className="hover:cursor-pointer absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] text-xl"
-                            data-trackid={item?.trackId}
-                            data-name={item?.name}
-                            data-artists={item?.artists}
-                            data-imgurl={item?.imgUrl}
-                            onClick={onPlayClick}
-                            icon={faPlay}
-                          />
-                        )}
-                      </div>
-                    </div>
+          const artistsId = item.artistsId?.split(",");
+          const artists = item.artists?.split(",");
 
-                    <div
-                      ref={containerRef}
-                      className="flex flex-col gap-1 overflow-hidden grow whitespace-nowrap "
-                      id={item?.trackId ?? ""}
-                    >
-                      <div className={`group-hover:hidden `}>{item?.name}</div>
-                      {item.name && item?.name.length > 15 ? (
-                        <div className={"group-hover:block  hidden"}>
-                          <div className="animate-marquee  inline-block pr-10">
-                            {item?.name}
-                          </div>
-                          <div className="animate-marquee  inline-block pr-10">
-                            {item?.name}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className={`hidden group-hover:block `}>
-                          {item?.name}
-                        </div>
-                      )}
-                      <div>
-                        {artistsId?.map((id, index) => {
-                          return (
-                            <Link key={index} to={"/artist/" + id}>
-                              <span className="text-sm text-gray-400 hover:underline">
-                                {artists && index !== artists.length - 1
-                                  ? artists?.[index] + ", "
-                                  : artists?.[index]}
-                              </span>
-                            </Link>
-                          );
-                        })}
-                      </div>
-                    </div>
-                    <div className="items-center justify-center hidden group-hover:flex">
+          return (
+            <div key={index} className="group">
+              <div
+                data-trackid={item?.trackId}
+                data-name={item?.name}
+                data-artists={artists}
+                data-artistsid={artistsId}
+                data-imgurl={item?.imgUrl}
+                className="p-2 hover:rounded-md relative rounded-xl hover:bg-purple-500  cursor-pointer grid gap-3 grid-cols-[auto_1fr_auto] justify-between group "
+              >
+                <div className="w-12 h-12 items-center justify-center relative shrink-0 ">
+                  <img
+                    className={
+                      item ? "w-full h-full rounded group-hover:opacity-50" : ""
+                    }
+                    src={item?.imgUrl ?? ""}
+                    alt={item?.name ?? ""}
+                  />
+                  <div className="hidden justify-center items-center group-hover:flex">
+                    {isPlaying && trackInfo?.trackId === item.trackId ? (
                       <FontAwesomeIcon
-                        className="cursor-pointer hover:bg-purple-500 rounded-full p-1"
-                        onClick={(e) => removeSong(e, index)}
-                        icon={faCircleMinus}
+                        icon={faPause}
+                        className="hover:cursor-pointer absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] text-xl"
+                        onClick={pauseVideo}
                       />
-                    </div>
+                    ) : (
+                      <FontAwesomeIcon
+                        className="hover:cursor-pointer absolute left-1/2 top-1/2 translate-x-[-50%] translate-y-[-50%] text-xl"
+                        data-trackid={item?.trackId}
+                        data-name={item?.name}
+                        data-artists={item?.artists}
+                        data-imgurl={item?.imgUrl}
+                        onClick={onPlayClick}
+                        icon={faPlay}
+                      />
+                    )}
                   </div>
                 </div>
-              );
-            })}
+
+                <div
+                  ref={containerRef}
+                  className="flex flex-col gap-1 overflow-hidden grow whitespace-nowrap "
+                  id={item?.trackId ?? ""}
+                >
+                  <div className={`group-hover:hidden `}>{item?.name}</div>
+                  {item.name && item?.name.length > 15 ? (
+                    <div className={"group-hover:block  hidden"}>
+                      <div className="animate-marquee  inline-block pr-10">
+                        {item?.name}
+                      </div>
+                      <div className="animate-marquee  inline-block pr-10">
+                        {item?.name}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className={`hidden group-hover:block `}>
+                      {item?.name}
+                    </div>
+                  )}
+                  <div>
+                    {artistsId?.map((id, index) => {
+                      return (
+                        <Link key={index} to={"/artist/" + id}>
+                          <span className="text-sm text-gray-400 hover:underline">
+                            {artists && index !== artists.length - 1
+                              ? artists?.[index] + ", "
+                              : artists?.[index]}
+                          </span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="items-center justify-center hidden group-hover:flex">
+                  <FontAwesomeIcon
+                    className="cursor-pointer hover:bg-purple-500 rounded-full p-1"
+                    onClick={(e) => removeSong(e, index)}
+                    icon={faCircleMinus}
+                  />
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
