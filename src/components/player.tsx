@@ -1,7 +1,10 @@
 import {
+  faBars,
   faCirclePause,
   faCirclePlay,
   faList,
+  faPause,
+  faPlay,
   faRepeat,
   faShuffle,
   faStepBackward,
@@ -296,131 +299,159 @@ export default function Player() {
   };
 
   return (
-    <div className="col-span-3 flex justify-between gap-10">
-      <div className="text-white w-[30%]">
-        <div className="flex pl-2 items-center h-full w-full">
-          <img
-            className={trackInfo ? "w-14 rounded-lg " : ""}
-            src={trackInfo?.imgUrl ?? ""}
-            alt={trackInfo?.name ?? ""}
+    <>
+      <div className="fixed bottom-0 left-0 right-0 items-center bg-purple-900 p-4 text-white col-span-3 flex justify-between gap-10">
+        <div>
+          {trackInfo ? (
+            <>
+              <div className="text-sm">{trackInfo?.name}</div>
+              <div className="text-xs text-gray-400">{trackInfo?.artists}</div>
+            </>
+          ) : (
+            <div className="text-sm text-gray-400">곡 목록이 없습니다.</div>
+          )}
+        </div>
+        <div className="flex gap-6 text-2xl">
+          <FontAwesomeIcon
+            icon={faStepBackward}
+            onClick={handlePreviousTrack}
           />
-          <div
-            ref={containerRef}
-            className="ml-3 relative overflow-hidden whitespace-nowrap "
-          >
-            <div className="text-sm">{trackInfo?.name}</div>
-            <div className="text-xs text-gray-400">{trackInfo?.artists}</div>
-          </div>
+          {isPlaying ? (
+            <FontAwesomeIcon icon={faPause} onClick={handlePause} />
+          ) : (
+            <FontAwesomeIcon icon={faPlay} onClick={handlePlay} />
+          )}
+          <FontAwesomeIcon icon={faStepForward} onClick={handleNextTrack} />
+          <FontAwesomeIcon icon={faBars} />
         </div>
       </div>
-      <div className=" text-white w-[40%] ">
-        <div
-          aria-label="플레이어 컨트롤"
-          className={`${
-            isPlaylistEmpty ? "opacity-50 cursor-not-allowed" : " "
-          }`}
-        >
+
+      <div className="hidden col-span-3 sm:flex justify-between gap-10">
+        <div className="text-white w-[30%]">
+          <div className="flex pl-2 items-center h-full w-full">
+            <img
+              className={trackInfo ? "w-14 rounded-lg " : ""}
+              src={trackInfo?.imgUrl ?? ""}
+              alt={trackInfo?.name ?? ""}
+            />
+            <div
+              ref={containerRef}
+              className="ml-3 relative overflow-hidden whitespace-nowrap "
+            >
+              <div className="text-sm">{trackInfo?.name}</div>
+              <div className="text-xs text-gray-400">{trackInfo?.artists}</div>
+            </div>
+          </div>
+        </div>
+        <div className=" text-white w-[40%] ">
           <div
-            aria-label="재생부"
-            className={`basis-1/3 flex justify-center items-center ${
-              isPlaylistEmpty ? "pointer-events-none" : ""
+            aria-label="플레이어 컨트롤"
+            className={`${
+              isPlaylistEmpty ? "opacity-50 cursor-not-allowed" : " "
             }`}
           >
-            <div className="flex justify-center items-center gap-6">
-              <div>
-                <YouTube
-                  videoId={videoId}
-                  opts={opts}
-                  onReady={onReady}
-                  onEnd={onEnd}
+            <div
+              aria-label="재생부"
+              className={`basis-1/3 flex justify-center items-center ${
+                isPlaylistEmpty ? "pointer-events-none" : ""
+              }`}
+            >
+              <div className="flex justify-center items-center gap-6">
+                <div>
+                  <YouTube
+                    videoId={videoId}
+                    opts={opts}
+                    onReady={onReady}
+                    onEnd={onEnd}
+                  />
+                  <FontAwesomeIcon
+                    icon={faShuffle}
+                    onClick={handleShuffle}
+                    className={
+                      shuffle
+                        ? "cursor-pointer text-orange-400 text-xl"
+                        : "cursor-pointer text-xl"
+                    }
+                  />
+                </div>
+                <FontAwesomeIcon
+                  icon={faStepBackward}
+                  onClick={handlePreviousTrack}
+                  className="cursor-pointer text-xl"
+                />
+                <div className=" my-2">
+                  {isPlaying ? (
+                    <FontAwesomeIcon
+                      icon={faCirclePause}
+                      className="cursor-pointer text-white text-4xl"
+                      onClick={handlePause}
+                    />
+                  ) : (
+                    <FontAwesomeIcon
+                      icon={faCirclePlay}
+                      className="cursor-pointer text-white text-4xl "
+                      onClick={handlePlay}
+                    />
+                  )}
+                </div>
+                <FontAwesomeIcon
+                  icon={faStepForward}
+                  onClick={handleNextTrack}
+                  className="cursor-pointer text-xl"
                 />
                 <FontAwesomeIcon
-                  icon={faShuffle}
-                  onClick={handleShuffle}
+                  onClick={handleRepeat}
+                  icon={faRepeat}
                   className={
-                    shuffle
+                    repeat
                       ? "cursor-pointer text-orange-400 text-xl"
-                      : "cursor-pointer text-xl"
+                      : "text-xl cursor-pointer"
                   }
                 />
               </div>
-              <FontAwesomeIcon
-                icon={faStepBackward}
-                onClick={handlePreviousTrack}
-                className="cursor-pointer text-xl"
-              />
-              <div className=" my-2">
-                {isPlaying ? (
-                  <FontAwesomeIcon
-                    icon={faCirclePause}
-                    className="cursor-pointer text-white text-4xl"
-                    onClick={handlePause}
-                  />
-                ) : (
-                  <FontAwesomeIcon
-                    icon={faCirclePlay}
-                    className="cursor-pointer text-white text-4xl "
-                    onClick={handlePlay}
-                  />
-                )}
-              </div>
-              <FontAwesomeIcon
-                icon={faStepForward}
-                onClick={handleNextTrack}
-                className="cursor-pointer text-xl"
-              />
-              <FontAwesomeIcon
-                onClick={handleRepeat}
-                icon={faRepeat}
-                className={
-                  repeat
-                    ? "cursor-pointer text-orange-400 text-xl"
-                    : "text-xl cursor-pointer"
-                }
-              />
+              <div></div>
             </div>
-            <div></div>
-          </div>
-          <div className="flex basis-1/3  text-xs gap-2 items-center justify-center mb-1">
-            <span>{formatTime(currentTime)}</span>
-            <div
-              className="relative w-full rounded-xl h-1 bg-purple-500"
-              onClick={handleProgressBarClick}
-              ref={progressBarRef}
-            >
+            <div className="flex basis-1/3  text-xs gap-2 items-center justify-center mb-1">
+              <span>{formatTime(currentTime)}</span>
               <div
-                className=" absolute left-0 top-0 h-1 rounded-xl bg-white"
-                style={{ width: progressBarWidth }}
-              ></div>
+                className="relative w-full rounded-xl h-1 bg-purple-500"
+                onClick={handleProgressBarClick}
+                ref={progressBarRef}
+              >
+                <div
+                  className=" absolute left-0 top-0 h-1 rounded-xl bg-white"
+                  style={{ width: progressBarWidth }}
+                ></div>
+              </div>
+              <span>{formatTime(duration)}</span>
             </div>
-            <span>{formatTime(duration)}</span>
           </div>
         </div>
-      </div>
-      <div className="w-[30%] flex items-center justify-center">
-        <div className="flex items-center gap-2">
-          <FontAwesomeIcon
-            className="text-purple-300 w-6 cursor-pointer hover:text-white"
-            icon={isMuted ? faVolumeXmark : faVolumeLow}
-            onClick={handleMute}
-          />
-          <input
-            type="range"
-            min="0"
-            max="100"
-            value={volume}
-            onChange={handleVolumeChange}
-            className="w-full h-2 appearance-none cursor-pointer
+        <div className="w-[30%] flex items-center justify-center">
+          <div className="flex items-center gap-2">
+            <FontAwesomeIcon
+              className="text-purple-300 w-6 cursor-pointer hover:text-white"
+              icon={isMuted ? faVolumeXmark : faVolumeLow}
+              onClick={handleMute}
+            />
+            <input
+              type="range"
+              min="0"
+              max="100"
+              value={volume}
+              onChange={handleVolumeChange}
+              className="w-full h-2 appearance-none cursor-pointer
               bg-purple-500 rounded-lg outline-none
                  [&::-webkit-slider-thumb]:appearance-none
                   [&::-webkit-slider-thumb]:w-4
                  "
-            style={{
-              background: `linear-gradient(to right, #fff ${volume}%, #a855f7 ${volume}%)`,
-            }}
-          />
+              style={{
+                background: `linear-gradient(to right, #fff ${volume}%, #a855f7 ${volume}%)`,
+              }}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
