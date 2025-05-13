@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getNewReleases } from "../api/spotify";
 import Loading from "../components/loading";
@@ -76,21 +76,22 @@ export default function Home() {
               <Link className="" to={`album/${item.id}`} key={item.id}>
                 <div className="">
                   <img className="rounded-lg w-full" src={item.images[0].url} />
-                  <div className="my-1 truncate font-bold" key={item.id}>
-                    {item.name}
-                  </div>
-                  <div className="truncate text-sm font-bold text-gray-400">
+                  <div className="my-1 truncate font-bold">{item.name}</div>
+                  <div
+                    className="truncate text-sm font-bold text-gray-400"
+                    key={item.id}
+                  >
                     {item.artists.map((artist, index) => {
                       const isLast = index === item.artists.length - 1;
                       return (
-                        <>
-                          <Link to={`artist/${artist.id}`} key={artist.id}>
+                        <div key={artist.id}>
+                          <Link to={`artist/${artist.id}`}>
                             <span className="hover:underline">
                               {artist.name}
                             </span>
                           </Link>
                           {!isLast && <span>, </span>}
-                        </>
+                        </div>
                       );
                     })}
                   </div>

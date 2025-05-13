@@ -17,6 +17,7 @@ export async function addToPlaylist(track: ITrackInfo) {
         state: track.state,
       },
     ]);
+    console.log(error);
 
     if (error) {
       throw error;
