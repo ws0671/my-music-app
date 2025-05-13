@@ -3,6 +3,7 @@ import {
   faCirclePause,
   faCirclePlay,
   faList,
+  faMusic,
   faPause,
   faPlay,
   faRepeat,
@@ -26,13 +27,14 @@ import YouTube from "react-youtube";
 import { useVideoIdStore } from "../stores/video";
 import useSessionStore from "../stores/session";
 import { addToPlaylist, fetchPlaylist } from "../utils/playlist";
+import Playlist from "./playlist";
 
 interface OnReady {
   target: {
     getDuration: () => number;
   };
 }
-export default function Player() {
+export default function Player({ setIsOpen }) {
   const { videoId } = useVideoIdStore();
   const { playlist, setPlaylist } = usePlaylistStore();
   const [player, setPlayer] = useYouTubeStore((state) => [
@@ -235,6 +237,7 @@ export default function Player() {
       rel: 0,
     },
   };
+
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
@@ -300,7 +303,7 @@ export default function Player() {
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 items-center bg-purple-900 p-4 text-white col-span-3 flex justify-between gap-10">
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 items-center bg-purple-900 p-4 text-white col-span-3 flex justify-between gap-10">
         <div>
           {trackInfo ? (
             <>
@@ -322,7 +325,10 @@ export default function Player() {
             <FontAwesomeIcon icon={faPlay} onClick={handlePlay} />
           )}
           <FontAwesomeIcon icon={faStepForward} onClick={handleNextTrack} />
-          <FontAwesomeIcon icon={faBars} />
+          <FontAwesomeIcon
+            icon={faList}
+            onClick={() => setIsOpen((prev) => !prev)}
+          />
         </div>
       </div>
 
