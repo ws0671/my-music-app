@@ -1,9 +1,7 @@
 import {
-  faBars,
   faCirclePause,
   faCirclePlay,
   faList,
-  faMusic,
   faPause,
   faPlay,
   faRepeat,
@@ -15,7 +13,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  ITrackInfo,
   useCurrentTrackIndexStore,
   usePlaylistStore,
   useTrackInfoStore,
@@ -27,14 +24,16 @@ import YouTube from "react-youtube";
 import { useVideoIdStore } from "../stores/video";
 import useSessionStore from "../stores/session";
 import { addToPlaylist, fetchPlaylist } from "../utils/playlist";
-import Playlist from "./playlist";
 
 interface OnReady {
   target: {
     getDuration: () => number;
   };
 }
-export default function Player({ setIsOpen }) {
+interface PlayerProps {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export default function Player({ setIsOpen }: PlayerProps) {
   const { videoId } = useVideoIdStore();
   const { playlist, setPlaylist } = usePlaylistStore();
   const [player, setPlayer] = useYouTubeStore((state) => [
@@ -46,7 +45,6 @@ export default function Player({ setIsOpen }) {
   const progressBarRef = useRef<HTMLDivElement>(null);
   const { trackInfo, isPlaying, statePlay, statePause } = useTrackInfoStore();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isShort, setIsShort] = useState(false);
   const { currentTrackIndex, setCurrentTrackIndex } =
     useCurrentTrackIndexStore();
   const { session } = useSessionStore();
@@ -76,7 +74,6 @@ export default function Player({ setIsOpen }) {
 
   useEffect(() => {
     const handleUpdatedPlaylist = () => {
-      console.log(trackInfo);
       if (trackInfo) {
         if (
           currentPlaylist.some((track) => track.trackId === trackInfo.trackId)
