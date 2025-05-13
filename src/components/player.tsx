@@ -30,11 +30,10 @@ interface OnReady {
     getDuration: () => number;
   };
 }
-export default function Player({
-  setIsOpen,
-}: {
-  setIsOpen: (isOpen: boolean) => void;
-}) {
+interface PlayerProps {
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export default function Player({ setIsOpen }: PlayerProps) {
   const { videoId } = useVideoIdStore();
   const { playlist, setPlaylist } = usePlaylistStore();
   const [player, setPlayer] = useYouTubeStore((state) => [
@@ -75,7 +74,6 @@ export default function Player({
 
   useEffect(() => {
     const handleUpdatedPlaylist = () => {
-      console.log(trackInfo);
       if (trackInfo) {
         if (
           currentPlaylist.some((track) => track.trackId === trackInfo.trackId)

@@ -19,7 +19,7 @@ import useSessionStore from "../stores/session";
 import { deleteAllTrack, deleteTrack } from "../utils/playlist";
 import { Link } from "react-router-dom";
 
-export default function Playlist({ isOpen }) {
+export default function Playlist({ isOpen }: { isOpen: boolean }) {
   const [showShadow, setShowShadow] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
