@@ -11,7 +11,6 @@ import { searchYouTubeVideo } from "../api/youtube";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleMinus,
-  faMinus,
   faPause,
   faPlay,
   faSquareMinus,
@@ -20,7 +19,7 @@ import useSessionStore from "../stores/session";
 import { deleteAllTrack, deleteTrack } from "../utils/playlist";
 import { Link } from "react-router-dom";
 
-export default function Playlist({ isOpen }) {
+export default function Playlist({ isOpen }: { isOpen: boolean }) {
   const [showShadow, setShowShadow] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -28,8 +27,7 @@ export default function Playlist({ isOpen }) {
   const { setVideoId } = useVideoIdStore();
   const { isPlaying, trackInfo, setTrackInfo, statePlay, statePause } =
     useTrackInfoStore();
-  const [ellipsis, setEllipsis] = useState(false);
-  const [selectedId] = useState(0);
+  const [_, setEllipsis] = useState(false);
   const { playlist, removePlaylist, resetPlaylist } = usePlaylistStore();
   const dropdownRef = useRef<HTMLElement[]>([]);
   const { player, setCurrentTime, play, pause } = useYouTubeStore();

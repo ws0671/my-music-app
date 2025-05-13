@@ -6,7 +6,7 @@ import Playlist from "./playlist";
 import { useState } from "react";
 
 export default function Layout() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
     <div className="p-2 h-screen grid grid-rows-[auto_1fr_auto] grid-cols-3 lg:grid-cols-[1fr_3fr_1fr] gap-2 bg-purple-800">
