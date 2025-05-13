@@ -20,7 +20,7 @@ export default function CreateAccount() {
     await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: "https://my-music-app-eta.vercel.app/",
+        redirectTo: import.meta.env.VITE_SUPABASE_REDIRECT_URL,
       },
     });
   };
@@ -44,7 +44,7 @@ export default function CreateAccount() {
         data: {
           name,
         },
-        emailRedirectTo: "https://my-music-app-eta.vercel.app/",
+        emailRedirectTo: import.meta.env.VITE_SUPABASE_REDIRECT_URL,
       },
     });
 
@@ -134,7 +134,7 @@ export default function CreateAccount() {
                 required
               />
               <input
-                className="px-4 py-2 w-full focus:outline-none bg-gray-100 border-solid border rounded"
+                className="px-4 py-2 w-full focus:outline-none text-black bg-gray-100 border-solid border rounded"
                 onChange={onChange}
                 type="text"
                 name="name"
@@ -143,7 +143,7 @@ export default function CreateAccount() {
                 required
               />
               <input
-                className="px-4 py-2 w-full focus:outline-none bg-gray-100 border-solid border rounded"
+                className="px-4 py-2 w-full focus:outline-none text-black bg-gray-100 border-solid border rounded"
                 onChange={onChange}
                 type="password"
                 name="password"

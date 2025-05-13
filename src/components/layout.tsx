@@ -3,8 +3,11 @@ import Player from "./player";
 import Header from "./header";
 import Nav from "./nav";
 import Playlist from "./playlist";
+import { useState } from "react";
 
 export default function Layout() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className="p-2 h-screen grid grid-rows-[auto_1fr_auto] grid-cols-3 lg:grid-cols-[1fr_3fr_1fr] gap-2 bg-purple-800">
       <Header />
@@ -14,9 +17,9 @@ export default function Layout() {
       <div className="bg-purple-700 custom-scrollbar sm:col-span-1 col-span-3 text-white">
         <Outlet />
       </div>
-      <Playlist />
+      <Playlist isOpen={isOpen} />
 
-      <Player />
+      <Player setIsOpen={setIsOpen} />
     </div>
   );
 }
