@@ -33,7 +33,7 @@ npm run dev
 
 # 나만의 뮤직 웹 Honey
 
-<img width="1280" alt="배포 home" src="https://github.com/user-attachments/assets/0fcfe42d-be9b-4477-aa70-d4e9c000087f"/>
+<img width="1280" alt="배포 home" src="public/images/assets/홈.png"/>
 듣고 싶은 음악을 플레이리스트에 등록해 감상해보세요
 
 ## 프로젝트 소개
@@ -63,33 +63,27 @@ npm run dev
       <td align="center">로그인</td>
     </tr>
     <tr>
-      <td align="center"><img src="https://github.com/user-attachments/assets/11df9bbb-ab12-403a-8c87-5826b38b7fad" /></td>
-      <td align="center"><img src="https://github.com/user-attachments/assets/9561525d-8697-457d-9143-0c469b529a41" /></td>
+      <td align="center"><img src="public/images/assets/회원가입.png" /></td>
+      <td align="center"><img src="public/images/assets/로그인.png" /></td>
     </tr>
     <tr>
       <td align="center">새로 발매된 앨범(홈)</td>
       <td align="center">앨범</td>
     </tr>
     <tr>
-      <td align="center"><img src="https://github.com/user-attachments/assets/d4ac9a3f-8008-4653-a41e-05aff42e248b" /></td>
-      <td align="center"><img src="https://github.com/user-attachments/assets/6c3cb6b0-d72e-4890-80b3-1f3c38faacc8" /></td>
+      <td align="center"><img src="public/images/assets/홈.png" /></td>
+      <td align="center"><img src="public/images/assets/앨범.png" /></td>
     </tr>
     <tr>
       <td align="center">아티스트</td>
-      <td align="center">Honey 플레이리스트</td>
-    </tr>
-    <tr>
-      <td align="center"><img src="https://github.com/user-attachments/assets/14a4fe29-7a86-48df-84a4-c66faac0afb5" /></td>
-      <td align="center"><img src="https://github.com/user-attachments/assets/d987dfa6-b695-41b3-9605-9a20c286084a" /></td>
-    </tr>
-    <tr>
       <td align="center">검색</td>
-      <td align="center">플레이리스트</td>
     </tr>
     <tr>
-      <td align="center"><img src="https://github.com/user-attachments/assets/baa3ec7c-3044-4587-8288-f6fabfd333b3" /></td>
-      <td align="center"><img src="https://github.com/user-attachments/assets/8e1fd3c5-1bba-4202-a1cb-9fd5c0c2f4f1" height="200" /></td>
+      <td align="center"><img src="public/images/assets/아티스트.png" /></td>
+          <td align="center"><img src="public/images/assets/검색.png" /></td>
     </tr>
+   
+   
  </table>
 
 ### 비로그인
