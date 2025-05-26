@@ -190,7 +190,6 @@ https://api.spotify.com/v1/tracks/${trackId}`,
     }
   );
   const data = response.data;
-  console.log(data);
 
   return { name: data.name, artist: data.artists[0].name };
 };

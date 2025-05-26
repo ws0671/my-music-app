@@ -131,7 +131,7 @@ export default function Login() {
                 required
               />
               <input
-                className="px-4 py-2 w-full focus:outline-none bg-gray-100 border-solid border rounded"
+                className="px-4 py-2 w-full focus:outline-none bg-gray-100 text-black border-solid border rounded"
                 onChange={onChange}
                 type="password"
                 name="password"
