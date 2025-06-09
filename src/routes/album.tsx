@@ -4,36 +4,48 @@ import { getAlbumTracks } from "../api/spotify";
 import Loading from "../components/loading";
 import { ITracksAllData } from "../types/spotify";
 import Songlist from "../components/songlist";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Album() {
-  const [tracks, setTracks] = useState<ITracksAllData[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  // const [tracks, setTracks] = useState<ITracksAllData[]>([]);
+  // const [isLoading, setIsLoading] = useState<boolean>(true);
   const { id } = useParams();
 
-  useEffect(() => {
-    const fetchAlbumTracks = async () => {
-      setIsLoading(true);
-      try {
-        if (id) {
-          const tracks = await getAlbumTracks(id);
+  // useEffect(() => {
+  //   const fetchAlbumTracks = async () => {
+  //     setIsLoading(true);
+  //     try {
+  //       if (id) {
+  //         const tracks = await getAlbumTracks(id);
 
-          setTracks(tracks);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchAlbumTracks();
-  }, [id]);
-
+  //         setTracks(tracks);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   fetchAlbumTracks();
+  // }, [id]);
+  const {
+    data: tracks,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["albumTracks", id],
+    queryFn: () => getAlbumTracks(id ?? ""),
+  });
   if (isLoading) {
     return (
       <div className="h-full flex">
         <Loading />
       </div>
     );
+  }
+  if (isError) {
+    console.error("Error fetching album tracks:", error.message);
   }
   return (
     <div className="relative">

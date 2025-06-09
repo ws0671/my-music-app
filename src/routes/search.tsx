@@ -23,14 +23,10 @@ import {
   ITrack,
   ITracksAllData,
 } from "../types/spotify";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Search() {
   const { id } = useParams();
-  const [tracks, setTracks] = useState<ITracksAllData[]>([]);
-  const [artists, setArtists] = useState<ISpecificArtist[]>([]);
-  const [albums, setAlbums] = useState<ITrack[]>([]);
-  const [_playlists, setPlaylists] = useState<IPlaylists[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const { setVideoId } = useVideoIdStore();
   const { isPlaying, trackInfo, setTrackInfo, statePlay, statePause } =
     useTrackInfoStore();
@@ -38,26 +34,14 @@ export default function Search() {
   const { setPlaylist } = usePlaylistStore();
   const { play, pause } = useYouTubeStore();
 
-  useEffect(() => {
-    const fetchSearchedData = async () => {
-      try {
-        setIsLoading(true);
-        if (id) {
-          const searchedData = await searchTracks(id);
+  const { data, isLoading } = useQuery({
+    queryKey: ["searchTracks", id],
+    queryFn: () => searchTracks(id ?? ""),
+  });
+  const tracks: ITracksAllData[] = data?.tracks.items;
+  const artists: ISpecificArtist[] = data?.artists.items;
+  const albums: ITrack[] = data?.albums.items;
 
-          setTracks(searchedData.tracks.items);
-          setArtists(searchedData.artists.items);
-          setPlaylists(searchedData.playlists.items);
-          setAlbums(searchedData.albums.items);
-        }
-      } catch (error) {
-        console.error("Error: ", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchSearchedData();
-  }, [id]);
   const onPlayClick = async (e: React.MouseEvent<SVGSVGElement>) => {
     const trackId = e.currentTarget.getAttribute("data-trackid");
     const name = e.currentTarget.getAttribute("data-name");

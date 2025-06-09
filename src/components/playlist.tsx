@@ -78,6 +78,7 @@ export default function Playlist() {
 
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
     const fetchedVideoId = await searchYouTubeVideo(searchQuery);
+
     const trackInfoOne = {
       trackId,
       name,

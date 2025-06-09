@@ -32,6 +32,10 @@ export default function Header() {
   };
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!word) {
+      return;
+    }
     inputRef.current?.blur();
 
     navigate(`/search/${word}`);
