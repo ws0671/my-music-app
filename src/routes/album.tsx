@@ -51,27 +51,41 @@ export default function Album() {
         <div className="max-sm:py-5 flex-shrink-0 flex justify-center">
           <img
             className="max-sm:w-40 h-full shadow-[rgba(0,0,0,0.35)_0px_5px_15px]"
-            src={tracks && tracks && tracks[0]??.images ? tracks && tracks[0]?.images : ""}
-            alt={tracks && tracks && tracks[0]??.name ? tracks && tracks[0]?.name : ""}
+            src={
+              tracks && tracks && tracks[0]?.images
+                ? tracks && tracks[0]?.images
+                : ""
+            }
+            alt={
+              tracks && tracks && tracks[0]?.name
+                ? tracks && tracks[0]?.name
+                : ""
+            }
           />
         </div>
         <div className="m-3 sm:m-0 flex font-rowdies flex-col justify-end  gap-4 pb-5">
           <div className="">앨범</div>
-          <div className="max-sm:text-3xl text-5xl ">{tracks && tracks[0]?.name}</div>
+          <div className="max-sm:text-3xl text-5xl ">
+            {tracks && tracks[0]?.name}
+          </div>
           <div className="">
-            {tracks && tracks[0]?.artists.map((artist, index) => {
-              const isLast = index === (tracks && tracks[0]?.artists.length - 1);
-              return (
-                <span className="font-bold" key={artist.id}>
-                  <Link to={`/artist/${artist.id}`}>
-                    <span className="hover:underline">{artist.name}</span>
-                  </Link>
-                  {!isLast && <span>, </span>}
-                </span>
-              );
-            })}
+            {tracks &&
+              tracks[0]?.artists.map((artist, index) => {
+                const isLast =
+                  index === (tracks && tracks[0]?.artists.length - 1);
+                return (
+                  <span className="font-bold" key={artist.id}>
+                    <Link to={`/artist/${artist.id}`}>
+                      <span className="hover:underline">{artist.name}</span>
+                    </Link>
+                    {!isLast && <span>, </span>}
+                  </span>
+                );
+              })}
             <span className="mx-1">·</span>
-            <span className=" opacity-70">{tracks && tracks[0]?.release_date}</span>
+            <span className=" opacity-70">
+              {tracks && tracks[0]?.release_date}
+            </span>
           </div>
         </div>
       </div>
