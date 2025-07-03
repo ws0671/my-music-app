@@ -4,32 +4,37 @@ import { useParams } from "react-router-dom";
 import Loading from "../components/loading";
 import { ISpecificArtist, ITracksAllData } from "../types/spotify";
 import Songlist from "../components/songlist";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Artist() {
-  const [tracks, setTracks] = useState<ITracksAllData[]>([]);
-  const [artist, setArtist] = useState<ISpecificArtist>();
-  const [relatedArtists, setRelatedArtists] = useState<ISpecificArtist[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { id } = useParams();
-  useEffect(() => {
-    const fetchAlbumTracks = async () => {
-      setIsLoading(true);
-      try {
-        if (id) {
-          const artist = await getArtist(id);
-          const tracks = await getArtistTopTracks(id);
-          setArtist(artist);
-          setTracks(tracks);
-          setRelatedArtists(relatedArtists);
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchAlbumTracks();
-  }, [id]);
+  // useEffect(() => {
+  //   const fetchAlbumTracks = async () => {
+  //     setIsLoading(true);
+  //     try {
+  //       if (id) {
+  //         const artist = await getArtist(id);
+  //         const tracks = await getArtistTopTracks(id);
+  //         setArtist(artist);
+  //         setTracks(tracks);
+  //         setRelatedArtists(relatedArtists);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error:", error);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   fetchAlbumTracks();
+  // }, [id]);
+  const { data: artist, isLoading } = useQuery({
+    queryKey: ["artitst", id],
+    queryFn: () => getArtist(id ?? ""),
+  });
+  const { data: tracks } = useQuery({
+    queryKey: ["artistTopTracks", id],
+    queryFn: () => getArtistTopTracks(id ?? ""),
+  });
   if (isLoading) {
     return <Loading />;
   }

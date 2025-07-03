@@ -316,11 +316,17 @@ export default function Player({ setIsOpen }: PlayerProps) {
             icon={faStepBackward}
             onClick={handlePreviousTrack}
           />
+
           {isPlaying ? (
-            <FontAwesomeIcon icon={faPause} onClick={handlePause} />
+            <button aria-label="Pause" onClick={handlePause}>
+              <FontAwesomeIcon icon={faPause} />
+            </button>
           ) : (
-            <FontAwesomeIcon icon={faPlay} onClick={handlePlay} />
+            <button aria-label="Play" onClick={handlePlay}>
+              <FontAwesomeIcon icon={faPlay} />
+            </button>
           )}
+
           <FontAwesomeIcon icon={faStepForward} onClick={handleNextTrack} />
           <FontAwesomeIcon
             icon={faList}
@@ -384,17 +390,19 @@ export default function Player({ setIsOpen }: PlayerProps) {
                 />
                 <div className=" my-2">
                   {isPlaying ? (
-                    <FontAwesomeIcon
-                      icon={faCirclePause}
-                      className="cursor-pointer text-white text-4xl"
-                      onClick={handlePause}
-                    />
+                    <button aria-label="Pause" onClick={handlePause}>
+                      <FontAwesomeIcon
+                        icon={faCirclePause}
+                        className="cursor-pointer text-white text-4xl"
+                      />
+                    </button>
                   ) : (
-                    <FontAwesomeIcon
-                      icon={faCirclePlay}
-                      className="cursor-pointer text-white text-4xl "
-                      onClick={handlePlay}
-                    />
+                    <button aria-label="Play" onClick={handlePlay}>
+                      <FontAwesomeIcon
+                        icon={faCirclePlay}
+                        className="cursor-pointer text-white text-4xl"
+                      />
+                    </button>
                   )}
                 </div>
                 <FontAwesomeIcon

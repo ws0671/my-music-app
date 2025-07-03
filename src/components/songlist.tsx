@@ -84,7 +84,7 @@ export default function Songlist({ isArtist, isAlbum, tracks }: IPageProps) {
 
   return (
     <>
-      {tracks.map((item, index) => {
+      {tracks?.map((item, index) => {
         const artists = item.artists.map((i) => i.name).join(",");
         const artistsId = item.artists.map((i) => i.id).join(",");
         let image = "";

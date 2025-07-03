@@ -77,6 +77,7 @@ export default function Playlist({ isOpen }: { isOpen: boolean }) {
 
     const searchQuery = `${trackInfo.name} ${trackInfo.artist}`;
     const fetchedVideoId = await searchYouTubeVideo(searchQuery);
+
     const trackInfoOne = {
       trackId,
       name,
