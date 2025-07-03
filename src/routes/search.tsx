@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getSpotifyTrackInfo, searchTracks } from "../api/spotify";
 import Loading from "../components/loading";
@@ -17,12 +16,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import useSessionStore from "../stores/session";
 
-import {
-  IPlaylists,
-  ISpecificArtist,
-  ITrack,
-  ITracksAllData,
-} from "../types/spotify";
+import { ISpecificArtist, ITrack, ITracksAllData } from "../types/spotify";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Search() {

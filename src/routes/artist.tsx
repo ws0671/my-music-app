@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
 import { getArtist, getArtistTopTracks } from "../api/spotify";
 import { useParams } from "react-router-dom";
 import Loading from "../components/loading";
-import { ISpecificArtist, ITracksAllData } from "../types/spotify";
 import Songlist from "../components/songlist";
 import { useQuery } from "@tanstack/react-query";
 
