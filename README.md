@@ -31,6 +31,11 @@ VITE_YOUTUBE_API_KEY={my-key}
 npm run dev
 ```
 
+### 🧪 테스트 계정
+
+- ID: `test@test.com`
+- PW: `12345`
+
 # Switch - The Fantasy Music App
 
 <img width="1280" alt="배포 home" src="public/images/assets/홈.png"/>
