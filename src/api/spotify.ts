@@ -29,7 +29,7 @@ export const getAccessToken = async () => {
   }
 };
 
-export const getNewReleases = async (countryCode: string) => {
+export const getNewReleases = async () => {
   let allData: IAllData[] = [];
   const limit = 50;
   let offset = 0;
@@ -37,17 +37,20 @@ export const getNewReleases = async (countryCode: string) => {
   const token = await getAccessToken();
   do {
     const response = await axios.get(
-      `https://api.spotify.com/v1/browse/new-releases?market=${countryCode}&limit=${limit}&offset=${offset}`,
+      `https://api.spotify.com/v1/browse/new-releases?limit=${limit}&offset=${offset}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }
     );
+
     const data = response.data;
+    console.log(data);
 
     total = data.albums.total;
     allData = allData.concat(data.albums.items);
+    console.log(allData);
 
     offset += limit;
   } while (offset < total);

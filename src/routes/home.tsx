@@ -6,33 +6,16 @@ import { IAllData } from "../types/spotify";
 import { useQuery } from "@tanstack/react-query";
 
 export default function Home() {
-  //   const [isLoading, setIsLoading] = useState<boolean>(true);
-  // const [music, setMusic] = useState<IAllData[]>([]);
-  const [countryCode, setContryCode] = useState("KR");
   const startTime = useRef(performance.now());
   const [renderTime, setRenderTime] = useState<number | null>(null);
 
-  // useEffect(() => {
-  //   const fetchNewReleases = async () => {
-  //     setIsLoading(true);
-  //     try {
-  //       const music = await getNewReleases(countryCode);
-  //       setMusic(music);
-  //     } catch (error) {
-  //       console.error("Error:", error);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-  //   fetchNewReleases();
-  // }, [countryCode]);
   const {
     data: music,
     isLoading,
     isError,
   } = useQuery<IAllData[]>({
-    queryKey: ["newReleases", countryCode],
-    queryFn: () => getNewReleases(countryCode),
+    queryKey: ["newReleases"],
+    queryFn: () => getNewReleases(),
   });
   useEffect(() => {
     if (!isLoading && music && music.length > 0 && renderTime === null) {
@@ -47,18 +30,12 @@ export default function Home() {
     }
   }, [isLoading, music, renderTime]);
 
-  const onChangeCountryCode = (code: string) => {
-    setContryCode(code);
-    startTime.current = performance.now(); // 국가 바뀔 때 다시 측정 시작
-    setRenderTime(null); // 렌더링 시간 초기화
-  };
-
   if (isError) return <div>오류가 발생했습니다.</div>;
   return (
     <div className="h-full flex sm:flex flex-col p-6 bg-piur">
-      <div className="flex items-center flex-col mb-7 ">
-        <span className="font-bold text-4xl mb-4">새로나온 앨범</span>
-        <span className="space-x-3 text-base">
+      <div className="flex flex-col mb-7 ">
+        <span className="font-bold text-xl">새로나온 앨범</span>
+        {/* <span className="space-x-3 text-base">
           <span
             onClick={() => onChangeCountryCode("KR")}
             className={
@@ -91,12 +68,12 @@ export default function Home() {
           >
             일본
           </span>
-        </span>
+        </span> */}
       </div>
       {isLoading ? (
         <Loading />
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-6 ">
+        <div className="grid grid-cols-2 sm:grid-cols-8 gap-6 ">
           {music?.map((item) => {
             return (
               <Link className="" to={`album/${item.id}`} key={item.id}>

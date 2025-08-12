@@ -87,7 +87,7 @@ export default function Header() {
               />
             </div>
             <Link to="/login">
-              <div className="font-bold text-xl">로그인하기</div>
+              <div className="font-bold text-xl ">로그인하기</div>
             </Link>
             <Link to="/create-account">
               <div className="font-bold text-xl">가입하기</div>
@@ -95,14 +95,15 @@ export default function Header() {
           </div>
         )}
       </div>
-      <div className="hidden justify-center sm:flex">
+      {/* desktop */}
+      <div className="hidden  sm:flex">
         <Link
           to={"/"}
           className=""
           style={{ clipPath: "circle(33.9% at 50% 50%)" }}
         >
           <img
-            className="w-20"
+            className="w-14"
             src="/images/3-removebg-preview.png"
             alt="logo"
           />
@@ -113,23 +114,23 @@ export default function Header() {
           <div className="fixed inset-0 bg-black opacity-0 transition-opacity duration-300 pointer-events-none group-hover:opacity-50 group-focus-within:opacity-50"></div>
 
           <form className="relative" onSubmit={onSubmit}>
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 ">
-              <FontAwesomeIcon icon={faMagnifyingGlass} />
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-2xl ">
+              <FontAwesomeIcon className="" icon={faMagnifyingGlass} />
             </div>
             <input
               ref={inputRef}
               onChange={onSearch}
-              className="w-full transition-transform duration-300 ease-in-out hover:scale-[2] focus:scale-[2] shadow-[0px_0px_10px_5px_rgba(0,_0,_0,_0.1)] focus:outline-none p-1 pl-9 rounded-3xl
+              className="w-[400px] h-[45px] transition-transform duration-300 ease-in-out   hover:scale-[1.4] focus:scale-[1.4] shadow-[0px_0px_10px_5px_rgba(0,_0,_0,_0.1)] focus:outline-none p-1 pl-9 rounded-3xl
                  "
               type="text"
             />
           </form>
         </div>
       </div>
-      <div className="hidden sm:flex justify-center gap-2 md:gap-5 items-center">
+      <div className="hidden sm:flex justify-center gap-2 md:gap-5 items-center text-sm">
         {session ? (
           <div
-            className="border cursor-pointer font-bold transition-all bg-black text-white border-none hover:bg-gray-600 rounded-lg py-3 px-4"
+            className="border cursor-pointer font-bold transition-all bg-black text-white border-none hover:bg-gray-600 rounded-lg py-2 px-4"
             onClick={signOut}
           >
             로그아웃
@@ -137,12 +138,12 @@ export default function Header() {
         ) : (
           <>
             <Link to="/create-account">
-              <div className="border font-bold transition-all bg-black text-white border-none hover:bg-gray-600 rounded-lg py-3 px-4">
+              <div className="border font-bold transition-all bg-black text-white border-none hover:bg-gray-600 rounded-lg py-2 px-4">
                 회원가입
               </div>
             </Link>
             <Link to="/login">
-              <div className="border font-bold transition-all bg-black text-white border-none hover:bg-gray-600 rounded-lg py-3 px-4">
+              <div className="border font-bold transition-all bg-black text-white border-none hover:bg-gray-600 rounded-lg py-2 px-4">
                 로그인
               </div>
             </Link>

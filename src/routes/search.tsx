@@ -24,6 +24,9 @@ import {
   ITracksAllData,
 } from "../types/spotify";
 import { useQuery } from "@tanstack/react-query";
+import AlbumCarousel from "../components/album-carousel";
+import Carousel from "../components/album-carousel";
+import ArtistCarousel from "../components/alrtist-carousel";
 
 export default function Search() {
   const { id } = useParams();
@@ -186,9 +189,10 @@ export default function Search() {
           );
         })}
       <h3 className="mt-10 mb-5 text-2xl font-bold">아티스트</h3>
-      <div className="grid max-sm:grid-cols-2 grid-cols-5 gap-6 ">
+      <ArtistCarousel artists={artists} />
+      {/* <div className="grid max-sm:grid-cols-2 grid-cols-8 gap-6 ">
         {artists &&
-          artists.slice(0, 5).map((artist) => {
+          artists.map((artist) => {
             console.log(artist);
 
             return (
@@ -209,11 +213,11 @@ export default function Search() {
               </Link>
             );
           })}
-      </div>
+      </div> */}
       <h3 className="mt-10 mb-5 text-2xl font-bold">앨범</h3>
-      <div className="grid max-sm:grid-cols-2 grid-cols-5 gap-6 ">
+      {/* <div className="grid max-sm:grid-cols-2 grid-cols-8 gap-6 ">
         {albums &&
-          albums.slice(0, 5).map((item) => {
+          albums.map((item) => {
             return (
               <Link to={`/album/${item.id}`} key={item.id}>
                 <div className="">
@@ -240,7 +244,8 @@ export default function Search() {
               </Link>
             );
           })}
-      </div>
+      </div> */}
+      <AlbumCarousel albums={albums} />
     </div>
   );
 }
