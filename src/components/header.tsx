@@ -120,7 +120,7 @@ export default function Header() {
             <input
               ref={inputRef}
               onChange={onSearch}
-              className="w-[400px] h-[45px] transition-transform duration-300 ease-in-out   hover:scale-[1.4] focus:scale-[1.4] shadow-[0px_0px_10px_5px_rgba(0,_0,_0,_0.1)] focus:outline-none p-1 pl-9 rounded-3xl
+              className="w-[400px] h-[45px] transition-transform duration-300 ease-in-out   hover:scale-[1.4] focus:scale-[1.4] shadow-[0px_0px_10px_5px_rgba(0,_0,_0,_0.1)] focus:outline-none p-1 pl-12 rounded-3xl
                  "
               type="text"
             />

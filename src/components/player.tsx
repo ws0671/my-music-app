@@ -300,7 +300,7 @@ export default function Player({ setIsOpen }: PlayerProps) {
 
   return (
     <>
-      <div className="sm:hidden fixed bottom-0 left-0 right-0 items-center bg-purple-900 p-4 text-white col-span-3 flex justify-between gap-10">
+      <div className="sm:hidden  fixed bottom-0 left-0 right-0 items-center bg-purple-900 p-4 text-white col-span-3 flex justify-between gap-10">
         <div>
           {trackInfo ? (
             <>
@@ -311,7 +311,7 @@ export default function Player({ setIsOpen }: PlayerProps) {
             <div className="text-sm text-gray-400">곡 목록이 없습니다.</div>
           )}
         </div>
-        <div className="flex gap-6 text-2xl">
+        <div className="flex gap-6 text-2xl items-center">
           <FontAwesomeIcon
             icon={faStepBackward}
             onClick={handlePreviousTrack}
