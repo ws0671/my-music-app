@@ -9,25 +9,22 @@ export default function ArtistCarousel({ artists }) {
   // 스크롤 위치 체크
   const checkScroll = useCallback(() => {
     const el = trackRef.current;
-
     if (!el) return;
 
     const atStart = el.scrollLeft <= 6;
     const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
-
     setShowLeft(!atStart);
     setShowRight(!atEnd);
   }, []);
 
   useEffect(() => {
-    checkScroll(); // 처음 로딩 시 상태 반영
+    checkScroll();
     const el = trackRef.current;
     if (!el) return;
 
     el.addEventListener("scroll", checkScroll);
     return () => el.removeEventListener("scroll", checkScroll);
   }, [checkScroll]);
-
   // 스크롤 이동
   const scrollByPage = (dir: "prev" | "next") => {
     const el = trackRef.current;
@@ -35,8 +32,6 @@ export default function ArtistCarousel({ artists }) {
     const page = el.clientWidth * 0.9;
     el.scrollBy({ left: dir === "next" ? page : -page, behavior: "smooth" });
   };
-
-  if (!artists?.length) return null;
 
   return (
     <section className="relative">
@@ -65,7 +60,9 @@ export default function ArtistCarousel({ artists }) {
                   }
                   alt={artist.name}
                 />
-                <div className="my-1 truncate font-bold">{artist.name}</div>
+                <div className="my-1 truncate font-bold hover:underline">
+                  {artist.name}
+                </div>
                 <div className="text-sm text-gray-400">아티스트</div>
               </div>
             </Link>

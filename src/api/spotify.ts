@@ -46,11 +46,9 @@ export const getNewReleases = async () => {
     );
 
     const data = response.data;
-    console.log(data);
 
     total = data.albums.total;
     allData = allData.concat(data.albums.items);
-    console.log(allData);
 
     offset += limit;
   } while (offset < total);
