@@ -8,6 +8,8 @@ import UpdatePassword from "./routes/update-password";
 import Album from "./routes/album";
 import Artist from "./routes/artist";
 import Search from "./routes/search";
+import Albums from "./routes/search/albums";
+import Artists from "./routes/search/artists";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +31,19 @@ const router = createBrowserRouter([
       {
         path: "search/:id",
         element: <Search />,
+      },
+      {
+        path: "search/:id",
+        children: [
+          {
+            path: "albums",
+            element: <Albums />,
+          },
+          {
+            path: "artists",
+            element: <Artists />,
+          },
+        ],
       },
     ],
   },

@@ -77,7 +77,7 @@ export default function AlbumCarousel({ albums }) {
                 type="button"
                 aria-label="Previous"
                 onClick={() => scrollByPage("prev")}
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 group-hover:opacity-100 opacity-0 transition-opacity duration-200 h-10 w-10 items-center justify-center rounded-full bg-white/60 shadow hover:bg-white/80"
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 font-bold group-hover:opacity-100 opacity-0 transition-opacity duration-200 h-10 w-10 items-center justify-center rounded-full bg-white/60 shadow hover:bg-white/80 "
               >
                 ‹
               </button>
@@ -87,7 +87,7 @@ export default function AlbumCarousel({ albums }) {
                 type="button"
                 aria-label="Next"
                 onClick={() => scrollByPage("next")}
-                className="transition-opacity duration-200 group-hover:opacity-100 absolute right-0 top-1/2 -translate-y-1/2 z-10 opacity-0  h-10 w-10 items-center justify-center rounded-full bg-white/60 shadow hover:bg-white/80"
+                className="transition-opacity duration-200 group-hover:opacity-100 absolute right-0 top-1/2 -translate-y-1/2 z-10 opacity-0  h-10 w-10 items-center justify-center rounded-full bg-white/60 shadow hover:bg-white/80 font-bold"
               >
                 ›
               </button>

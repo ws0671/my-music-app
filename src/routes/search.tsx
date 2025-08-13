@@ -188,9 +188,15 @@ export default function Search() {
             </div>
           );
         })}
-      <h3 className="mt-10 mb-5 text-2xl font-bold">아티스트</h3>
+
+      <h3 className="mt-10 mb-5 text-2xl font-bold ">
+        {" "}
+        <Link className="inline hover:underline" to={"artists"}>
+          아티스트
+        </Link>
+      </h3>
       <ArtistCarousel artists={artists} />
-      {/* <div className="grid max-sm:grid-cols-2 grid-cols-8 gap-6 ">
+      {/* <div className="grid max-sm:grid-cols-2 grid-cols-6 gap-6 ">
         {artists &&
           artists.map((artist) => {
             console.log(artist);
@@ -214,8 +220,15 @@ export default function Search() {
             );
           })}
       </div> */}
-      <h3 className="mt-10 mb-5 text-2xl font-bold">앨범</h3>
-      {/* <div className="grid max-sm:grid-cols-2 grid-cols-8 gap-6 ">
+
+      <h3 className="mt-10 mb-5 text-2xl font-bold ">
+        {" "}
+        <Link className="inline hover:underline" to={"albums"}>
+          앨범
+        </Link>
+      </h3>
+      <AlbumCarousel albums={albums} />
+      {/* <div className="grid max-sm:grid-cols-2 grid-cols-6 gap-6 ">
         {albums &&
           albums.map((item) => {
             return (
@@ -245,7 +258,6 @@ export default function Search() {
             );
           })}
       </div> */}
-      <AlbumCarousel albums={albums} />
     </div>
   );
 }

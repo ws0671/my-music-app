@@ -1,5 +1,6 @@
 import axios from "axios";
 import { IAllData, IArtist, ITrack, ITracksAllData } from "../types/spotify";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 const BASE_URL = "https://accounts.spotify.com/api/token";
 
@@ -173,4 +174,53 @@ export const searchTracks = async (query: string) => {
   } catch (error) {
     console.error("Error searching tracks", error);
   }
+};
+
+const searchAllAlbums = async (
+  query: string,
+  tab: string,
+
+  pageParam: number
+) => {
+  const token = await getAccessToken();
+
+  if (!token) {
+    console.error("Access token is not available");
+    return;
+  }
+
+  try {
+    const response = await axios.get("https://api.spotify.com/v1/search", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        q: query,
+        type: tab,
+        limit: 36,
+        offset: pageParam,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error searching tracks", error);
+  }
+};
+
+export const useGetSearchAllAlbums = (query: string, tab) => {
+  return useInfiniteQuery({
+    queryKey: ["search", tab, query],
+    queryFn: ({ pageParam }) => {
+      return searchAllAlbums(query, tab, pageParam);
+    },
+    getNextPageParam: (last) => {
+      if (tab === "album") last = last.albums;
+      if (tab === "artist") last = last.artists;
+      const { next, offset, limit, total } = last;
+      if (next) return offset + limit;
+      return undefined;
+    },
+    initialPageParam: 0,
+  });
 };

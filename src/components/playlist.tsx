@@ -150,8 +150,6 @@ export default function Playlist({ isOpen }: { isOpen: boolean }) {
           className="pl-4 custom-scrollbar overflow-y-auto "
         >
           {currentPlaylist.map((item, index) => {
-            console.log(item);
-
             const artistsId = item.artistsId?.split(",");
             const artists = item.artists?.split(",");
 

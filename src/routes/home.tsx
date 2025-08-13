@@ -73,7 +73,7 @@ export default function Home() {
       {isLoading ? (
         <Loading />
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-8 gap-6 ">
+        <div className="grid grid-cols-2 sm:grid-cols-6 gap-6 ">
           {music?.map((item) => {
             return (
               <Link className="" to={`album/${item.id}`} key={item.id}>
