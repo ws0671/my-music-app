@@ -3,6 +3,7 @@ import { useGetSearchAllAlbums } from "../../api/spotify";
 import { useInView } from "react-intersection-observer";
 import { Link, useLocation, useParams } from "react-router-dom";
 import Loading from "../../components/loading";
+import SearchDetailHeader from "../../components/search-detail-header";
 function Artists() {
   const { id } = useParams();
   const { pathname } = useLocation();
@@ -18,7 +19,6 @@ function Artists() {
     hasNextPage,
     isFetchingNextPage,
   } = useGetSearchAllAlbums(id, tab);
-  console.log(data);
 
   const { ref, inView } = useInView();
   useEffect(() => {
@@ -33,9 +33,9 @@ function Artists() {
   }, [inView]);
 
   return (
-    <div className="m-6  h-full">
-      <h3 className="mt-10 mb-5 text-2xl font-bold">전체 아티스트</h3>
-      <div className="grid max-sm:grid-cols-2 grid-cols-6 gap-6 ">
+    <div className="">
+      <SearchDetailHeader />
+      <div className="m-6 grid max-sm:grid-cols-2 grid-cols-6 gap-6 ">
         {artists &&
           artists.map((page) =>
             page.artists.items.map((artist) => {

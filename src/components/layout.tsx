@@ -14,7 +14,7 @@ export default function Layout() {
       <div className="bg-purple-700 sm:block hidden">
         <Nav />
       </div>
-      <div className="bg-purple-700 custom-scrollbar sm:col-span-1 col-span-3 text-white ">
+      <div className="bg-purple-700 sm:col-span-1 col-span-3 text-white custom-scrollbar">
         <Outlet />
       </div>
       <Playlist isOpen={isOpen} />
