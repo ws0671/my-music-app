@@ -217,8 +217,11 @@ export const useGetSearchAllAlbums = (query: string, tab) => {
     getNextPageParam: (last) => {
       if (tab === "album") last = last.albums;
       if (tab === "artist") last = last.artists;
+      if (tab === "track") last = last.tracks;
       const { next, offset, limit, total } = last;
-      if (next) return offset + limit;
+      if (next) {
+        return offset + limit;
+      }
       return undefined;
     },
     initialPageParam: 0,

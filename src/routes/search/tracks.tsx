@@ -1,36 +1,32 @@
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { getSpotifyTrackInfo, searchTracks } from "../api/spotify";
-import Loading from "../components/loading";
+import { useEffect, useRef, useState } from "react";
+import { getSpotifyTrackInfo, useGetSearchAllAlbums } from "../../api/spotify";
+import { useInView } from "react-intersection-observer";
+import { Link, useLocation, useParams } from "react-router-dom";
+import Loading from "../../components/loading";
+import SearchDetailHeader from "../../components/search-detail-header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCirclePlus,
+  faFileCirclePlus,
+  faPause,
+  faPlay,
+} from "@fortawesome/free-solid-svg-icons";
 import {
   usePlaylistStore,
   useTrackInfoStore,
   useVideoIdStore,
   useYouTubeStore,
-} from "../stores/video";
-import { searchYouTubeVideo } from "../api/youtube";
-import {
-  faCirclePlus,
-  faPause,
-  faPlay,
-} from "@fortawesome/free-solid-svg-icons";
-import useSessionStore from "../stores/session";
-
-import {
-  IPlaylists,
-  ISpecificArtist,
-  ITrack,
-  ITracksAllData,
-} from "../types/spotify";
-import { useQuery } from "@tanstack/react-query";
-import AlbumCarousel from "../components/album-carousel";
-import Carousel from "../components/album-carousel";
-import ArtistCarousel from "../components/alrtist-carousel";
-import SearchDetailHeader from "../components/search-detail-header";
-
-export default function Search() {
+} from "../../stores/video";
+import useSessionStore from "../../stores/session";
+import { searchYouTubeVideo } from "../../api/youtube";
+function Tracks() {
   const { id } = useParams();
+  const { pathname } = useLocation();
+  const [tracks, setTracks] = useState([]);
+  //items를 하나의 단위로 0,1 인덱스에 넣은게 아니라 하나의 단위를 평탄화하여 내부의 요소들을 0,1순으로 배치해 넣는 것. 즉, 평탄화.
+  const items = tracks.flatMap((page) => page.tracks.items) ?? [];
+
+  const { ref, inView } = useInView();
   const { setVideoId } = useVideoIdStore();
   const { isPlaying, trackInfo, setTrackInfo, statePlay, statePause } =
     useTrackInfoStore();
@@ -38,13 +34,29 @@ export default function Search() {
   const { setPlaylist } = usePlaylistStore();
   const { play, pause } = useYouTubeStore();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["searchTracks", id],
-    queryFn: () => searchTracks(id ?? ""),
-  });
-  const tracks: ITracksAllData[] = data?.tracks.items;
-  const artists: ISpecificArtist[] = data?.artists.items;
-  const albums: ITrack[] = data?.albums.items;
+  let tab = pathname.split("/");
+  tab = tab[tab.length - 1].slice(0, -1);
+
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useGetSearchAllAlbums(id, tab);
+  console.log(data);
+
+  useEffect(() => {
+    if (!data?.pages) return;
+    setTracks(data?.pages);
+  }, [data?.pages]);
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView]);
 
   const onPlayClick = async (e: React.MouseEvent<SVGSVGElement>) => {
     const trackId = e.currentTarget.getAttribute("data-trackid");
@@ -96,17 +108,11 @@ export default function Search() {
   };
   if (isLoading) return <Loading />;
   return (
-    <>
+    <div className="">
       <SearchDetailHeader />
       <div className="m-6">
-        <h3 className="mt-10 mb-5 text-2xl font-bold">
-          {" "}
-          <Link className="inline hover:underline" to={"tracks"}>
-            곡
-          </Link>
-        </h3>
         {tracks &&
-          tracks.map((item) => {
+          items.map((item, i) => {
             const artists = item.artists.map((i) => i.name).join(",");
             const artistsId = item.artists.map((i) => i.id).join(",");
             const image = item.album.images[0]
@@ -115,8 +121,9 @@ export default function Search() {
             return (
               <div
                 key={item.id}
-                className="p-2 grid grid-cols-[10fr_10fr_1fr]  gap-3 hover:rounded-md hover:bg-purple-500  group relative "
+                className="py-1 grid grid-cols-[1fr_10fr_10fr_1fr] hover:rounded-md hover:bg-purple-500  group relative "
               >
+                <div className="grid place-content-center">{i + 1}</div>
                 <div className="flex flex-grow w-full items-center truncate">
                   <div className="relative w-10 h-10 shrink-0">
                     <img
@@ -149,7 +156,6 @@ export default function Search() {
                     <div aria-label="곡 제목" className="font-bold truncate">
                       {item.name}
                     </div>
-
                     <div className="text-sm text-gray-400">
                       {item.artists.map((artist, index) => {
                         const isLast = index === item.artists.length - 1;
@@ -187,77 +193,15 @@ export default function Search() {
               </div>
             );
           })}
-
-        <h3 className="mt-10 mb-5 text-2xl font-bold ">
-          {" "}
-          <Link className="inline hover:underline" to={"artists"}>
-            아티스트
-          </Link>
-        </h3>
-        <ArtistCarousel artists={artists} />
-        {/* <div className="grid max-sm:grid-cols-2 grid-cols-6 gap-6 ">
-        {artists &&
-          artists.map((artist) => {
-            console.log(artist);
-
-            return (
-              <Link key={artist.id} to={`/artist/${artist.id}`}>
-                <div className=" ">
-                  <img
-                    className="w-full aspect-square rounded-full"
-                    src={
-                      artist.images[0]
-                        ? artist.images[0]?.url
-                        : "/images/headphone.jpg"
-                    }
-                    alt={artist.name}
-                  />
-                  <div className="my-1 truncate font-bold">{artist.name}</div>
-                  <div className="text-sm text-gray-400">아티스트</div>
-                </div>
-              </Link>
-            );
-          })}
-      </div> */}
-
-        <h3 className="mt-10 mb-5 text-2xl font-bold ">
-          {" "}
-          <Link className="inline hover:underline" to={"albums"}>
-            앨범
-          </Link>
-        </h3>
-        <AlbumCarousel albums={albums} />
-        {/* <div className="grid max-sm:grid-cols-2 grid-cols-6 gap-6 ">
-        {albums &&
-          albums.map((item) => {
-            return (
-              <Link to={`/album/${item.id}`} key={item.id}>
-                <div className="">
-                  <img className="rounded-lg w-full" src={item.images[0].url} />
-                  <div className="my-1 truncate font-bold" key={item.id}>
-                    {item.name}
-                  </div>
-                  <div className="truncate text-sm  text-gray-400">
-                    {item.artists.map((artist, index) => {
-                      const isLast = index === item.artists.length - 1;
-                      return (
-                        <div className="inline-block" key={index}>
-                          <Link to={`/artist/${artist.id}`}>
-                            <span className="hover:underline">
-                              {artist.name}
-                            </span>
-                          </Link>
-                          {!isLast && <span>,&nbsp;</span>}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
-      </div> */}
       </div>
-    </>
+      <div ref={ref} className="h-px" />
+      {isFetchingNextPage && (
+        <div className="pt-8 pb-6">
+          <Loading />
+        </div>
+      )}
+    </div>
   );
 }
+
+export default Tracks;

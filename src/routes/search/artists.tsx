@@ -61,9 +61,12 @@ function Artists() {
             })
           )}
       </div>
-      <div ref={ref} className="pt-8 pb-6">
-        <Loading />{" "}
-      </div>
+      <div ref={ref} className="h-px" />
+      {isFetchingNextPage && (
+        <div className="pt-8 pb-6">
+          <Loading />
+        </div>
+      )}
     </div>
   );
 }

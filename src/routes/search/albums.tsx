@@ -3,6 +3,7 @@ import { useGetSearchAllAlbums } from "../../api/spotify";
 import { useInView } from "react-intersection-observer";
 import { Link, useLocation, useParams } from "react-router-dom";
 import Loading from "../../components/loading";
+import SearchDetailHeader from "../../components/search-detail-header";
 function Albums() {
   const { id } = useParams();
   const { pathname } = useLocation();
@@ -23,26 +24,18 @@ function Albums() {
   useEffect(() => {
     if (!data?.pages) return;
     setAlbums(data?.pages);
-
-    console.log("앨범 데이터", data);
   }, [data?.pages]);
 
   useEffect(() => {
-    console.log("인부", inView);
-    console.log("해넥페", hasNextPage);
-    console.log("이패넥페", isFetchingNextPage);
-
     if (inView && hasNextPage && !isFetchingNextPage) {
-      console.log("감지");
-
       fetchNextPage();
     }
   }, [inView]);
 
   return (
-    <div className="m-6  h-full ">
-      <h3 className="mt-10 mb-5 text-2xl font-bold">전체 앨범</h3>
-      <div className="grid max-sm:grid-cols-2 grid-cols-6 gap-6 ">
+    <div className="">
+      <SearchDetailHeader />
+      <div className="m-6 grid max-sm:grid-cols-2 grid-cols-6 gap-6 ">
         {albums &&
           albums.map((page) =>
             page.albums.items.map((item) => {
@@ -78,7 +71,6 @@ function Albums() {
           )}
       </div>
       <div ref={ref} className="h-px" />
-      LOAD MORE
       {isFetchingNextPage && (
         <div className="pt-8 pb-6">
           <Loading />
