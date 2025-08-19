@@ -14,10 +14,10 @@ export default function Nav() {
       className="
          px-4  transition-shadow duration-300  font-bold text-white"
     >
-      <div className="flex justify-between py-[18px]">
+      <div className="relative flex justify-between py-[18px]">
         <div className="">라이브러리</div>
         <div
-          className="bg-purple-600 px-3 py-1 grid place-content-center rounded-full text-sm cursor-pointer hover:bg-purple-500"
+          className=" bg-purple-600 px-3 py-1 grid place-content-center rounded-full text-sm cursor-pointer hover:bg-purple-500"
           onClick={handleDropdown}
         >
           <FontAwesomeIcon
@@ -27,6 +27,14 @@ export default function Nav() {
             }`}
           />
         </div>
+        {dropdown ? (
+          <div className="bg-purple-600 z-10 absolute right-[-10.5rem] -bottom-10 p-2 text-sm rounded-lg hover:bg-purple-500 cursor-pointer">
+            <div>플레이리스트 만들기</div>
+            <div className="text-gray-400 text-xs">
+              나만의 플레이리스트를 만들어 보세요!
+            </div>
+          </div>
+        ) : null}
       </div>
 
       <div>
