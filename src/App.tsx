@@ -11,6 +11,7 @@ import Search from "./routes/search";
 import Albums from "./routes/search/albums";
 import Artists from "./routes/search/artists";
 import Tracks from "./routes/search/tracks";
+import Mypage from "./routes/mypage";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,11 @@ const router = createBrowserRouter([
         path: "search/:id",
         element: <Search />,
       },
+      {
+        path: "mypage",
+        element: <Mypage />,
+      },
+
       {
         path: "search/:id",
         children: [

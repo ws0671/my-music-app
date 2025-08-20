@@ -129,12 +129,19 @@ export default function Header() {
       </div>
       <div className="hidden sm:flex justify-center gap-2 md:gap-5 items-center text-sm">
         {session ? (
-          <div
-            className="border cursor-pointer font-bold transition-all bg-black text-white border-none hover:bg-gray-600 rounded-lg py-2 px-4"
-            onClick={signOut}
-          >
-            로그아웃
-          </div>
+          <>
+            <Link to="/mypage">
+              <div className="border font-bold transition-all bg-black text-white border-none hover:bg-gray-600 rounded-lg py-2 px-4">
+                내정보
+              </div>
+            </Link>
+            <div
+              className="border cursor-pointer font-bold transition-all bg-black text-white border-none hover:bg-gray-600 rounded-lg py-2 px-4"
+              onClick={signOut}
+            >
+              로그아웃
+            </div>
+          </>
         ) : (
           <>
             <Link to="/create-account">

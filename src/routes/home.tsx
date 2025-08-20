@@ -35,40 +35,6 @@ export default function Home() {
     <div className="h-full flex sm:flex flex-col p-6 bg-piur">
       <div className="flex flex-col mb-7 ">
         <span className="font-bold text-xl">새로나온 앨범</span>
-        {/* <span className="space-x-3 text-base">
-          <span
-            onClick={() => onChangeCountryCode("KR")}
-            className={
-              countryCode === "KR"
-                ? "bg-purple-500 text-white px-2 py-1 rounded cursor-pointer"
-                : "cursor-pointer transition duration-500 px-2 py-1 rounded hover:px-2 hover:py-1 hover:text-white hover:bg-purple-500 hover:rounded"
-            }
-          >
-            한국
-          </span>
-          <span> | </span>
-          <span
-            onClick={() => onChangeCountryCode("US")}
-            className={
-              countryCode === "US"
-                ? "bg-purple-500 text-white px-2 py-1 rounded cursor-pointer"
-                : "cursor-pointer transition duration-500 px-2 py-1 rounded hover:px-2 hover:py-1 hover:text-white hover:bg-purple-500 hover:rounded"
-            }
-          >
-            미국
-          </span>
-          <span> | </span>
-          <span
-            onClick={() => onChangeCountryCode("JP")}
-            className={
-              countryCode === "JP"
-                ? "bg-purple-500 text-white px-2 py-1 rounded cursor-pointer"
-                : "cursor-pointer transition duration-500 px-2 py-1 rounded hover:px-2 hover:py-1 hover:text-white hover:bg-purple-500 hover:rounded"
-            }
-          >
-            일본
-          </span>
-        </span> */}
       </div>
       {isLoading ? (
         <Loading />

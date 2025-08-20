@@ -1,8 +1,11 @@
 import { faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
+import useSessionStore from "../stores/session";
 
 export default function Nav() {
+  const session = useSessionStore((state) => state.session);
+  const user = session?.user.user_metadata;
   const [dropdown, setDropdown] = useState(false);
   const handleDropdown = () => {
     setDropdown((prev) => !prev);
@@ -49,7 +52,7 @@ export default function Nav() {
           <div className="">
             <div>내 플레이리스트</div>
             <div className="text-sm text-gray-400">
-              플레이리스트·yeongmin lee
+              플레이리스트 · {user?.name}
             </div>
           </div>
         </div>
