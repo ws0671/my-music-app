@@ -31,7 +31,7 @@ export default function Nav() {
           />
         </div>
         {dropdown ? (
-          <div className="bg-purple-600 z-10 absolute right-[-10.5rem] -bottom-10 p-2 text-sm rounded-lg hover:bg-purple-500 cursor-pointer">
+          <div className="bg-purple-600 absolute right-[-10.5rem] -bottom-10 p-2 text-sm rounded-lg hover:bg-purple-500 cursor-pointer">
             <div>플레이리스트 만들기</div>
             <div className="text-gray-400 text-xs">
               나만의 플레이리스트를 만들어 보세요!

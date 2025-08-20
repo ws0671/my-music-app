@@ -9,5 +9,3 @@ export async function getUser() {
 
   return data.user;
 }
-
-console.log(getUser);
