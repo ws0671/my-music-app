@@ -51,3 +51,48 @@ body {
     display: none; /* 화살표 숨기기 */
   }
 }
+@theme {
+  --animate-zoomIn: zoomIn 0.5s 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) both;
+  --animate-zoomOut: zoomOut 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both;
+  --animate-unfoldIn: unfoldIn 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+  --animate-unfoldOut: unfoldOut 0.5s ease-in-out forwards;
+
+  @keyframes zoomIn {
+    from {
+      transform: scale(0);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+  @keyframes zoomOut {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(0);
+    }
+  }
+  @keyframes unfoldIn {
+    0% {
+      transform: scaleX(0) scaleY(0.005);
+    }
+    50% {
+      transform: scaleX(1) scaleY(0.005);
+    }
+    100% {
+      transform: scaleX(1) scaleY(1);
+    }
+  }
+  @keyframes unfoldOut {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scaleX(1) scaleY(0.005);
+    }
+    100% {
+      transform: scaleX(0) scaleY(0.005);
+    }
+  }
+}

@@ -8,13 +8,13 @@ export default function Mypage() {
   const user = session?.user.user_metadata;
   console.log(user);
 
-  const [modal, setModal] = useState(true);
+  const [modal, setModal] = useState(false);
   const handleModal = () => {
     setModal((prev) => !prev);
   };
   const handleAvatar = () => {};
   return (
-    <main>
+    <main className="">
       <header className="flex p-4 gap-4 bg-linear-to-b from-slate-300 to-slate-400">
         <figure className="">
           <label htmlFor="avatar">
@@ -31,14 +31,14 @@ export default function Mypage() {
           <div className="flex items-center gap-2">
             <p className="text-2xl font-bold">{user?.name}</p>
             <FontAwesomeIcon
-              onClick={handleAvatar}
+              onClick={handleModal}
               className="fa-lg cursor-pointer"
               icon={faPenToSquare}
             />
           </div>
         </div>
       </header>
-      {modal ? <Modal setModal={setModal} /> : null}
+      {modal ? <Modal modal={modal} setModal={setModal} /> : null}
     </main>
   );
 }

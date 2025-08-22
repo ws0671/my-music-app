@@ -1,3 +1,5 @@
+import { transform } from "typescript";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
@@ -21,6 +23,8 @@ export default {
         appear: "appear 1s",
         marquee: "marquee 10s linear infinite",
         marquee2: "marquee 5s linear infinite",
+        unfoldIn: "unfoldIn 1s cubic-bezier(0.165,0.84,0.44,1) forwards",
+        unfoldOut: "unfoldOut 0.5s ease-in-out forwards",
       },
       keyframes: {
         appear: {
@@ -33,6 +37,16 @@ export default {
         marquee2: {
           "0%": { transform: "translateX(100%)" },
           "100%": { transform: "translateX(0%)" },
+        },
+        unfoldIn: {
+          "0%": { transform: "scaleX(0) scaleY(0.005)" },
+          "50%": { transform: "scaleX(1) scaleY(0.005)" },
+          "100%": { transform: "scaleX(1) scaleY(1)" },
+        },
+        unfoldOut: {
+          "0%": { transform: "scale(1)" },
+          "50%": { transform: "scaleX(1) scaleY(0.005)" },
+          "100%": { transform: "scaleX(0) scaleY(0.005)" },
         },
       },
     },

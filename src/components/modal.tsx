@@ -4,18 +4,23 @@ import { useState } from "react";
 import { supabase } from "../utils/supabaseClient";
 import useSessionStore from "../stores/session";
 
-export default function Modal({ setModal }) {
+export default function Modal({ modal, setModal }) {
+  const [closing, setClosing] = useState(false);
+  const [bgClosing, setBgClosing] = useState(false);
   const { session, setSession } = useSessionStore();
   const [newName, setNewName] = useState("");
   const handleModal = () => {
-    setModal((prev) => !prev);
+    setClosing(true);
   };
   const handleEditName = (e) => {
     setNewName(e.currentTarget.value);
-    console.log(newName);
   };
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!newName) {
+      alert("닉네임을 입력하세요!");
+      return;
+    }
 
     const { data, error } = await supabase.auth.updateUser({
       data: { name: newName }, // metadata에 name 저장
@@ -31,30 +36,44 @@ export default function Modal({ setModal }) {
     } else {
       console.log("이름 변경 성공:", data);
       // 필요하다면 모달 닫기 등 추가 처리
-      setModal(false);
+      handleModal();
     }
   };
   return (
     <div>
-      <div className="absolute inset-0 bg-black opacity-50"></div>
+      {/* <div
+        className={`${bgClosing ? "animate-unfoldOut" : "animate-unfoldIn"}
+
+        absolute inset-0 bg-black opacity-50`}
+      /> */}
       <form
         onSubmit={onSubmit}
-        className="border-transparent border w-[30rem] h-[10rem] flex gap-3 justify-center rounded-lg items-center z-100 fixed transfrom bg-purple-700 top-1/2 left-1/2 transform -translate-1/2"
+        className={`${closing ? "animate-unfoldOut" : "animate-unfoldIn"} flex flex-col shadow-xl border-transparent border justify-center rounded-lg items-center fixed transfrom bg-purple-500 top-1/2 left-1/2 transform -translate-1/2`}
+        onAnimationEnd={() => {
+          if (closing) setBgClosing(true);
+        }}
       >
         <input
           type="text"
-          className="bg-white w-[24rem] h-[4rem] placeholder-gray-400 p-2 rounded-lg text-black"
-          placeholder="바꾸고 싶은 이름을 입력하세요"
+          className="bg-white placeholder:italic placeholder-gray-400 p-2 rounded-t-lg placeholderp-2 text-black focus:outline-none placeholder:text-xs"
+          placeholder="새로운 이름을 입력하세요"
           onChange={handleEditName}
         />
-        <button className="bg-red-700 w-16 h-16 rounded-full font-bold shadow-md">
-          완료!
-        </button>
-        <FontAwesomeIcon
-          icon={faXmark}
-          onClick={handleModal}
-          className="fa-xl curosr-pointer absolute top-0 right-0 p-2 text-black"
-        />
+        <div className="flex w-full h-full ">
+          <button
+            type="button"
+            className=" px-4 py-2 w-full rounded-bl-lg hover:bg-white hover:text-black hover:cursor-pointer"
+            onClick={handleModal}
+          >
+            취소
+          </button>
+          <button
+            type="submit"
+            className=" px-4 py-2 w-full rounded-br-lg font-bold hover:bg-white hover:text-black hover:cursor-pointer"
+          >
+            완료
+          </button>
+        </div>
       </form>
     </div>
   );
