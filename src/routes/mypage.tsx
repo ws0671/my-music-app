@@ -1,20 +1,35 @@
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import useSessionStore from "../stores/session";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
-import Modal from "../components/modal";
+import { useEffect, useState } from "react";
+import NameEditModal from "../components/mypage/name-edit-modal";
 import { supabase } from "../utils/supabaseClient";
+import PictureEditModal from "../components/mypage/picture-edit-modal";
+
+interface Iuser {
+  avatar_url: string;
+  email: string;
+  email_verified: boolean;
+  name: string;
+  phone_verified: boolean;
+  sub: string;
+}
+
 export default function Mypage() {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
-  const session = useSessionStore((state) => state.session);
-  const user = session?.user.user_metadata;
-  console.log(session);
-
   const [modal, setModal] = useState(false);
+  const [pictureEditModal, setPictureEditModal] = useState(false);
+  const { session, setSession } = useSessionStore();
+  const user = session?.user.user_metadata;
+  const imgSrc = user?.avatar_url ?? "/images/headphone.jpg";
+
   const handleModal = () => {
-    setModal((prev) => !prev);
+    setModal(true);
+  };
+  const handlePictureEditModal = () => {
+    setPictureEditModal(true);
   };
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -38,18 +53,22 @@ export default function Mypage() {
     setAvatarFile(file);
     setAvatarPreview(URL.createObjectURL(file));
   };
-  const handleSaveAvatar = async () => {
+  const handleSaveAvatar = async (avatarFile) => {
     if (!session?.user.id || !avatarFile) return;
     setSaving(true);
     try {
       const userId = session?.user.id;
-
-      const filePath = `${userId}/avatar`;
+      const ext = (() => {
+        const m = avatarFile.type.split("/")[1]; // "image/png" → "png"
+        return m ? `${m}` : "";
+      })();
+      const filename = `avatar_${Date.now()}.${ext}`;
+      const filePath = `${userId}/${filename}`;
 
       // 1) Storage 업로드
       const { error: uploadError } = await supabase.storage
         .from("avatars")
-        .upload(filePath, avatarFile, { upsert: true });
+        .upload(filePath, avatarFile);
       if (uploadError) throw uploadError;
 
       // 2) 공개 URL 가져오기
@@ -63,6 +82,10 @@ export default function Mypage() {
       });
       if (updateError) throw updateError;
 
+      const { data: refreshName, error: getErr } =
+        await supabase.auth.getSession();
+      setSession(refreshName.session);
+
       // 4) UI 반영(미리보기 유지 or 서버값으로 갱신)
       alert("프로필 사진이 업데이트되었습니다.");
     } catch (err: any) {
@@ -75,22 +98,27 @@ export default function Mypage() {
   return (
     <main className="">
       <header className="flex p-4 gap-4 bg-linear-to-b from-slate-300 to-slate-400">
-        <figure className="">
-          <label htmlFor="avatar">
+        <label htmlFor="avatar">
+          <figure className="group relative">
             <img
-              className="w-[12rem] h-[12rem] rounded-full hover:opacity-[50%] cursor-pointer"
-              src={avatarPreview ?? user?.avatar_url ?? "/images/headphone.jpg"}
+              className="w-[12rem] h-[12rem] rounded-full cursor-pointer group-hover:opacity-50"
+              onClick={handlePictureEditModal}
+              src={imgSrc}
               alt=""
             />
-          </label>
-          <input
-            id="avatar"
-            accept="image/*"
-            type="file"
-            className="sr-only"
-            onChange={handleAvatarChange}
-          />
-        </figure>
+            <div className="opacity-0  group-hover:opacity-100 absolute top-1/2 left-1/2 -translate-1/2 flex flex-col gap-2 items-center">
+              <FontAwesomeIcon icon={faPen} className="fa-2x" />
+              <span className="text-sm">사진 선택</span>
+            </div>
+            <input
+              id="avatar"
+              accept="image/*"
+              type="file"
+              className="sr-only"
+              onChange={handleAvatarChange}
+            />
+          </figure>
+        </label>
         <div>
           <h1 className="text-[6rem] font-bold">내정보</h1>
           <div className="flex items-center gap-2">
@@ -103,10 +131,19 @@ export default function Mypage() {
           </div>
         </div>
       </header>
-      <button type="button" onClick={handleSaveAvatar}>
-        Save Avatar
-      </button>
-      {modal ? <Modal modal={modal} setModal={setModal} /> : null}
+
+      {modal ? <NameEditModal modal={modal} setModal={setModal} /> : null}
+      {pictureEditModal ? (
+        <PictureEditModal
+          avatarPreview={avatarPreview}
+          setAvatarPreview={setAvatarPreview}
+          avatarFile={avatarFile}
+          setAvatarFile={setAvatarFile}
+          setPictureEditModal={setPictureEditModal}
+          handleSaveAvatar={handleSaveAvatar}
+          handleAvatarChange={handleAvatarChange}
+        />
+      ) : null}
     </main>
   );
 }

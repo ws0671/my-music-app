@@ -1,10 +1,10 @@
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { supabase } from "../utils/supabaseClient";
-import useSessionStore from "../stores/session";
+import { supabase } from "../../utils/supabaseClient";
+import useSessionStore from "../../stores/session";
 
-export default function Modal({ modal, setModal }) {
+export default function NameEditModal({ modal, setModal }) {
   const [closing, setClosing] = useState(false);
   const [bgClosing, setBgClosing] = useState(false);
   const { session, setSession } = useSessionStore();
@@ -50,7 +50,7 @@ export default function Modal({ modal, setModal }) {
         onSubmit={onSubmit}
         className={`${closing ? "animate-unfoldOut" : "animate-unfoldIn"} flex flex-col shadow-xl border-transparent border justify-center rounded-lg items-center fixed transfrom bg-purple-500 top-1/2 left-1/2 transform -translate-1/2`}
         onAnimationEnd={() => {
-          if (closing) setBgClosing(true);
+          if (closing) setModal(false);
         }}
       >
         <input
@@ -69,7 +69,7 @@ export default function Modal({ modal, setModal }) {
           </button>
           <button
             type="submit"
-            className=" px-4 py-2 w-full rounded-br-lg font-bold hover:bg-white hover:text-black hover:cursor-pointer"
+            className=" px-4 py-2 w-full rounded-br-lg hover:bg-white hover:text-black hover:cursor-pointer"
           >
             완료
           </button>
