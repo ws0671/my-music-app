@@ -15,9 +15,9 @@ export default function Nav() {
   return (
     <div
       className="
-         px-4  transition-shadow duration-300  font-bold text-white"
+         transition-shadow duration-300  font-bold text-white"
     >
-      <div className="relative flex justify-between py-[18px]">
+      <div className="px-4 relative flex justify-between py-[18px]">
         <div className="">라이브러리</div>
         <div
           className=" bg-purple-600 px-3 py-1 grid place-content-center rounded-full text-sm cursor-pointer hover:bg-purple-500"
@@ -40,17 +40,50 @@ export default function Nav() {
         ) : null}
       </div>
 
-      <div>
-        <div className="flex gap-3">
-          <div className="">
+      <div
+        data-ui="playlist-list-container "
+        className="[&>div]:py-1 [&>div]:hover:cursor-pointer [&>div]:hover:bg-gray-400/40 px-2"
+      >
+        <div className="flex gap-3 p-2 rounded-sm">
+          <figure className="">
             <img
               className="w-12 h-12 rounded-full"
               src="https://i.scdn.co/image/ab67616d00001e02922c02b3c6df73287798bf0d"
               alt=""
             />
-          </div>
+          </figure>
           <div className="">
-            <div>내 플레이리스트</div>
+            <div>더미 플레이리스트</div>
+            <div className="text-sm text-gray-400">
+              플레이리스트 · {user?.name}
+            </div>
+          </div>
+        </div>
+        <div className="flex gap-3 p-2 rounded-sm">
+          <figure className="">
+            <img
+              className="w-12 h-12 rounded-full"
+              src="https://i.scdn.co/image/ab67616d00001e02922c02b3c6df73287798bf0d"
+              alt=""
+            />
+          </figure>
+          <div className="">
+            <div>더미 플레이리스트</div>
+            <div className="text-sm text-gray-400">
+              플레이리스트 · {user?.name}
+            </div>
+          </div>
+        </div>
+        <div className="flex gap-3 p-2 rounded-sm">
+          <figure className="">
+            <img
+              className="w-12 h-12 rounded-full"
+              src="https://i.scdn.co/image/ab67616d00001e02922c02b3c6df73287798bf0d"
+              alt=""
+            />
+          </figure>
+          <div className="">
+            <div>더미 플레이리스트</div>
             <div className="text-sm text-gray-400">
               플레이리스트 · {user?.name}
             </div>
