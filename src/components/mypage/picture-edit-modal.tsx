@@ -37,33 +37,42 @@ export default function PictureEditModal({
     handleModal();
   };
   return (
-    <div
-      className={`${closing ? "animate-unfoldOut" : "animate-unfoldIn"} fixed top-1/2 left-1/2 -translate-1/2 bg-purple-500 rounded-t-lg rounded-b-lg`}
-      onAnimationEnd={() => {
-        if (closing) setPictureEditModal(false);
-      }}
-    >
-      <form className="" onSubmit={onSubmit}>
+    <div>
+      {/* <div
+        className={`${bgClosing ? "animate-unfoldOut" : "animate-unfoldIn"}
+
+        absolute inset-0 bg-black opacity-50`}
+        onAnimationEnd={() => {
+          if (bgClosing) setPictureEditModal(false);
+        }}
+      /> */}
+      <form
+        className={`${closing ? "animate-unfoldOut" : "animate-unfoldIn"} fixed top-1/2 left-1/2 -translate-1/2 bg-purple-500 rounded-t-lg rounded-b-lg`}
+        onSubmit={onSubmit}
+        onAnimationEnd={() => {
+          if (closing) setPictureEditModal(false);
+        }}
+      >
         <label htmlFor="avatar2">
           <figure className="group rounded-t-lg w-44 h-44">
             <img
-              className="w-44 h-44 rounded-t-lg group-hover:opacity-50"
+              className="w-44 h-44 rounded-t-lg"
               src={avatarPreview ?? user?.avatar_url ?? "/images/headphone.jpg"}
               alt=""
             />
-            <div className="opacity-0  group-hover:opacity-100 absolute top-1/2 left-1/2 -translate-1/2 flex flex-col gap-2 items-center">
+            {/* <div className="opacity-0  group-hover:opacity-100 absolute top-1/2 left-1/2 -translate-1/2 flex flex-col gap-2 items-center">
               <FontAwesomeIcon icon={faPen} className="fa-2x" />
               <span className="text-sm">사진 선택</span>
-            </div>
+            </div> */}
           </figure>
         </label>
-        <input
+        {/* <input
           type="file"
           id="avatar2"
           className="sr-only"
           accept="image/*"
           onChange={handleAvatarChange}
-        />
+        /> */}
         <div className="flex w-full h-full ">
           <button
             type="button"

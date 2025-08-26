@@ -99,10 +99,9 @@ export default function Mypage() {
     <main className="">
       <header className="flex p-4 gap-4 bg-linear-to-b from-slate-300 to-slate-400">
         <label htmlFor="avatar">
-          <figure className="group relative">
+          <figure className="group relative" onClick={handlePictureEditModal}>
             <img
               className="w-[12rem] h-[12rem] rounded-full cursor-pointer group-hover:opacity-50"
-              onClick={handlePictureEditModal}
               src={imgSrc}
               alt=""
             />
@@ -110,15 +109,15 @@ export default function Mypage() {
               <FontAwesomeIcon icon={faPen} className="fa-2x" />
               <span className="text-sm">사진 선택</span>
             </div>
-            <input
-              id="avatar"
-              accept="image/*"
-              type="file"
-              className="sr-only"
-              onChange={handleAvatarChange}
-            />
           </figure>
         </label>
+        <input
+          id="avatar"
+          accept="image/*"
+          type="file"
+          className="sr-only"
+          onChange={handleAvatarChange}
+        />
         <div>
           <h1 className="text-[6rem] font-bold">내정보</h1>
           <div className="flex items-center gap-2">

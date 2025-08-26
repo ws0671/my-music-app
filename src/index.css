@@ -55,7 +55,7 @@ body {
   --animate-zoomIn: zoomIn 0.5s 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) both;
   --animate-zoomOut: zoomOut 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) both;
   --animate-unfoldIn: unfoldIn 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-  --animate-unfoldOut: unfoldOut 0.5s ease-in-out forwards;
+  --animate-unfoldOut: unfoldOut 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
 
   @keyframes zoomIn {
     from {
