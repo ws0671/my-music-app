@@ -112,9 +112,9 @@ export default function Header() {
       </div>
       <div className="hidden sm:flex relative justify-center items-center">
         <div className="group flex items-center ">
-          <div className="fixed inset-0 bg-black opacity-0 transition-opacity duration-300 pointer-events-none group-hover:opacity-50 group-focus-within:opacity-50"></div>
+          <div className="fixed z-10 inset-0 bg-black opacity-0 transition-opacity duration-300 pointer-events-none group-hover:opacity-50 group-focus-within:opacity-50"></div>
 
-          <form className="relative" onSubmit={onSubmit}>
+          <form className="relative z-10" onSubmit={onSubmit}>
             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-2xl ">
               <FontAwesomeIcon className="" icon={faMagnifyingGlass} />
             </div>

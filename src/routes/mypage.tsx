@@ -98,8 +98,12 @@ export default function Mypage() {
   return (
     <main className="">
       <header className="flex p-4 gap-4 bg-linear-to-b from-slate-300 to-slate-400">
-        <label htmlFor="avatar">
-          <figure className="group relative" onClick={handlePictureEditModal}>
+        <label
+          htmlFor="avatar"
+          className="group relative"
+          onClick={handlePictureEditModal}
+        >
+          <figure>
             <img
               className="w-[12rem] h-[12rem] rounded-full cursor-pointer group-hover:opacity-50"
               src={imgSrc}

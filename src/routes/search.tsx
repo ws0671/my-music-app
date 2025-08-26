@@ -124,7 +124,7 @@ export default function Search() {
                       src={image}
                       alt={item.album.name}
                     />
-                    <div className="absolute z-10 top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100">
+                    <div className="absolute z-[1] top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100">
                       {isPlaying && trackInfo?.trackId === item.id ? (
                         <FontAwesomeIcon
                           icon={faPause}
