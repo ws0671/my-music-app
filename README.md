@@ -100,4 +100,4 @@ npm run dev
 
 ## 개발 일지
 
-- [Honey 개발 일지](https://keen-blue-f02.notion.site/Honey-bae4439c30c44725ad8b61d85ccf9c00)
+- [Switch 개발 일지](https://keen-blue-f02.notion.site/Honey-bae4439c30c44725ad8b61d85ccf9c00)
